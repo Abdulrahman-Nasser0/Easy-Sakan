@@ -1,4 +1,4 @@
-# 💻 TechZone - E-Commerce Store Frontend
+# 🏠 Easy Sakan - Property Booking Platform
 
 <div align="center">
 
@@ -7,9 +7,9 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?style=for-the-badge&logo=tailwind-css)
 
-**🚀 A modern, full-featured e-commerce platform for laptops**
+**🚀 A modern, full-featured property booking platform**
 
-**🌐 [Live Demo](https://techzone-alpha.vercel.app/)** | [Features](#-features) • [Screenshots](#-screenshots) • [Getting Started](#-getting-started) • [Documentation](#-table-of-contents)
+**🌐 [Live Demo](https://easy-sakan.vercel.app/)** | [Features](#-features) • [Screenshots](#-screenshots) • [Getting Started](#-getting-started) • [Documentation](#-table-of-contents)
 
 </div>
 
@@ -35,7 +35,6 @@
 - [State Management](#state-management)
 - [Styling Guide](#styling-guide)
 - [Mock Data System](#mock-data-system)
-- [Cart System](#cart-system)
 - [Authentication](#authentication)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
@@ -44,7 +43,7 @@
 
 ## 🎯 Overview
 
-TechZone is a modern e-commerce storefront specifically designed for selling laptops. It features a complete shopping experience with product browsing, variant selection, cart management, and user authentication.
+Easy Sakan is a modern property booking platform for discovering and reserving premium accommodations worldwide. It features complete property browsing, booking management, and user authentication.
 
 ### Key Highlights
 
@@ -61,61 +60,61 @@ TechZone is a modern e-commerce storefront specifically designed for selling lap
 
 
 
-### Product Browsing
+### Property Browsing
 <div align="center">
-  <img src="../public/screenshots/Screenshot from 2025-11-23 16-07-52.png" alt="Product Listing" width="800"/>
-  <p><em>Product listing page with grid layout and filters</em></p>
+  <img src="../public/screenshots/Screenshot from 2025-11-23 16-07-52.png" alt="Property Listing" width="800"/>
+  <p><em>Property listing page with grid layout and filters</em></p>
 </div>
 
-### Product Details & Variants
+### Property Details
 <div align="center">
-  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-08.png" alt="Product Details" width="800"/>
-  <p><em>Product detail page with image gallery and variant selection</em></p>
+  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-08.png" alt="Property Details" width="800"/>
+  <p><em>Property detail page with image gallery and amenities</em></p>
 </div>
 
-### Variant Selection
+### Booking Options
 <div align="center">
-  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-28.png" alt="Variant Selection" width="800"/>
-  <p><em>Interactive variant selector with pricing and stock information</em></p>
+  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-28.png" alt="Booking Options" width="800"/>
+  <p><em>Interactive booking options with dates and pricing</em></p>
 </div>
 
-### Shopping Cart
+### User Dashboard
 <div align="center">
-  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-41.png" alt="Shopping Cart" width="800"/>
-  <p><em>Fully responsive shopping cart with quantity controls</em></p>
+  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-41.png" alt="Dashboard" width="800"/>
+  <p><em>User dashboard showing bookings and reservations</em></p>
 </div>
 
-### Cart Details
+### User Profile
 <div align="center">
-  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-59.png" alt="Cart Summary" width="800"/>
-  <p><em>Order summary with detailed pricing breakdown</em></p>
+  <img src="../public/screenshots/Screenshot from 2025-11-23 16-08-59.png" alt="Profile" width="800"/>
+  <p><em>User profile with account management</em></p>
 </div>
 
 ---
 
 ## ✨ Features
 
-### Product Management
-- 📱 Product listing with grid layout
-- 🔍 Product detail pages with image galleries
-- 🎨 Variant selection (RAM, Storage, Storage Type)
-- 💰 Price display with discount calculations
-- 📦 Stock status indicators
-- 🏷️ SKU-based product identification
+### Property Management
+- 🏠 Property listing with grid layout
+- 🔍 Property detail pages with image galleries
+- 📍 Location-based search
+- 💰 Price display with best deals
+- 📦 Amenities display
+- ⭐ Rating and reviews system
 
-### Shopping Cart
-- 🛒 Add/remove items from cart
-- ➕➖ Quantity management with stock validation
-- 💳 Cart persistence across sessions (localStorage)
-- 🔄 Real-time cart count updates
-- 📊 Order summary with subtotal, discounts, tax, and shipping
-- 📱 Fully responsive cart page
+### Booking System
+- 📅 Date range selection for reservations
+- ✅ Booking confirmation
+- 📧 Booking notifications
+- 🔄 Booking management and modifications
+- 📊 Reservation history
+- 📱 Fully responsive booking interface
 
 ### User Experience
 - 🎭 Modern gradient-based UI design
 - 🌐 Responsive navigation with mobile menu
 - 🔔 Promotional banner
-- 🔎 Search functionality (UI ready)
+- 🔎 Search functionality for properties
 - 💫 Smooth animations and transitions
 - ⚡ Loading states and error handling
 - 🎨 Consistent button system with variants
@@ -142,7 +141,7 @@ TechZone is a modern e-commerce storefront specifically designed for selling lap
 - **Custom Gradients** - Blue to Indigo gradient theme
 
 ### State & Data
-- **Custom React Hooks** - `useCart`, `useLaptops`, `useVariants`, `useMenuState`
+- **Custom React Hooks** - `useMenuState`
 - **localStorage** - Client-side cart persistence
 - **Custom Events** - Cross-component cart synchronization
 
@@ -168,11 +167,8 @@ store-frontend/
 │   │   │   ├── signup/
 │   │   │   ├── forgot-password/
 │   │   │   └── verify-email/
-│   │   ├── cart/             # Shopping cart page
 │   │   ├── dashboard/        # User dashboard
 │   │   ├── profile/          # User profile
-│   │   ├── shop/             # Product listing & details
-│   │   │   └── [id]/         # Dynamic product pages
 │   │   ├── layout.tsx        # Root layout
 │   │   ├── page.tsx          # Homepage
 │   │   └── globals.css       # Global styles
@@ -184,25 +180,20 @@ store-frontend/
 │   │   │   ├── ErrorDisplay.tsx
 │   │   │   ├── EmptyState.tsx
 │   │   │   └── fonts.ts
-│   │   ├── layout/           # Layout components
-│   │   │   └── Header/       # Header components
-│   │   └── products/         # Product-specific components
+│   │   └── layout/           # Layout components
+│   │       └── Header/       # Header components
 │   │
 │   ├── hooks/                # Custom React hooks
-│   │   ├── useCart.ts
-│   │   ├── useLaptops.ts
-│   │   ├── useVariants.ts
 │   │   └── useMenuState.ts
 │   │
 │   ├── lib/                  # Utility libraries
 │   │   ├── actions.ts        # Server actions
 │   │   ├── api.ts            # API wrapper functions
-│   │   ├── clientCartStorage.ts  # Cart localStorage manager
+│   │   ├── mockData.ts       # Mock API responses
 │   │   ├── session.ts        # Session management
 │   │   ├── types.ts          # TypeScript types
 │   │   ├── utils.ts          # Helper functions
-│   │   ├── validation.ts     # Form validation schemas
-│   │   └── mock-data/        # Mock data system
+│   │   └── validation.ts     # Form validation schemas
 │   │
 │   ├── store/                # Future state management
 │   └── proxy.ts              # API proxy configuration

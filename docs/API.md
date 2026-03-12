@@ -1,6 +1,6 @@
 # API Documentation
 
-This document provides comprehensive documentation for all API interactions in the TechZone frontend application.
+This document provides comprehensive documentation for all API interactions in the Easy Sakan frontend application.
 
 ## Table of Contents
 

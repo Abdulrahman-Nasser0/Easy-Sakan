@@ -7,7 +7,7 @@ interface SearchBarProps {
   onMenuClose?: () => void;
 }
 
-export default function SearchBar({ isMobile = false, placeholder = "Search laptops, brands, specifications...", onMenuClose }: SearchBarProps) {
+export default function SearchBar({ isMobile = false, placeholder = "Search properties, locations, amenities...", onMenuClose }: SearchBarProps) {
   const router = useRouter();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,7 +31,7 @@ export default function SearchBar({ isMobile = false, placeholder = "Search lapt
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search laptops..."
+          placeholder="Search properties..."
           className="w-full pl-4 pr-12 text-black py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
         <svg

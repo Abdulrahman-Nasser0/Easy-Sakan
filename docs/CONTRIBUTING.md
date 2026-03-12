@@ -1,6 +1,6 @@
-# Contributing to TechZone
+# Contributing to Easy Sakan
 
-Thank you for considering contributing to TechZone! This document provides guidelines and instructions for contributing to this project.
+Thank you for considering contributing to Easy Sakan! This document provides guidelines and instructions for contributing to this project.
 
 ## Table of Contents
 
@@ -552,4 +552,4 @@ By contributing, you agree that your contributions will be licensed under the sa
 
 ---
 
-Thank you for contributing to TechZone! 🚀
+Thank you for contributing to Easy Sakan! 🚀

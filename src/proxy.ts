@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
 const protectedRoutes = ["/dashboard", "/profile"];
-const publicRoutes = ["/login", "/signup" , "/shop", "/cart", "/", "/forgot-password", "/verify-email"];
+const publicRoutes = ["/login", "/signup", "/", "/forgot-password", "/verify-email"];
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -52,16 +52,15 @@ User Flow:
 
  UNAUTHENTICATED USERS:
 ┌─────────────────────────┐
-│ / (Home)                │ ← Browse laptops, see features
+│ / (Home)                │ ← Browse properties, see features
 │ ├─ Sign In → /login     │ 
 │ └─ Sign Up → /signup    │
 └─────────────────────────┘
 
  AUTHENTICATED USERS:
 ┌─────────────────────────┐
-│ /dashboard              │ ← Overview, stats, recent orders
-│ ├─ /shop                │ ← Browse & add to cart
-│ ├─ /cart                │ ← Review items, checkout
+│ /dashboard              │ ← Overview, bookings, reservations
+│ ├─ /shop                │ ← Browse properties
 │ └─ /profile             │ ← Settings, logout
 └─────────────────────────┘
 */

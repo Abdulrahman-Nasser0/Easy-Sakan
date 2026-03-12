@@ -11,7 +11,7 @@ const Login = () => {
               Welcome back
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Sign in to your TechStore account
+              Sign in to your Easy Sakan account
             </p>
           </div>
           

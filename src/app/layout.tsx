@@ -5,8 +5,8 @@ import Header from "@/components/layout/Header";
 import { getSession } from "../lib/session";
 
 export const metadata: Metadata = {
-  title: "TechZone",
-  description: "A store for laptops",
+  title: "Easy Sakan",
+  description: "A platform for booking premium properties and accommodations",
 };
 
 export default async function RootLayout({

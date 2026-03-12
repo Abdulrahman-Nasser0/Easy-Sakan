@@ -8,10 +8,10 @@ const Signup = () => {
           {/* Welcome Section */}
           <div className="text-center">
             <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-              Join TechStore
+              Join Easy Sakan
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Create your account and discover amazing laptops
+              Create your account and discover amazing properties
             </p>
           </div>
           

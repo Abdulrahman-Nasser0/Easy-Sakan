@@ -32,35 +32,58 @@ export interface ApiResponse<T = any> {
   timestamp: string;
 }
 
+export type UserRole = 'Student' | 'Landlord' | 'Admin';
+export type VerificationStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  role: UserRole;
+  fullName: string;
+  phone: string;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
 }
 
-export interface RegisterRequest {
-  userName: string;
-  fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
 export interface LoginResponse {
-  message: string | null;
-  isAuthenticated: boolean;
-  username: string;
-  email: string;
-  roles: string[];
   token: string;
-  emailConfirmed: boolean;
-  refreshTokenExpiration: string;
+  refreshToken: string;
+  tokenExpiresAt: string;
+  user: {
+    id: number;
+    email: string;
+    role: UserRole;
+    fullName: string;
+    phone: string;
+    isVerified: boolean;
+    profileImage: string | null;
+  };
 }
 
 export interface AuthStatusResponse {
-  isAuthenticated: boolean;
-  username: string | null;
-  userId: string;
+  userId: number;
   email: string;
-  roles: string[];
-  tokenExpiry: string | null;
+  role: UserRole;
+  isVerified: boolean;
+  fullName: string;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  fullName: string;
+  phone: string;
+  role: UserRole;
+  isVerified: boolean;
+  profileImage: string | null;
+  university?: string;
+  createdAt: string;
+  stats?: {
+    totalBookings: number;
+    activeBookings: number;
+    reviewsGiven: number;
+  };
 }

@@ -8,12 +8,14 @@ import SearchBar from "./SearchBar";
 import UserActions from "./UserActions";
 import MobileMenu from "./MobileMenu";
 
+import { UserRole } from "@/lib/types";
+
 interface HeaderProps {
   isAuthenticated?: boolean;
+  userRole?: UserRole;
 }
 
-
-export default function Header({ isAuthenticated = false }: HeaderProps) {
+export default function Header({ isAuthenticated = false, userRole }: HeaderProps) {
   const [isMenuOpen, toggleMenu, setIsMenuOpen] = useMenuState();
 
   return (
@@ -38,7 +40,7 @@ export default function Header({ isAuthenticated = false }: HeaderProps) {
 
             {/* Right: User Actions */}
             <div className="flex items-center gap-3">
-              <UserActions isAuthenticated={isAuthenticated} />
+              <UserActions isAuthenticated={isAuthenticated} userRole={userRole} />
 
               {/* Mobile Menu Button */}
               <button

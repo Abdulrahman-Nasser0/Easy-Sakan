@@ -4,7 +4,7 @@ import { UserActionsProps } from "@/lib/types";
 import { Button } from "@/components/common/Button";
 
 
-export default function UserActions({ isAuthenticated = false }: UserActionsProps) {
+export default function UserActions({ isAuthenticated = false, userRole }: UserActionsProps) {
   return (
     <div className="flex items-center">
       <div className="flex items-center">
@@ -26,6 +26,24 @@ export default function UserActions({ isAuthenticated = false }: UserActionsProp
             </Button>
           </Link>
         </div>
+      )}
+      
+      {/* Show dashboard link for authenticated users */}
+      {isAuthenticated && userRole !== 'Admin' && (
+        <Link href="/dashboard" className="hidden md:inline-block">
+          <Button variant="ghost" size="sm">
+            Dashboard
+          </Button>
+        </Link>
+      )}
+      
+      {/* Show admin dashboard link for admin users */}
+      {isAuthenticated && userRole === 'Admin' && (
+        <Link href="/admin/dashboard" className="hidden md:inline-block">
+          <Button variant="ghost" size="sm">
+            Admin Panel
+          </Button>
+        </Link>
       )}
     </div>
   );

@@ -26,7 +26,7 @@ export default async function RootLayout({
         className={`${inter.className} antialiased`}
         suppressHydrationWarning={true}
       >
-        <Header isAuthenticated={isAuthenticated} />
+        <Header isAuthenticated={isAuthenticated} userRole={session?.role} />
         {children}
       </body>
     </html>

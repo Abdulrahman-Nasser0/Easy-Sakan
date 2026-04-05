@@ -2,12 +2,34 @@
 
 import Link from "next/link";
 import { Button } from "@/components/common/Button";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check session from the API
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.role) {
+            setIsAuthenticated(true);
+            setUserRole(data.role);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to check auth:", error);
+      }
+    };
+    checkAuth();
+  }, []);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
+      <div className="relative overflow-hidden bg-linear-to-br from-slate-900 via-blue-900 to-indigo-900">
         {/* Animated Grid Background */}
         <div className="absolute inset-0 opacity-20">
           <div
@@ -43,7 +65,7 @@ export default function Home() {
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
               Find Your Perfect
-              <span className="block mt-2 bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 text-transparent bg-clip-text">
+              <span className="block mt-2 bg-linear-to-r from-blue-400 via-cyan-400 to-indigo-400 text-transparent bg-clip-text">
                 Home & Stay
               </span>
             </h1>
@@ -51,35 +73,93 @@ export default function Home() {
               Easy Sakan - Book luxury properties and accommodations for your next getaway. Discover premium
               stays tailored to your lifestyle.
             </p>
+            
+            {/* Conditional buttons based on auth status */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/login">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  rightIcon={
-                    <svg
-                      className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+              {!isAuthenticated ? (
+                <>
+                  <Link href="/login">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      rightIcon={
+                        <svg
+                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      }
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  }
-                >
-                  Explore Properties
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button variant="secondary" size="lg">
-                  Create Account
-                </Button>
-              </Link>
+                      Explore Properties
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button variant="secondary" size="lg">
+                      Create Account
+                    </Button>
+                  </Link>
+                </>
+              ) : userRole === 'Admin' ? (
+                <>
+                  <Link href="/admin/dashboard">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      rightIcon={
+                        <svg
+                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      }
+                    >
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/dashboard">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      rightIcon={
+                        <svg
+                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      }
+                    >
+                      Continue Browsing
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Stats */}
@@ -118,13 +198,13 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="py-24 bg-gradient-to-b from-slate-50 to-white">
+      <div className="py-24 bg-linear-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-sm font-semibold mb-4">
+            <span className="inline-block px-4 py-1 rounded-full bg-linear-to-r from-indigo-100 to-purple-100 text-indigo-700 text-sm font-semibold mb-4">
               WHY CHOOSE US
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-slate-900 via-indigo-900 to-purple-900 text-transparent bg-clip-text mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold bg-linear-to-r from-slate-900 via-indigo-900 to-purple-900 text-transparent bg-clip-text mb-4">
               The Easy Sakan Advantage
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -212,7 +292,7 @@ export default function Home() {
       </div>
 
       {/* Stats Section */}
-      <div className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+      <div className="py-16 bg-linear-to-r from-blue-600 to-purple-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="text-white">

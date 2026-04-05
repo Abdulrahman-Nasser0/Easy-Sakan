@@ -17,7 +17,7 @@ export default async function proxy(req: NextRequest) {
   if (process.env.NODE_ENV === "development") {
     console.log("🔍 Proxy check for:", path);
     console.log("   Cookie exists:", !!cookie);
-    console.log("   Session:", session ? `User ${session.userId}` : "null");
+    console.log("   Session:", session ? `User ${session.userId} (${session.role})` : "null");
   }
 
   // Redirect unauthenticated users from protected routes
@@ -25,8 +25,13 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Redirect authenticated users from auth pages
-  if (isPublicRoute && session?.userId && (path === "/" || path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email")) {
+  // Redirect admins trying to access user routes to admin dashboard
+  if (session?.role === 'Admin' && (path === "/dashboard" || path === "/profile" || path === "/settings")) {
+    return NextResponse.redirect(new URL("/admin/dashboard", req.nextUrl));
+  }
+
+  // Redirect authenticated non-admin users from auth pages
+  if (session?.userId && session?.role !== 'Admin' && (path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email")) {
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 

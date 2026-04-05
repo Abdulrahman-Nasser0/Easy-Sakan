@@ -1,3 +1,6 @@
+// This route uses cookies, so it must be dynamic
+export const dynamic = 'force-dynamic';
+
 import LoginForm from './LoginForm';
 
 const Login = () => {

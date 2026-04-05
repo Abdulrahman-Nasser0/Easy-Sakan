@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { forgotPasswordApi } from '../../../lib/api';
 import { Button } from "@/components/common/Button";
 
-export default function ForgotPassword() {
+export const dynamic = 'force-dynamic';
+
+function ForgotPasswordContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState(searchParams.get('email') || '');
 
@@ -98,5 +100,13 @@ export default function ForgotPassword() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ForgotPassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ForgotPasswordContent />
+    </Suspense>
   );
 }

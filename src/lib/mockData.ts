@@ -6,35 +6,38 @@
 
 export const NO_BACKEND_MODE = true ; // ← Change to true to enable mock mode
 
-import { LoginResponse, AuthStatusResponse } from "./types";
+import { LoginResponse, AuthStatusResponse, RegisterResponse } from "./types";
 
 export const mockLoginResponse: LoginResponse = {
-  message: "Login successful",
-  isAuthenticated: true,
-  username: "testuser",
-  email: "test@example.com",
   token: "mock_jwt_token_xyz123",
-  refreshTokenExpiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-  emailConfirmed: true,
-  roles: ["User"],
+  refreshToken: "mock_refresh_token_xyz123",
+  tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+  user: {
+    id: 101,
+    email: "student@test.edu",
+    role: "Student",
+    fullName: "Test Student",
+    phone: "+201012345678",
+    isVerified: true,
+    profileImage: null,
+  },
 };
 
 export const mockAuthStatus: AuthStatusResponse = {
-  isAuthenticated: true,
-  username: "testuser",
-  userId: "mock_user_123",
-  email: "test@example.com",
-  roles: ["User"],
-  tokenExpiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+  userId: 101,
+  email: "student@test.edu",
+  role: "Student",
+  isVerified: true,
+  fullName: "Test Student",
 };
 
-export const mockRegisterResponse: LoginResponse = {
-  message: "Account created successfully",
-  isAuthenticated: true,
-  username: "newuser",
-  email: "newuser@example.com",
+export const mockRegisterResponse: RegisterResponse = {
+  id: 102,
+  email: "newstudent@test.edu",
+  role: "Student",
+  fullName: "New Student",
+  isVerified: false,
   token: "mock_jwt_token_new_456",
-  refreshTokenExpiration: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-  emailConfirmed: false,
-  roles: ["User"],
+  refreshToken: "mock_refresh_token_new_456",
+  tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
 };

@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useSearchParams, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { confirmEmailApi, resendVerificationApi } from '../../../lib/api';
 import { Button } from "@/components/common/Button";
 
-export default function VerifyEmail() {
+// This route uses cookies, so it must be dynamic
+export const dynamic = 'force-dynamic';
+
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
   
@@ -135,5 +138,13 @@ export default function VerifyEmail() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmail() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

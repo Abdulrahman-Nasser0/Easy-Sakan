@@ -8,6 +8,9 @@ import { AuthStatusResponse } from "@/lib/types";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ErrorDisplay from "@/components/common/ErrorDisplay";
 
+// This route uses cookies, so it must be dynamic
+export const dynamic = 'force-dynamic';
+
 export default function Profile() {
   const router = useRouter();
   const [userData, setUserData] = useState<AuthStatusResponse | null>(null);
@@ -54,7 +57,7 @@ export default function Profile() {
     );
   }
 
-  if (!userData?.isAuthenticated) {
+  if (!userData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <ErrorDisplay
@@ -93,8 +96,8 @@ export default function Profile() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Username</label>
-                <p className="mt-1 text-sm text-gray-900">{user.username || 'Not set'}</p>
+                <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                <p className="mt-1 text-sm text-gray-900">{user.fullName || 'Not set'}</p>
               </div>
 
               <div>
@@ -102,22 +105,26 @@ export default function Profile() {
                 <p className="mt-1 text-sm text-gray-900">{user.email}</p>
               </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Roles</label>
-                <div className="flex flex-wrap gap-2">
-                  {user.roles.length > 0 ? (
-                    user.roles.map((role: string, index: number) => (
-                      <span
-                        key={index}
-                        className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800"
-                      >
-                        {role}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm text-gray-500">No roles assigned</span>
-                  )}
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Role</label>
+                <p className="mt-1 text-sm text-gray-900">
+                  <span className="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                    {user.role}
+                  </span>
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Verification Status</label>
+                <p className="mt-1 text-sm text-gray-900">
+                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                    user.isVerified 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {user.isVerified ? 'Verified' : 'Pending Verification'}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -131,10 +138,10 @@ export default function Profile() {
           <div className="px-6 py-6">
             <div className="flex items-center">
               <div className={`w-3 h-3 rounded-full mr-3 ${
-                userData.isAuthenticated ? 'bg-green-500' : 'bg-red-500'
+                user.isVerified ? 'bg-green-500' : 'bg-yellow-500'
               }`}></div>
               <span className="text-sm text-gray-900">
-                {userData.isAuthenticated ? 'Authenticated' : 'Not Authenticated'}
+                {user.isVerified ? 'Account Verified' : 'Account Pending Verification'}
               </span>
             </div>
           </div>

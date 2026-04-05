@@ -1,3 +1,6 @@
+// This route uses cookies, so it must be dynamic
+export const dynamic = 'force-dynamic';
+
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">

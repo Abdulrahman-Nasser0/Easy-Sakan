@@ -18,7 +18,9 @@ export default async function AdminUsers() {
 
   const response = await adminGetUsers(session.token);
   console.log('📊 Admin Users Response:', response);
-  const users = response.isSuccess ? response.data?.users || [] : [];
+  console.log('👥 Total Users:', response.data?.totalCount);
+  console.log('📋 Users Details:', JSON.stringify(response.data?.items, null, 2));
+  const users = response.isSuccess ? response.data?.items || [] : [];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -44,43 +46,68 @@ export default async function AdminUsers() {
             <p className="text-gray-400">No users found</p>
           </div>
         ) : (
-          <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-700 border-b border-gray-600">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
-                {users.map((user: any) => (
-                  <tr key={user.id} className="hover:bg-gray-700 transition-colors">
-                    <td className="px-6 py-3 text-sm">{user.fullName}</td>
-                    <td className="px-6 py-3 text-sm">{user.email}</td>
-                    <td className="px-6 py-3 text-sm">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-900 text-blue-200">
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 text-sm">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        user.status === 'APPROVED' ? 'bg-green-900 text-green-200' :
-                        user.status === 'REJECTED' ? 'bg-red-900 text-red-200' :
-                        'bg-yellow-900 text-yellow-200'
-                      }`}>
-                        {user.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 text-sm">
-                      <button className="text-blue-500 hover:text-blue-400 font-medium">View Details</button>
-                    </td>
+          <div className="grid gap-6">
+            {/* Summary Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                <p className="text-gray-400 text-sm mb-1">Total Users</p>
+                <p className="text-2xl font-bold text-white">{users.length}</p>
+              </div>
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                <p className="text-gray-400 text-sm mb-1">Admins</p>
+                <p className="text-2xl font-bold text-blue-400">{users.filter((u: any) => u.role === 'Admin').length}</p>
+              </div>
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                <p className="text-gray-400 text-sm mb-1">Landlords</p>
+                <p className="text-2xl font-bold text-purple-400">{users.filter((u: any) => u.role === 'Landlord').length}</p>
+              </div>
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                <p className="text-gray-400 text-sm mb-1">Students</p>
+                <p className="text-2xl font-bold text-green-400">{users.filter((u: any) => u.role === 'Student').length}</p>
+              </div>
+            </div>
+
+            {/* Users Table */}
+            <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-700 border-b border-gray-600">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Phone</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Joined</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-700">
+                  {users.map((user: any) => (
+                    <tr key={user.id} className="hover:bg-gray-700 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium">{user.fullName || 'N/A'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-300">{user.email}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          user.role === 'Admin' ? 'bg-blue-900 text-blue-200' :
+                          user.role === 'Landlord' ? 'bg-purple-900 text-purple-200' :
+                          'bg-green-900 text-green-200'
+                        }`}>
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-300">{user.phone || 'N/A'}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          user.emailConfirmed ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200'
+                        }`}>
+                          {user.emailConfirmed ? 'Verified' : 'Pending'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-300">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

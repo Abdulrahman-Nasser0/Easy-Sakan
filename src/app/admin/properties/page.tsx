@@ -18,7 +18,9 @@ export default async function AdminProperties() {
 
   const response = await adminGetProperties(session.token);
   console.log('📊 Admin Properties Response:', response);
-  const properties = response.isSuccess ? response.data?.properties || [] : [];
+  console.log('🏠 Total Properties:', response.data?.totalCount);
+  console.log('📋 Properties Details:', JSON.stringify(response.data?.items, null, 2));
+  const properties = response.isSuccess ? response.data?.items || [] : [];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">

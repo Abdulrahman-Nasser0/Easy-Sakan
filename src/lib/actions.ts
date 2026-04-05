@@ -170,8 +170,8 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     null
   );
 
-  // 6. Redirect to dashboard (skip email verification for now)
-  redirect("/dashboard");
+  // 6. Redirect to email verification
+  redirect("/verify-email");
 }
 
 

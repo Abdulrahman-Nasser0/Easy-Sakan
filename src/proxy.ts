@@ -30,9 +30,17 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.nextUrl));
   }
 
-  // Redirect authenticated non-admin users from auth pages
-  if (session?.userId && session?.role !== 'Admin' && (path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email")) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  // Redirect authenticated non-admin users from auth pages (but allow verify-email for unverified users)
+  if (session?.userId && session?.role !== 'Admin') {
+    // Allow unverified users to access verify-email
+    if (path === "/verify-email" && !session.isVerified) {
+      return NextResponse.next();
+    }
+    
+    // Redirect from other auth pages if authenticated
+    if (path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email") {
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    }
   }
 
   return NextResponse.next();

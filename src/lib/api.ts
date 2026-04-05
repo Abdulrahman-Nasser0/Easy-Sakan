@@ -252,6 +252,7 @@ export async function adminApproveUser(token: string, userId: number) {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    body: JSON.stringify({}),
   });
 }
 

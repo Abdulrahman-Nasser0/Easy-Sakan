@@ -32,6 +32,7 @@ export default function UsersTable({ users, token }: UsersTableProps) {
     try {
       const response = await adminApproveUser(token, userId);
       console.log('Approve user response:', response);
+      console.log('Full response data:', JSON.stringify(response, null, 2));
 
       if (response.isSuccess) {
         setSuccess(`✓ ${userName} has been approved!`);
@@ -42,7 +43,9 @@ export default function UsersTable({ users, token }: UsersTableProps) {
           )
         );
       } else {
-        setError(response.message || 'Failed to approve user.');
+        const errorMessage = response.message || response.errors?.join(', ') || 'Failed to approve user.';
+        console.error('Approval failed:', errorMessage);
+        setError(errorMessage);
       }
     } catch (err) {
       console.error('Approve user error:', err);

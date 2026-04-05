@@ -215,5 +215,222 @@ export async function changePasswordApi(
   });
 }
 
+// ==========================================
+// ADMIN API CALLS
+// ==========================================
+
+export async function adminGetDashboardStats(token: string) {
+  return apiCall<any>("/api/admin/dashboard/stats", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetUsers(token: string, page: number = 1, limit: number = 20) {
+  return apiCall<any>("/api/admin/users", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetUserDetails(token: string, userId: number) {
+  return apiCall<any>(`/api/admin/users/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminApproveUser(token: string, userId: number) {
+  return apiCall<any>(`/api/admin/users/${userId}/approve`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminRejectUser(token: string, userId: number, reason: string) {
+  return apiCall<any>(`/api/admin/users/${userId}/reject`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export async function adminDeactivateUser(token: string, userId: number, reason: string) {
+  return apiCall<any>(`/api/admin/users/${userId}/deactivate`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export async function adminReactivateUser(token: string, userId: number) {
+  return apiCall<any>(`/api/admin/users/${userId}/reactivate`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetProperties(token: string) {
+  return apiCall<any>("/api/admin/properties", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminApproveProperty(token: string, propertyId: number) {
+  return apiCall<any>(`/api/admin/properties/${propertyId}/approve`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminRejectProperty(token: string, propertyId: number, reason: string) {
+  return apiCall<any>(`/api/admin/properties/${propertyId}/reject`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export async function adminDeleteProperty(token: string, propertyId: number) {
+  return apiCall<any>(`/api/admin/properties/${propertyId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetBookings(token: string) {
+  return apiCall<any>("/api/admin/bookings", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetBookingDetail(token: string, bookingId: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminConfirmPayment(token: string, bookingId: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/confirm-payment`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminCancelBooking(token: string, bookingId: number, reason: string) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/cancel`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ reason }),
+  });
+}
+
+export async function adminCompleteBooking(token: string, bookingId: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/complete`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminHandleDispute(token: string, bookingId: number, resolution: string) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/dispute`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ resolution }),
+  });
+}
+
+export async function adminRefundBooking(token: string, bookingId: number, amount: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/refund`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ amount }),
+  });
+}
+
+export async function adminDismissDispute(token: string, bookingId: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/dismiss-dispute`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminDeleteReview(token: string, reviewId: number) {
+  return apiCall<any>(`/api/admin/reviews/${reviewId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetAuditLog(token: string) {
+  return apiCall<any>("/api/admin/audit-log", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminGetFraudDetection(token: string) {
+  return apiCall<any>("/api/admin/fraud-detection", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function adminResolveFraudAlert(token: string, alertId: number, resolution: string) {
+  return apiCall<any>(`/api/admin/fraud-detection/${alertId}/resolve`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ resolution }),
+  });
+}
 
 import { getSession, createSession } from "./session";

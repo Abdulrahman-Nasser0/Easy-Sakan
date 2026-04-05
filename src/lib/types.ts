@@ -99,3 +99,98 @@ export interface User {
     reviewsGiven: number;
   };
 }
+
+// ==========================================
+// ADMIN TYPES
+// ==========================================
+
+export type UserStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'DEACTIVATED';
+export type PropertyStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'DISPUTED';
+export type DisputeStatus = 'OPEN' | 'RESOLVED' | 'DISMISSED';
+export type FraudStatus = 'PENDING' | 'RESOLVED' | 'DISMISSED';
+
+export interface DashboardStats {
+  totalUsers: number;
+  totalProperties: number;
+  totalBookings: number;
+  totalRevenue: number;
+  pendingVerifications: number;
+  activeDisputes: number;
+  fraudAlerts: number;
+}
+
+export interface AdminUser extends User {
+  status: UserStatus;
+  documentVerificationStatus: VerificationStatus;
+  approvedDate?: string;
+}
+
+export interface AdminProperty {
+  id: number;
+  title: string;
+  landlordId: number;
+  landlordName: string;
+  status: PropertyStatus;
+  address: string;
+  city: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+  createdAt: string;
+  submittedAt: string;
+  approvedAt?: string;
+  images: string[];
+}
+
+export interface AdminBooking {
+  id: number;
+  studentId: number;
+  studentName: string;
+  propertyId: number;
+  propertyTitle: string;
+  status: BookingStatus;
+  checkInDate: string;
+  checkOutDate: string;
+  totalPrice: number;
+  paymentStatus: 'PENDING' | 'CONFIRMED' | 'REFUNDED';
+  createdAt: string;
+  hasDispute: boolean;
+}
+
+export interface AdminDispute {
+  id: number;
+  bookingId: number;
+  studentId: number;
+  landlordId: number;
+  reason: string;
+  status: DisputeStatus;
+  createdAt: string;
+  resolvedAt?: string;
+  resolution?: string;
+}
+
+export interface FraudAlert {
+  id: number;
+  userId: number;
+  userName: string;
+  alertType: 'DUPLICATE_DOCUMENT' | 'SUSPICIOUS_ACTIVITY' | 'PAYMENT_FRAUD' | 'OTHER';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  description: string;
+  status: FraudStatus;
+  detectedAt: string;
+  resolvedAt?: string;
+  resolution?: string;
+}
+
+export interface AuditLogEntry {
+  id: number;
+  adminId: number;
+  adminName: string;
+  action: string;
+  targetType: 'USER' | 'PROPERTY' | 'BOOKING' | 'DISPUTE' | 'FRAUD_ALERT';
+  targetId: number;
+  details: string;
+  timestamp: string;
+}

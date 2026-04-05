@@ -4,8 +4,9 @@
  * Set NO_BACKEND_MODE = false to use real backend API
  */
 
-export const NO_BACKEND_MODE = true ; // ← Change to true to enable mock mode
+export const NO_BACKEND_MODE = false ; // ← Change to true to enable mock mode
 
+import { fa } from "zod/locales";
 import { LoginResponse, AuthStatusResponse, RegisterResponse } from "./types";
 
 export const mockLoginResponse: LoginResponse = {

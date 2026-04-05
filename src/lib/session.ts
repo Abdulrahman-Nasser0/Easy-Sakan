@@ -95,7 +95,7 @@ export async function getSession(): Promise<SessionData | null> {
       return null;
     }
 
-    return JSON.parse(sessionCookie) as SessionData;
+    return await decrypt(sessionCookie);
   } catch (error) {
     console.error('Error reading session:', error);
     return null;

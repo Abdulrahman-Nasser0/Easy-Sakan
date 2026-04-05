@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { resendVerificationApi } from "@/lib/api";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface Session {
-  userId: string;
+  userId: number;
   name: string;
   email: string;
   role: 'Student' | 'Landlord' | 'Admin';
@@ -19,36 +17,6 @@ interface ProfileContentProps {
 }
 
 export default function ProfileContent({ session }: ProfileContentProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const handleVerifyEmail = async () => {
-    setLoading(true);
-    setError('');
-    setMessage('');
-
-    try {
-      const response = await resendVerificationApi(session.email, 0);
-      console.log('Send verification code response:', response); // Debug log
-
-      if (response.isSuccess) {
-        setMessage('Verification code sent! Redirecting to verification page...');
-        // Redirect to verify-email page
-        setTimeout(() => {
-          router.push(`/verify-email?email=${encodeURIComponent(session.email)}`);
-        }, 1500);
-      } else {
-        setError(response.message || 'Failed to send verification code.');
-      }
-    } catch (error) {
-      console.error('Send verification code error:', error); // Debug log
-      setError('We\'re having trouble connecting to our servers. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -62,33 +30,11 @@ export default function ProfileContent({ session }: ProfileContentProps) {
 
         {/* Email Verification Banner */}
         {!session.isVerified && (
-          <div className="mb-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="mb-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div>
-              <h3 className="text-sm font-semibold text-yellow-800">Email Verification Required</h3>
-              <p className="text-sm text-yellow-700 mt-1">Please verify your email address to unlock all features</p>
+              <h3 className="text-sm font-semibold text-yellow-800">Email Verification Pending</h3>
+              <p className="text-sm text-yellow-700 mt-1">Your account is pending email verification. An admin will review and approve your account.</p>
             </div>
-            <div className="ml-4 flex gap-3 shrink-0">
-              <button
-                onClick={handleVerifyEmail}
-                disabled={loading}
-                className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-yellow-400 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-              >
-                {loading ? 'Sending...' : 'Send Code & Verify'}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Success/Error Messages */}
-        {message && (
-          <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded">
-            <p className="text-sm text-green-700">{message}</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
-            <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
 

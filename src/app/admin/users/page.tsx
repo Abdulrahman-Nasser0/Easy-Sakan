@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic';
 import { getSession } from '@/lib/session';
 import { adminGetUsers } from '@/lib/api';
 import Link from 'next/link';
+import UsersTable from './UsersTable';
 
 export default async function AdminUsers() {
   const session = await getSession();
@@ -68,46 +69,7 @@ export default async function AdminUsers() {
             </div>
 
             {/* Users Table */}
-            <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-700 border-b border-gray-600">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Phone</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold">Joined</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700">
-                  {users.map((user: any) => (
-                    <tr key={user.id} className="hover:bg-gray-700 transition-colors">
-                      <td className="px-6 py-4 text-sm font-medium">{user.fullName || 'N/A'}</td>
-                      <td className="px-6 py-4 text-sm text-gray-300">{user.email}</td>
-                      <td className="px-6 py-4 text-sm">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          user.role === 'Admin' ? 'bg-blue-900 text-blue-200' :
-                          user.role === 'Landlord' ? 'bg-purple-900 text-purple-200' :
-                          'bg-green-900 text-green-200'
-                        }`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-300">{user.phone || 'N/A'}</td>
-                      <td className="px-6 py-4 text-sm">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          user.emailConfirmed ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200'
-                        }`}>
-                          {user.emailConfirmed ? 'Verified' : 'Pending'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-300">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <UsersTable users={users} token={session.token} />
           </div>
         )}
       </div>

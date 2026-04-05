@@ -26,27 +26,13 @@ export async function login(_prevState: any, formData: FormData): Promise<LoginS
 
   // 3. Handle API response
   if (!response.isSuccess) {
-    // Map backend errors to user-friendly messages
-    let userFriendlyMessage = response.message;
-    
-    // Handle specific backend error messages
-    if (response.message.toLowerCase().includes("application not found")) {
-      userFriendlyMessage = "Unable to connect to the authentication service. Our team is working on this. Please try again in a few moments.";
-    } else if (response.message.toLowerCase().includes("invalid") || 
-               response.message.toLowerCase().includes("incorrect")) {
-      userFriendlyMessage = "Invalid email or password. Please check your credentials and try again.";
-    } else if (response.message.toLowerCase().includes("network")) {
-      userFriendlyMessage = "Network connection issue. Please check your internet connection and try again.";
-    } else if (response.message.toLowerCase().includes("server") || 
-               response.message.toLowerCase().includes("empty response")) {
-      userFriendlyMessage = "Our servers are temporarily unavailable. Please try again in a few moments.";
-    }
+    console.log("Login API response:", response); // Debug log
     
     return {
       errors: {
-        email: [userFriendlyMessage],
+        email: [response.message || "Login failed. Please try again."],
       },
-      message: userFriendlyMessage,
+      message: response.message || "Login failed",
     };
   }
 
@@ -147,15 +133,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     }
 
     // Handle specific server errors
-    let userFriendlyMessage = response.message;
-    if (response.message.toLowerCase().includes("application not found")) {
-      userFriendlyMessage = "Unable to connect to the registration service. Our team is working on this. Please try again in a few moments.";
-    } else if (response.message.toLowerCase().includes("server") || 
-               response.message.toLowerCase().includes("empty response")) {
-      userFriendlyMessage = "Our servers are temporarily unavailable. Please try again in a few moments.";
-    } else if (response.message.toLowerCase().includes("network")) {
-      userFriendlyMessage = "Network connection issue. Please check your internet connection and try again.";
-    }
+    let userFriendlyMessage = response.message || "An error occurred during registration. Please try again.";
 
     // General error on email field if no specific field errors
     if (Object.keys(fieldErrors).length === 0) {

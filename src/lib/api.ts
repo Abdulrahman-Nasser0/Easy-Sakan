@@ -1,26 +1,13 @@
 "use server";
 import { ApiResponse, LoginRequest, RegisterRequest, LoginResponse, AuthStatusResponse, RegisterResponse } from './types'
-import { NO_BACKEND_MODE, mockLoginResponse, mockAuthStatus, mockRegisterResponse } from './mockData';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // Generic API call function
 async function apiCall<T>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<ApiResponse<T>> {
-  // If backend is disabled, don't make the call
-  if (NO_BACKEND_MODE) {
-    return {
-      isSuccess: false,
-      message: "Backend mode is disabled. Use loginApi(), registerApi(), or authStatusApi() for mock support.",
-      messageAr: "وضع الخادم معطل",
-      data: null as T,
-      errors: ["Backend disabled"],
-      statusCode: 503,
-      timestamp: new Date().toISOString(),
-    };
-  }
+): Promise<ApiResponse<T>> {  
 
   const url = `${API_URL}${endpoint}`;
   
@@ -120,20 +107,9 @@ async function apiCall<T>(
 
 // Login API call
 export async function loginApi(credentials: LoginRequest) {
-  // Check if backend is disabled
-  if (NO_BACKEND_MODE) {
-    return {
-      isSuccess: true,
-      message: "Logged in successfully (Mock Mode)",
-      messageAr: "تم تسجيل الدخول بنجاح",
-      data: mockLoginResponse,
-      errors: [],
-      statusCode: 200,
-      timestamp: new Date().toISOString(),
-    };
-  }
+  
 
-  return apiCall<LoginResponse>("/api/Auth/login", {
+  return apiCall<LoginResponse>("/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -145,19 +121,6 @@ export async function loginApi(credentials: LoginRequest) {
 
 // Register API call
 export async function registerApi(userData: RegisterRequest) {
-  // Check if backend is disabled
-  if (NO_BACKEND_MODE) {
-    return {
-      isSuccess: true,
-      message: "Account created successfully (Mock Mode)",
-      messageAr: "تم إنشاء الحساب بنجاح",
-      data: mockRegisterResponse,
-      errors: [],
-      statusCode: 201,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
   return apiCall<RegisterResponse>("/api/auth/register", {
     method: "POST",
     headers: {
@@ -180,19 +143,6 @@ export async function logoutApi(token: string) {
 
 // Auth Status
 export async function authStatusApi(token: string) {
-  // Check if backend is disabled
-  if (NO_BACKEND_MODE) {
-    return {
-      isSuccess: true,
-      message: "Auth status retrieved (Mock Mode)",
-      messageAr: "تم استرجاع حالة المصادقة",
-      data: mockAuthStatus,
-      errors: [],
-      statusCode: 200,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
   return apiCall<AuthStatusResponse | null>("/api/Auth/status", {
     method: "GET",
     headers: {

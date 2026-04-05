@@ -17,6 +17,7 @@ async function AdminDashboard() {
   }
 
   const statsResponse = await adminGetDashboardStats(session.token);
+  console.log('📊 Admin Dashboard Stats Response:', statsResponse);
   
   const stats = statsResponse.isSuccess ? statsResponse.data : {
     totalUsers: 0,

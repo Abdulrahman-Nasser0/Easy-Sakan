@@ -17,6 +17,7 @@ export default async function AdminAuditLog() {
   }
 
   const response = await adminGetAuditLog(session.token);
+  console.log('📊 Admin Audit Log Response:', response);
   const entries = response.isSuccess ? response.data?.entries || [] : [];
 
   return (

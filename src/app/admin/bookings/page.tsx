@@ -17,6 +17,7 @@ export default async function AdminBookings() {
   }
 
   const response = await adminGetBookings(session.token);
+  console.log('📊 Admin Bookings Response:', response);
   const bookings = response.isSuccess ? response.data?.bookings || [] : [];
 
   return (

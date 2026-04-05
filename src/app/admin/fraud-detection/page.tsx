@@ -17,6 +17,7 @@ export default async function AdminFraudDetection() {
   }
 
   const response = await adminGetFraudDetection(session.token);
+  console.log('📊 Admin Fraud Detection Response:', response);
   const alerts = response.isSuccess ? response.data?.alerts || [] : [];
 
   const getSeverityColor = (severity: string) => {

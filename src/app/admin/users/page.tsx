@@ -17,6 +17,7 @@ export default async function AdminUsers() {
   }
 
   const response = await adminGetUsers(session.token);
+  console.log('📊 Admin Users Response:', response);
   const users = response.isSuccess ? response.data?.users || [] : [];
 
   return (

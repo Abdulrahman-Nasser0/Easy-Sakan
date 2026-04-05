@@ -17,6 +17,7 @@ export default async function AdminProperties() {
   }
 
   const response = await adminGetProperties(session.token);
+  console.log('📊 Admin Properties Response:', response);
   const properties = response.isSuccess ? response.data?.properties || [] : [];
 
   return (

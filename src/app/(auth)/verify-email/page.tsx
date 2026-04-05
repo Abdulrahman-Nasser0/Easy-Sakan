@@ -27,13 +27,22 @@ function VerifyEmailContent() {
         try {
           console.log('Automatically sending verification code to:', email);
           const response = await resendVerificationApi(email, 0);
-          console.log('Initial verification code response:', response);
+          console.log('Initial verification code response:', {
+            isSuccess: response.isSuccess,
+            message: response.message,
+            errors: response.errors,
+            statusCode: response.statusCode,
+            data: response.data,
+            fullResponse: response
+          });
 
           if (response.isSuccess) {
             setMessage('✓ Verification code sent to your email! Check your inbox and spam folder.');
             setCodeSent(true);
           } else {
-            setError(response.message || 'Could not send verification code. Please click "Resend" to try again.');
+            const errorMsg = response.message || response.errors?.join(', ') || 'Could not send verification code. Please click "Resend" to try again.';
+            console.error('Failed to send initial code:', errorMsg);
+            setError(errorMsg);
           }
         } catch (err) {
           console.error('Error sending initial code:', err);
@@ -73,17 +82,27 @@ function VerifyEmailContent() {
     setMessage('');
 
     try {
-      const response = await resendVerificationApi(email, 0); // 0 for email verification
-      console.log('Resend verification response:', response); // Debug log
+      console.log('User manually resending verification code to:', email);
+      const response = await resendVerificationApi(email, 0);
+      console.log('Resend verification response:', {
+        isSuccess: response.isSuccess,
+        message: response.message,
+        errors: response.errors,
+        statusCode: response.statusCode,
+        data: response.data,
+        fullResponse: response
+      });
 
       if (response.isSuccess) {
         setMessage('✓ New verification code sent! Check your email inbox and spam folder.');
         setCodeSent(true);
       } else {
-        setError(response.message || 'We couldn\'t send a new code at the moment. Please try again in a few minutes.');
+        const errorMsg = response.message || response.errors?.join(', ') || 'We couldn\'t send a new code at the moment. Please try again in a few minutes.';
+        console.error('Failed to resend code:', errorMsg);
+        setError(errorMsg);
       }
     } catch (error) {
-      console.error('Resend verification error:', error); // Debug log
+      console.error('Resend verification error:', error);
       setError('We\'re having trouble connecting to our servers. Please check your internet connection and try again.');
     } finally {
       setResending(false);

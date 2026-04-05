@@ -170,11 +170,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     null
   );
 
-  // 6. Redirect to verification page (user must verify before accessing platform)
-  if (!isVerified) {
-    redirect(`/verify-email?email=${encodeURIComponent(email)}`);
-  }
-  
+  // 6. Redirect to dashboard (skip email verification for now)
   redirect("/dashboard");
 }
 

@@ -8,8 +8,8 @@ export const loginSchema = z.object({
     .trim(),
 });
 
-// Phone regex for Egyptian numbers: +201XXXXXXXXX or 01XXXXXXXXX
-const egyptianPhoneRegex = /^(\+20|0)1[0-9]{8}$/;
+// Phone regex for Egyptian numbers: +201XXXXXXXXX or 01XXXXXXXXX (9 digits after 01)
+const egyptianPhoneRegex = /^(\+20|0)1[0-9]{9}$/;
 
 export const signUpSchema = z.object({
   role: z.enum(['Student', 'Landlord'], { message: "Please select a valid role" }),

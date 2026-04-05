@@ -11,8 +11,14 @@ export default async function proxy(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
 
   const cookieStore = await cookies();
-  const cookie = cookieStore.get("session")?.value;
+  const cookie = cookieStore.get("easy_sakan_session")?.value;
   const session = await decrypt(cookie);
+
+  if (process.env.NODE_ENV === "development") {
+    console.log("🔍 Proxy check for:", path);
+    console.log("   Cookie exists:", !!cookie);
+    console.log("   Session:", session ? `User ${session.userId}` : "null");
+  }
 
   // Redirect unauthenticated users from protected routes
   if (isProtectedRoute && !session?.userId) {

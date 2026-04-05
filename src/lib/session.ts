@@ -1,6 +1,7 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { UserRole } from "./types";
 
 const secretKey = process.env.SESSION_SECRET;
 if (!secretKey) {
@@ -9,20 +10,18 @@ if (!secretKey) {
 
 const encodedKey = new TextEncoder().encode(secretKey);
 
-
 type SessionPayload = {
-  userId: string;        // from username
-  email: string;         // from email
-  name: string;          // display name 
-  roles: string[];       // user roles array
-  token: string;         // JWT token
-  emailConfirmed: boolean;     // email verification status
-  refreshTokenExpiration: string; // refresh token expiry
-  expiresAt: Date;       // session expiry
+  userId: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  token: string;
+  emailConfirmed: boolean;
+  refreshTokenExpiration: string;
+  profileImage: string | null;
+  isVerified: boolean;
+  expiresAt: Date;
 };
-
-const SESSION_COOKIE_NAME = 'easy_sakan_session';
-const REFRESH_TOKEN_COOKIE_NAME = 'easy_sakan_refresh';
 
 export interface SessionData {
   userId: number;
@@ -36,9 +35,32 @@ export interface SessionData {
   isVerified: boolean;
 }
 
-export async function createSession(userId: string, email: string, name: string, token: string, roles: string[], emailConfirmed: boolean, refreshTokenExpiration: string) {
+const SESSION_COOKIE_NAME = 'easy_sakan_session';
+const REFRESH_TOKEN_COOKIE_NAME = 'easy_sakan_refresh';
+
+export async function createSession(
+  userId: number,
+  email: string,
+  name: string,
+  token: string,
+  role: UserRole,
+  isVerified: boolean,
+  refreshTokenExpiration: string,
+  profileImage: string | null = null
+) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const session = await encrypt({ userId, email, name, token, expiresAt, roles, emailConfirmed, refreshTokenExpiration });
+  const session = await encrypt({
+    userId,
+    email,
+    name,
+    token,
+    role,
+    emailConfirmed: isVerified,
+    refreshTokenExpiration,
+    profileImage,
+    isVerified,
+    expiresAt,
+  });
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, session, {
@@ -50,7 +72,7 @@ export async function createSession(userId: string, email: string, name: string,
   });
 
   if (process.env.NODE_ENV === "development") {
-    console.log("🔐 Session created for user:", email, "expires:", expiresAt.toISOString());
+    console.log("🔐 Session created for user:", email, "role:", role, "expires:", expiresAt.toISOString());
   }
 }
 
@@ -88,7 +110,7 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined = ""): Promise<SessionPayload | null> {
+export async function decrypt(session: string | undefined = ""): Promise<SessionData | null> {
   try {
     if (!session || session.trim() === "") {
       return null;
@@ -102,7 +124,7 @@ export async function decrypt(session: string | undefined = ""): Promise<Session
       console.log("✅ Session verified for:", payload.email);
     }
     
-    return payload as unknown as SessionPayload;
+    return payload as unknown as SessionData;
   } catch (error) {
     if (session && session.trim() !== "") {
       console.warn("⚠️ Session verification failed:", error instanceof Error ? error.message : "Unknown error");

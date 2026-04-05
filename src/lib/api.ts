@@ -1,5 +1,5 @@
 "use server";
-import { ApiResponse, LoginRequest, RegisterRequest , LoginResponse, AuthStatusResponse } from './types'
+import { ApiResponse, LoginRequest, RegisterRequest, LoginResponse, AuthStatusResponse, RegisterResponse } from './types'
 import { NO_BACKEND_MODE, mockLoginResponse, mockAuthStatus, mockRegisterResponse } from './mockData';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -87,9 +87,10 @@ async function apiCall<T>(
             session.email,
             session.name,
             refreshResponse.data.token,
-            session.roles,
+            session.role,
             session.emailConfirmed,
-            refreshResponse.data.refreshTokenExpiration
+            refreshResponse.data.tokenExpiresAt,
+            session.profileImage
           );
           // Retry the original request with the new token
           headers.Authorization = `Bearer ${refreshResponse.data.token}`;
@@ -157,7 +158,7 @@ export async function registerApi(userData: RegisterRequest) {
     };
   }
 
-  return apiCall<LoginResponse>("/api/Auth/register", {
+  return apiCall<RegisterResponse>("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

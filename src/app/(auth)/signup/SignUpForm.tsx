@@ -13,21 +13,24 @@ const SignUpForm = () => {
         <div className="bg-white py-8 px-6 shadow-xl rounded-lg border border-gray-200">
             <form action={signUpAction} className="space-y-6">
                 <div>
-                    <label htmlFor="userName" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Username
+                    <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-2">
+                        I am a...
                     </label>
-                    <input 
-                        type="text" 
-                        name="userName"
-                        id="userName"
-                        placeholder="Choose a username" 
+                    <select 
+                        name="role"
+                        id="role"
                         className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         required
-                    />
-                    {state?.errors?.userName && (
+                        defaultValue=""
+                    >
+                        <option value="" disabled>Select your role</option>
+                        <option value="Student">Student (Looking for accommodation)</option>
+                        <option value="Landlord">Landlord (Offering properties)</option>
+                    </select>
+                    {state?.errors?.role && (
                         <p className="text-red-500 text-sm mt-2 flex items-center">
                             <span className="mr-1">⚠️</span>
-                            {state.errors.userName[0]}
+                            {state.errors.role[0]}
                         </p>
                     )}
                 </div>
@@ -73,6 +76,26 @@ const SignUpForm = () => {
                 </div>
 
                 <div>
+                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                        Phone Number (Egyptian)
+                    </label>
+                    <input 
+                        type="tel" 
+                        name="phone"
+                        id="phone"
+                        placeholder="01XXXXXXXXX or +201XXXXXXXXX" 
+                        className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        required
+                    />
+                    {state?.errors?.phone && (
+                        <p className="text-red-500 text-sm mt-2 flex items-center">
+                            <span className="mr-1">⚠️</span>
+                            {state.errors.phone[0]}
+                        </p>
+                    )}
+                </div>
+
+                <div>
                     <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
                         Password
                     </label>
@@ -84,6 +107,9 @@ const SignUpForm = () => {
                         className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                         required
                     />
+                    <p className="text-gray-500 text-xs mt-2">
+                        Password must be at least 8 characters with uppercase, number, and special character
+                    </p>
                     {state?.errors?.password && (
                         <p className="text-red-500 text-sm mt-2 flex items-center">
                             <span className="mr-1">⚠️</span>
@@ -135,7 +161,6 @@ function SubmitButton() {
             type="submit"
             loading={pending}
             fullWidth
-            variant="success"
             className="uppercase tracking-wide font-semibold text-sm"
         >
             {pending ? "Creating Account..." : "Create Account"}

@@ -8,9 +8,10 @@ export type LoginState = {
 
 export type SignUpState = {
   errors?: {
-    userName?: string[];
+    role?: string[];
     fullName?: string[];
     email?: string[];
+    phone?: string[];
     password?: string[];
     confirmPassword?: string[];
   };
@@ -69,6 +70,17 @@ export interface AuthStatusResponse {
   role: UserRole;
   isVerified: boolean;
   fullName: string;
+}
+
+export interface RegisterResponse {
+  id: number;
+  email: string;
+  role: UserRole;
+  fullName: string;
+  isVerified: boolean;
+  token: string;
+  refreshToken: string;
+  tokenExpiresAt: string;
 }
 
 export interface User {

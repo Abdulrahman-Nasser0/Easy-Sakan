@@ -1,10 +1,9 @@
 "use server";
 import { createSession, deleteSession, getSession } from "./session";
 import { redirect } from "next/navigation";
-import { loginApi, registerApi, authStatusApi } from "./api";
-import {LoginState, SignUpState} from "./types";
-import {loginSchema, signUpSchema} from "./validation";
-
+import { loginApi, registerApi, logoutApi, authStatusApi } from "./api";
+import { LoginRequest, RegisterRequest, LoginState, SignUpState, UserRole } from "./types";
+import { loginSchema, signUpSchema } from "./validation";
 
 // ==========================================
 // LOGIN ACTION
@@ -61,22 +60,28 @@ export async function login(_prevState: any, formData: FormData): Promise<LoginS
     };
   }
 
-  
+  const { token, refreshToken, tokenExpiresAt, user } = response.data;
 
   // 5. Create session with user data
   await createSession(
-    response.data.username,
-    response.data.email,
-    response.data.username, // or response.data.fullName if you add it to API
-    response.data.token,
-    response.data.roles,
-    response.data.emailConfirmed,
-    response.data.refreshTokenExpiration
+    user.id,
+    user.email,
+    user.fullName,
+    token,
+    user.role as UserRole,
+    user.isVerified,
+    tokenExpiresAt,
+    user.profileImage || null
   );
-  console.log(response.data)
 
-  // 6. Redirect to dashboard
-  redirect("/dashboard");
+  // 6. Redirect based on role
+  if (user.role === 'Student') {
+    redirect("/dashboard");
+  } else if (user.role === 'Landlord') {
+    redirect("/dashboard");
+  } else if (user.role === 'Admin') {
+    redirect("/admin/dashboard");
+  }
 }
 
 // ==========================================
@@ -93,48 +98,55 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     };
   }
 
-  const { userName, fullName, email, password, confirmPassword } = result.data;
+  const { role, fullName, email, phone, password } = result.data;
 
   // 2. Call backend API
   const response = await registerApi({
-    userName,
+    role: role as UserRole,
     fullName,
     email,
+    phone,
     password,
-    confirmPassword,
   });
 
   // 3. Handle API response
   if (!response.isSuccess) {
     // Map backend errors to form fields
     const fieldErrors: {
-      userName?: string[];
+      role?: string[];
       fullName?: string[];
       email?: string[];
+      phone?: string[];
       password?: string[];
       confirmPassword?: string[];
     } = {};
     
-    if (response.errors) {
-      response.errors.forEach(error => {
-        const lowerError = error.toLowerCase();
-        if (lowerError.includes("email")) {
+    if (response.errors && Array.isArray(response.errors)) {
+      response.errors.forEach((error: any) => {
+        const errorMessage = typeof error === 'string' ? error : error.message || '';
+        const errorField = typeof error === 'object' ? error.field : '';
+        const lowerError = errorMessage.toLowerCase();
+        
+        if (errorField === 'email' || lowerError.includes("email")) {
           fieldErrors.email = fieldErrors.email || [];
-          fieldErrors.email.push(error);
-        } else if (lowerError.includes("password")) {
+          fieldErrors.email.push(errorMessage);
+        } else if (errorField === 'phone' || lowerError.includes("phone")) {
+          fieldErrors.phone = fieldErrors.phone || [];
+          fieldErrors.phone.push(errorMessage);
+        } else if (errorField === 'password' || lowerError.includes("password")) {
           fieldErrors.password = fieldErrors.password || [];
-          fieldErrors.password.push(error);
-        } else if (lowerError.includes("username")) {
-          fieldErrors.userName = fieldErrors.userName || [];
-          fieldErrors.userName.push(error);
-        } else if (lowerError.includes("name")) {
+          fieldErrors.password.push(errorMessage);
+        } else if (errorField === 'fullName' || lowerError.includes("name")) {
           fieldErrors.fullName = fieldErrors.fullName || [];
-          fieldErrors.fullName.push(error);
+          fieldErrors.fullName.push(errorMessage);
+        } else if (errorField === 'role' || lowerError.includes("role")) {
+          fieldErrors.role = fieldErrors.role || [];
+          fieldErrors.role.push(errorMessage);
         }
       });
     }
 
-    // Handle "Application not found" and other server errors
+    // Handle specific server errors
     let userFriendlyMessage = response.message;
     if (response.message.toLowerCase().includes("application not found")) {
       userFriendlyMessage = "Unable to connect to the registration service. Our team is working on this. Please try again in a few moments.";
@@ -156,8 +168,36 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     };
   }
 
-  // 4. To email verification page
-  redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+  // 4. Check if we have the required data
+  if (!response.data || !response.data.token) {
+    return {
+      errors: {
+        email: ["We encountered an issue while registering. Please try again."],
+      },
+      message: "Registration failed",
+    };
+  }
+
+  const { token, tokenExpiresAt, id, role: userRole, isVerified, fullName: userName } = response.data as any;
+
+  // 5. Create session with user data
+  await createSession(
+    id,
+    email,
+    userName,
+    token,
+    userRole as UserRole,
+    isVerified,
+    tokenExpiresAt,
+    null
+  );
+
+  // 6. Redirect to verification page (user must verify before accessing platform)
+  if (!isVerified) {
+    redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+  }
+  
+  redirect("/dashboard");
 }
 
 
@@ -165,23 +205,18 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
 // LOGOUT ACTION
 // ==========================================
 export async function logout() {
-  // Get session to retrieve token
-  const session = await getSession();
-  
-  if (session?.token) {
-    // Call backend logout endpoint
-    try {
-      const { logoutApi } = await import("./api");
+  try {
+    const session = await getSession();
+    if (session?.token) {
       await logoutApi(session.token);
-    } catch (error) {
-      console.error("Logout API call failed:", error);
-      // Continue with local logout even if API fails
     }
+    await deleteSession();
+    redirect("/login");
+  } catch (error) {
+    console.error("Logout error:", error);
+    await deleteSession();
+    redirect("/login"); // Still logout locally even if API fails
   }
-  
-  // Delete local session
-  await deleteSession();
-  redirect("/login");
 }
 
 // ==========================================

@@ -48,13 +48,15 @@ function VerifyEmailContent() {
 
     try {
       const response = await resendVerificationApi(email, 0); // 0 for email verification
+      console.log('Resend verification response:', response); // Debug log
 
       if (response.isSuccess) {
         setMessage('New verification code sent! Check your email inbox and spam folder.');
       } else {
         setError(response.message || 'We couldn\'t send a new code at the moment. Please try again in a few minutes.');
       }
-    } catch {
+    } catch (error) {
+      console.error('Resend verification error:', error); // Debug log
       setError('We\'re having trouble connecting to our servers. Please check your internet connection and try again.');
     } finally {
       setResending(false);

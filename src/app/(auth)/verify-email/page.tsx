@@ -27,20 +27,18 @@ function VerifyEmailContent() {
         try {
           console.log('Automatically sending verification code to:', email);
           const response = await resendVerificationApi(email, 0);
-          console.log('Initial verification code response:', {
-            isSuccess: response.isSuccess,
-            message: response.message,
-            errors: response.errors,
-            statusCode: response.statusCode,
-            data: response.data,
-            fullResponse: response
-          });
+          console.log('Initial verification code full response:', response);
+          console.log('Response keys:', Object.keys(response));
+          console.log('isSuccess:', response.isSuccess);
+          console.log('message:', response.message);
+          console.log('errors:', response.errors);
+          console.log('statusCode:', response.statusCode);
 
           if (response.isSuccess) {
             setMessage('✓ Verification code sent to your email! Check your inbox and spam folder.');
             setCodeSent(true);
           } else {
-            const errorMsg = response.message || response.errors?.join(', ') || 'Could not send verification code. Please click "Resend" to try again.';
+            const errorMsg = response.message || (Array.isArray(response.errors) ? response.errors.join(', ') : JSON.stringify(response));
             console.error('Failed to send initial code:', errorMsg);
             setError(errorMsg);
           }

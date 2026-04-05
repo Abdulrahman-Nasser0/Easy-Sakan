@@ -153,7 +153,7 @@ export async function authStatusApi(token: string) {
 
 // Confirm Email
 export async function confirmEmailApi(email: string, code: string) {
-  return apiCall<null>("/api/Auth/confirm-email", {
+  return apiCall<null>("/api/auth/confirm-email", {
     method: "POST",
     body: JSON.stringify({ email, code }),
   });
@@ -161,7 +161,7 @@ export async function confirmEmailApi(email: string, code: string) {
 
 // Resend Verification Code
 export async function resendVerificationApi(email: string, verificationType: number) {
-  return apiCall<null>("/api/Auth/resend-verification-code", {
+  return apiCall<null>("/api/auth/resend-verification-code", {
     method: "POST",
     body: JSON.stringify({ email, verificationType }),
   });

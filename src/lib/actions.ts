@@ -170,8 +170,8 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     null
   );
 
-  // 6. Redirect to email verification with email in query params
-  redirect(`/verify-email?email=${encodeURIComponent(email)}`);
+  // 6. Redirect to dashboard
+  redirect("/dashboard");
 }
 
 

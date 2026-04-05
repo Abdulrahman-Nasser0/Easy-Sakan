@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { confirmEmailApi, resendVerificationApi } from '../../../lib/api';
@@ -18,6 +18,32 @@ function VerifyEmailContent() {
   const [resending, setResending] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [codeSent, setCodeSent] = useState(false);
+
+  // Automatically send verification code when user arrives on this page
+  useEffect(() => {
+    const sendInitialCode = async () => {
+      if (email && !codeSent) {
+        try {
+          console.log('Automatically sending verification code to:', email);
+          const response = await resendVerificationApi(email, 0);
+          console.log('Initial verification code response:', response);
+
+          if (response.isSuccess) {
+            setMessage('✓ Verification code sent to your email! Check your inbox and spam folder.');
+            setCodeSent(true);
+          } else {
+            setError(response.message || 'Could not send verification code. Please click "Resend" to try again.');
+          }
+        } catch (err) {
+          console.error('Error sending initial code:', err);
+          setError('Connection error. Please click "Resend" to try again.');
+        }
+      }
+    };
+
+    sendInitialCode();
+  }, [email, codeSent]);
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +77,8 @@ function VerifyEmailContent() {
       console.log('Resend verification response:', response); // Debug log
 
       if (response.isSuccess) {
-        setMessage('New verification code sent! Check your email inbox and spam folder.');
+        setMessage('✓ New verification code sent! Check your email inbox and spam folder.');
+        setCodeSent(true);
       } else {
         setError(response.message || 'We couldn\'t send a new code at the moment. Please try again in a few minutes.');
       }

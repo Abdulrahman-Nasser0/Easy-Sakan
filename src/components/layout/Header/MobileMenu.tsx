@@ -15,7 +15,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, isAuthenticated 
     <div className="md:hidden border-t border-gray-200 py-4">
       <div className="space-y-4">
         {/* Mobile Search */}
-        <SearchBar isMobile={true} onMenuClose={() => setIsMenuOpen(false)} />
+        {/* <SearchBar isMobile={true} onMenuClose={() => setIsMenuOpen(false)} /> */}
 
         {/* Mobile Navigation - Add booking features here */}
         <div className="space-y-1">

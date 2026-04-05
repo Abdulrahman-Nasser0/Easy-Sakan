@@ -18,7 +18,7 @@ export default function Header({ isAuthenticated = false }: HeaderProps) {
 
   return (
     <>
-      <PromotionalBanner />
+      {/* <PromotionalBanner /> */}
 
       <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,9 +31,9 @@ export default function Header({ isAuthenticated = false }: HeaderProps) {
             {/* Center: Navigation & Search */}
             <div className="hidden lg:flex items-center flex-1 justify-center gap-8 max-w-2xl">
               <DesktopNavigation />
-              <div className="flex-1 max-w-md">
+              {/* <div className="flex-1 max-w-md">
                 <SearchBar />
-              </div>
+              </div> */}
             </div>
 
             {/* Right: User Actions */}

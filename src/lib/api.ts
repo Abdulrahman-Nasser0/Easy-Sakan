@@ -248,7 +248,7 @@ export async function adminGetUserDetails(token: string, userId: number) {
 
 export async function adminApproveUser(token: string, userId: number) {
   return apiCall<any>(`/api/admin/users/${userId}/approve`, {
-    method: "POST",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
     },

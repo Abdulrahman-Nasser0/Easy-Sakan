@@ -18,10 +18,7 @@ export default async function AdminUsers() {
   }
 
   const response = await adminGetUsers(session.token);
-  console.log('📊 Admin Users Response:', response);
-  console.log('👥 Total Users:', response.data?.totalCount);
-  console.log('📋 Users Details:', JSON.stringify(response.data?.items, null, 2));
-  
+ 
   // Map backend field names to component field names
   const users = response.isSuccess 
     ? (response.data?.items || []).map((user: any) => ({

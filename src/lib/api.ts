@@ -489,7 +489,85 @@ export async function getPropertyById(propertyId: number) {
 
 export async function createProperty(token: string, propertyData: any, images?: File[]) {
   // If images are provided, send as multipart form data
-  
+  if (images && images.length > 0) {
+    const formData = new FormData();
+    
+    // Add basic property fields
+    formData.append('title', propertyData.title || '');
+    formData.append('description', propertyData.description || '');
+    formData.append('listingMode', propertyData.listingMode || 'Bed');
+    formData.append('price', propertyData.price?.toString() || '0');
+    formData.append('totalCapacity', propertyData.totalCapacity?.toString() || '1');
+    formData.append('gender', propertyData.gender || 'Any');
+    formData.append('bedrooms', propertyData.bedrooms?.toString() || '0');
+    formData.append('bathrooms', propertyData.bathrooms?.toString() || '1');
+    formData.append('areaSqm', propertyData.areaSqm?.toString() || '0');
+    
+    // Add location as JSON
+    formData.append('location', JSON.stringify(propertyData.location || {}));
+    
+    // Add amenities as JSON
+    formData.append('amenities', JSON.stringify(propertyData.amenities || []));
+    
+    // Add imageUrls as JSON
+    formData.append('imageUrls', JSON.stringify(propertyData.imageUrls || []));
+    
+    // Add images
+    images.forEach((image) => {
+      formData.append('images', image);
+    });
+
+    const url = `${API_URL}/api/properties`;
+    
+    console.log('🔍 Creating property...');
+    console.log('📍 API URL:', url);
+    console.log('🔑 Token:', token.substring(0, 20) + '...');
+    console.log('📦 Property data:', propertyData);
+    console.log('📸 Images count:', images.length);
+    console.log('🔗 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+    
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const responseText = await response.text();
+      console.log('✅ Response status:', response.status);
+      console.log('📄 Response text:', responseText);
+      console.log('🔗 Full URL attempted:', url);
+      
+      let data: ApiResponse<any>;
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        return {
+          isSuccess: false,
+          message: "Failed to create property",
+          messageAr: "فشل في إنشاء العقار",
+          data: null,
+          errors: [`Invalid response: ${responseText.substring(0, 100)}`],
+          statusCode: response.status,
+          timestamp: new Date().toISOString(),
+        };
+      }
+      return data;
+    } catch (error) {
+      console.error('Create property error:', error);
+      return {
+        isSuccess: false,
+        message: error instanceof Error ? error.message : "Failed to create property",
+        messageAr: "فشل في إنشاء العقار",
+        data: null,
+        errors: [error instanceof Error ? error.message : "Unknown error"],
+        statusCode: 500,
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
 
   // If no images, send as JSON (backward compatible)
   return apiCall<any>("/api/properties", {

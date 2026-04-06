@@ -285,8 +285,30 @@ export async function adminReactivateUser(token: string, userId: number) {
   });
 }
 
-export async function adminGetProperties(token: string) {
-  return apiCall<any>("/api/admin/properties", {
+export async function adminGetProperties(
+  token: string,
+  page: number = 1,
+  pageSize: number = 20,
+  filters?: {
+    status?: string;
+    landlordId?: number;
+    search?: string;
+    listingMode?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }
+) {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("pageSize", pageSize.toString());
+  if (filters?.status) params.append("status", filters.status);
+  if (filters?.landlordId) params.append("landlordId", filters.landlordId.toString());
+  if (filters?.search) params.append("search", filters.search);
+  if (filters?.listingMode) params.append("listingMode", filters.listingMode);
+  if (filters?.sortBy) params.append("sortBy", filters.sortBy);
+  if (filters?.sortOrder) params.append("sortOrder", filters.sortOrder);
+
+  return apiCall<any>(`/api/admin/properties?${params.toString()}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -313,12 +335,22 @@ export async function adminRejectProperty(token: string, propertyId: number, rea
   });
 }
 
-export async function adminDeleteProperty(token: string, propertyId: number) {
+export async function adminDeleteProperty(
+  token: string,
+  propertyId: number,
+  reason: string,
+  cancelActiveBookings: boolean = true
+) {
   return apiCall<any>(`/api/admin/properties/${propertyId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify({
+      reason,
+      cancelActiveBookings,
+    }),
   });
 }
 

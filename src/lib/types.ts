@@ -195,3 +195,112 @@ export interface AuditLogEntry {
   details: string;
   timestamp: string;
 }
+
+// ==========================================
+// PROPERTY TYPES
+// ==========================================
+
+export type ListingMode = 'Bed' | 'EntireUnit';
+export type PropertyListingStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'DELETED';
+export type Gender = 'Male' | 'Female' | 'Any';
+
+export interface PropertyLocation {
+  address: string;
+  lat: number;
+  lng: number;
+  nearestUniversity?: string;
+}
+
+export interface PropertyImage {
+  id?: number;
+  url: string;
+  isPrimary: boolean;
+}
+
+export interface PropertyAvailability {
+  totalCapacity: number;
+  occupiedSlots: number;
+  availableSlots: number;
+  isSoldOut: boolean;
+}
+
+export interface PropertyLandlord {
+  id: number;
+  fullName: string;
+  profileImage?: string;
+  isVerified?: boolean;
+  memberSince: string;
+  totalListings?: number;
+  averageRating?: number;
+}
+
+export interface PropertyReview {
+  id: number;
+  studentName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export interface PropertyMLInsights {
+  predictedFairPrice: number;
+  dealRating: string;
+  priceDifferencePercentage: number;
+}
+
+export interface Property {
+  id: number;
+  title: string;
+  description: string;
+  listingMode: ListingMode;
+  price: number;
+  currency?: string;
+  location: PropertyLocation;
+  amenities: string[];
+  gender: Gender;
+  images: PropertyImage[];
+  rating: number;
+  reviewCount: number;
+  availability: PropertyAvailability;
+  landlord: PropertyLandlord;
+  bedrooms: number;
+  bathrooms: number;
+  areaSqm: number;
+  mlInsights?: PropertyMLInsights;
+  status?: PropertyListingStatus;
+  isAvailable?: boolean;
+  canBook?: boolean;
+  reviews?: PropertyReview[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface PropertyListResponse {
+  items: Property[];
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalCount: number;
+  appliedFilters: {
+    location?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    gender?: string;
+    rentalType?: string;
+  };
+}
+
+export interface CreatePropertyRequest {
+  title: string;
+  description: string;
+  listingMode: ListingMode;
+  price: number;
+  totalCapacity: number;
+  gender: Gender;
+  location: PropertyLocation;
+  bedrooms: number;
+  bathrooms: number;
+  areaSqm: number;
+  amenities: string[];
+  imageUrls: string[];
+}

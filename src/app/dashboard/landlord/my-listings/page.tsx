@@ -1,19 +1,19 @@
 // Server Component - Gets session and passes token to client component
 import { getSession } from '@/lib/session';
-import UploadPropertyForm from './UploadPropertyForm';
+import MyListingsForm from './MyListingsForm';
 
 export const dynamic = 'force-dynamic';
 
-export default async function UploadPropertyPage() {
+export default async function MyListingsPage() {
   const session = await getSession();
 
   if (!session?.token) {
     return (
       <div className="p-6 text-center text-red-500">
-        <p>Unable to load dashboard. Please log in again.</p>
+        <p>Unable to load. Please log in again.</p>
       </div>
     );
   }
 
-  return <UploadPropertyForm token={session.token} />;
+  return <MyListingsForm token={session.token} />;
 }

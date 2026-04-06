@@ -434,4 +434,192 @@ export async function adminResolveFraudAlert(token: string, alertId: number, res
   });
 }
 
+// ==========================================
+// PROPERTIES API CALLS
+// ==========================================
+
+export async function getAllProperties(
+  page: number = 1,
+  pageSize: number = 10,
+  filters?: {
+    search?: string;
+    location?: string;
+    university?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    gender?: string;
+    rentalType?: string;
+    amenities?: string;
+    sortBy?: string;
+    sortOrder?: string;
+    includeSoldOut?: boolean;
+    minRating?: number;
+  }
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  if (filters) {
+    if (filters.search) params.append('search', filters.search);
+    if (filters.location) params.append('location', filters.location);
+    if (filters.university) params.append('university', filters.university);
+    if (filters.minPrice) params.append('minPrice', filters.minPrice.toString());
+    if (filters.maxPrice) params.append('maxPrice', filters.maxPrice.toString());
+    if (filters.gender) params.append('gender', filters.gender);
+    if (filters.rentalType) params.append('rentalType', filters.rentalType);
+    if (filters.amenities) params.append('amenities', filters.amenities);
+    if (filters.sortBy) params.append('sortBy', filters.sortBy);
+    if (filters.sortOrder) params.append('sortOrder', filters.sortOrder);
+    if (filters.includeSoldOut) params.append('includeSoldOut', 'true');
+    if (filters.minRating) params.append('minRating', filters.minRating.toString());
+  }
+
+  return apiCall<any>(`/api/properties?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+export async function getPropertyById(propertyId: number) {
+  return apiCall<any>(`/api/properties/${propertyId}`, {
+    method: "GET",
+  });
+}
+
+export async function createProperty(token: string, propertyData: any) {
+  return apiCall<any>("/api/properties", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(propertyData),
+  });
+}
+
+export async function uploadPropertyImages(
+  token: string,
+  propertyId: number,
+  images: File[],
+  primaryIndex?: number
+) {
+  const formData = new FormData();
+  images.forEach((image) => {
+    formData.append('images', image);
+  });
+  if (primaryIndex !== undefined) {
+    formData.append('primaryIndex', primaryIndex.toString());
+  }
+
+  const url = `${API_URL}/api/properties/${propertyId}/images`;
+  
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const responseText = await response.text();
+    let data: ApiResponse<any>;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      return {
+        isSuccess: false,
+        message: "Failed to upload images",
+        messageAr: "فشل في رفع الصور",
+        data: null,
+        errors: [`Invalid response: ${responseText.substring(0, 100)}`],
+        statusCode: response.status,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    return data;
+  } catch (error) {
+    return {
+      isSuccess: false,
+      message: error instanceof Error ? error.message : "Failed to upload images",
+      messageAr: "فشل في رفع الصور",
+      data: null,
+      errors: [error instanceof Error ? error.message : "Unknown error"],
+      statusCode: 500,
+      timestamp: new Date().toISOString(),
+    };
+  }
+}
+
+export async function deletePropertyImage(
+  token: string,
+  propertyId: number,
+  imageId: number
+) {
+  return apiCall<any>(`/api/properties/${propertyId}/images/${imageId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function updateProperty(
+  token: string,
+  propertyId: number,
+  propertyData: any
+) {
+  return apiCall<any>(`/api/properties/${propertyId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(propertyData),
+  });
+}
+
+export async function deleteProperty(token: string, propertyId: number) {
+  return apiCall<any>(`/api/properties/${propertyId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function getMyListings(
+  token: string,
+  page: number = 1,
+  pageSize: number = 10,
+  status?: string
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  if (status) params.append('status', status);
+
+  return apiCall<any>(`/api/properties/my-listings?${params.toString()}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function togglePropertyAvailability(
+  token: string,
+  propertyId: number,
+  isAvailable: boolean
+) {
+  return apiCall<any>(`/api/properties/${propertyId}/availability`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ isAvailable }),
+  });
+}
+
 import { getSession, createSession } from "./session";

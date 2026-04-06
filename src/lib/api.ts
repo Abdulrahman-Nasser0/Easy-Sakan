@@ -316,6 +316,15 @@ export async function adminGetProperties(
   });
 }
 
+export async function adminGetPropertyById(token: string, propertyId: number) {
+  return apiCall<any>(`/api/admin/properties/${propertyId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 export async function adminApproveProperty(token: string, propertyId: number) {
   return apiCall<any>(`/api/admin/properties/${propertyId}/approve`, {
     method: "PUT",

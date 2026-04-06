@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import {
+  adminGetPropertyById,
   adminApproveProperty,
   adminRejectProperty,
   adminDeleteProperty,
@@ -41,46 +42,13 @@ export default function PropertyDetailModal({
   const fetchPropertyDetails = async () => {
     setLoading(true);
     try {
-      // Since there's no dedicated GET endpoint, we'll use the list and filter
-      // In a real scenario, you'd have a dedicated endpoint
-      // For now, we'll mock the property details
-      setProperty({
-        id: propertyId,
-        title: 'Modern Studio near Cairo University',
-        status: 'PENDING_APPROVAL',
-        listingMode: 'EntireUnit',
-        price: 8000.00,
-        currency: 'EGP',
-        description: 'A beautiful studio apartment with modern amenities in the heart of Cairo, close to Cairo University.',
-        location: {
-          address: 'Dokki, Giza',
-          lat: 30.0444,
-          lng: 31.2357,
-        },
-        gender: 'Female',
-        bedrooms: 1,
-        bathrooms: 1,
-        areaSqm: 45,
-        amenities: ['WiFi', 'AC', 'Parking', 'Balcony'],
-        images: ['/img/property1.jpg', '/img/property2.jpg', '/img/property3.jpg'],
-        landlord: {
-          id: 55,
-          fullName: 'Mona Ibrahim',
-          email: 'mona@email.com',
-          phone: '+201222222222',
-          isVerified: true,
-        },
-        availability: {
-          totalCapacity: 1,
-          occupiedSlots: 0,
-          availableSlots: 1,
-        },
-        isAvailable: true,
-        activeBookings: 0,
-        createdAt: '2026-02-20T11:15:00Z',
-        updatedAt: '2026-02-20T11:15:00Z',
-      });
-      setError('');
+      const response = await adminGetPropertyById(token, propertyId);
+      if (response.isSuccess && response.data) {
+        setProperty(response.data);
+        setError('');
+      } else {
+        setError(response.message || 'Failed to fetch property details');
+      }
     } catch (err) {
       setError('Error fetching property details');
       console.error(err);
@@ -248,7 +216,7 @@ export default function PropertyDetailModal({
                         <button
                           key={idx}
                           onClick={() => setCurrentImageIndex(idx)}
-                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+                          className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
                             idx === currentImageIndex ? 'border-blue-600' : 'border-gray-200'
                           }`}
                         >

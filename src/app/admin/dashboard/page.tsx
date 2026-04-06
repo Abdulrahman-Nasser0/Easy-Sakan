@@ -20,7 +20,18 @@ async function AdminDashboard() {
   console.log('📊 Admin Dashboard Stats Response:', statsResponse);
   console.log('📈 Dashboard Data:', JSON.stringify(statsResponse.data, null, 2));
   
-  const stats = statsResponse.isSuccess ? statsResponse.data : {
+  // Extract stats from nested structure
+  const dashboardData = statsResponse.data || {};
+  
+  const stats = statsResponse.isSuccess ? {
+    totalUsers: dashboardData.users?.totalUsers || 0,
+    totalProperties: dashboardData.properties?.totalListings || 0,
+    totalBookings: dashboardData.bookings?.totalBookings || 0,
+    totalRevenue: dashboardData.financials?.totalRevenue || 0,
+    pendingVerifications: dashboardData.users?.pendingVerification || 0,
+    activeDisputes: dashboardData.bookings?.disputed || 0,
+    fraudAlerts: dashboardData.alerts?.length || 0,
+  } : {
     totalUsers: 0,
     totalProperties: 0,
     totalBookings: 0,
@@ -29,7 +40,7 @@ async function AdminDashboard() {
     activeDisputes: 0,
     fraudAlerts: 0,
   };
-
+  console.log('📊 Processed Dashboard Stats:', stats);
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}

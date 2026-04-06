@@ -21,7 +21,19 @@ export default async function AdminUsers() {
   console.log('📊 Admin Users Response:', response);
   console.log('👥 Total Users:', response.data?.totalCount);
   console.log('📋 Users Details:', JSON.stringify(response.data?.items, null, 2));
-  const users = response.isSuccess ? response.data?.items || [] : [];
+  
+  // Map backend field names to component field names
+  const users = response.isSuccess 
+    ? (response.data?.items || []).map((user: any) => ({
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        emailConfirmed: user.isVerified, // Map backend isVerified to component emailConfirmed
+        createdAt: user.createdAt,
+      }))
+    : [];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">

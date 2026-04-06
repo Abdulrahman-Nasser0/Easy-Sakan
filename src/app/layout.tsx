@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   description: "A platform for booking premium properties and accommodations",
 };
 
+// Mark this layout as dynamic since it uses cookies() via getSession()
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{

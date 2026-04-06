@@ -1,28 +1,62 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  adminGetPropertyById,
   adminApproveProperty,
   adminRejectProperty,
   adminDeleteProperty,
 } from '@/lib/api';
 
+interface Property {
+  id: number;
+  title: string;
+  status: string;
+  listingMode: string;
+  price: number;
+  currency: string;
+  location: {
+    address: string;
+    lat: number;
+    lng: number;
+  };
+  gender: string;
+  bedrooms: number;
+  bathrooms: number;
+  areaSqm?: number;
+  images: string[];
+  description: string;
+  amenities: string[];
+  landlord: {
+    id: number;
+    fullName: string;
+    email: string;
+    phone: string;
+    isVerified: boolean;
+  };
+  availability: {
+    totalCapacity: number;
+    occupiedSlots: number;
+    availableSlots: number;
+  };
+  isAvailable: boolean;
+  activeBookings: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface PropertyDetailModalProps {
   token: string;
-  propertyId: number;
+  property: Property;
   onClose: () => void;
   onPropertyUpdated: () => void;
 }
 
 export default function PropertyDetailModal({
   token,
-  propertyId,
+  property,
   onClose,
   onPropertyUpdated,
 }: PropertyDetailModalProps) {
-  const [property, setProperty] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -35,32 +69,10 @@ export default function PropertyDetailModal({
   const [deleteReason, setDeleteReason] = useState('');
   const [cancelActiveBookings, setCancelActiveBookings] = useState(true);
 
-  useEffect(() => {
-    fetchPropertyDetails();
-  }, [propertyId]);
-
-  const fetchPropertyDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await adminGetPropertyById(token, propertyId);
-      if (response.isSuccess && response.data) {
-        setProperty(response.data);
-        setError('');
-      } else {
-        setError(response.message || 'Failed to fetch property details');
-      }
-    } catch (err) {
-      setError('Error fetching property details');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleApprove = async () => {
     setActionLoading(true);
     try {
-      const response = await adminApproveProperty(token, propertyId);
+      const response = await adminApproveProperty(token, property.id);
       if (response.isSuccess) {
         setShowApproveModal(false);
         onPropertyUpdated();
@@ -82,7 +94,7 @@ export default function PropertyDetailModal({
     }
     setActionLoading(true);
     try {
-      const response = await adminRejectProperty(token, propertyId, rejectReason);
+      const response = await adminRejectProperty(token, property.id, rejectReason);
       if (response.isSuccess) {
         setShowRejectModal(false);
         setRejectReason('');
@@ -105,7 +117,7 @@ export default function PropertyDetailModal({
     }
     setActionLoading(true);
     try {
-      const response = await adminDeleteProperty(token, propertyId, deleteReason, cancelActiveBookings);
+      const response = await adminDeleteProperty(token, property.id, deleteReason, cancelActiveBookings);
       if (response.isSuccess) {
         setShowDeleteModal(false);
         setDeleteReason('');
@@ -161,16 +173,11 @@ export default function PropertyDetailModal({
 
           {/* Content */}
           <div className="p-6 space-y-6">
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-gray-500">Loading property details...</p>
-              </div>
-            ) : error && !showApproveModal && !showRejectModal && !showDeleteModal ? (
+            {error && !showApproveModal && !showRejectModal && !showDeleteModal ? (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
                 {error}
               </div>
-            ) : property ? (
+            ) : (
               <div className="space-y-6">
                 {/* Image Gallery */}
                 <div className="space-y-4">
@@ -381,7 +388,7 @@ export default function PropertyDetailModal({
                   </button>
                 </div>
               </div>
-            ) : null}
+            )}
           </div>
         </div>
       </div>

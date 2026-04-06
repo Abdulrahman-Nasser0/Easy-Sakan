@@ -17,7 +17,12 @@ interface Property {
     lng: number;
   };
   gender: string;
+  bedrooms: number;
+  bathrooms: number;
+  areaSqm?: number;
   images: string[];
+  description: string;
+  amenities: string[];
   landlord: {
     id: number;
     fullName: string;
@@ -47,7 +52,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   // Filters
@@ -90,8 +95,8 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
     }
   };
 
-  const handleViewProperty = (propertyId: number) => {
-    setSelectedProperty(propertyId);
+  const handleViewProperty = (property: Property) => {
+    setSelectedProperty(property);
     setShowDetailModal(true);
   };
 
@@ -303,7 +308,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
 
                 {/* Action Button */}
                 <button
-                  onClick={() => handleViewProperty(property.id)}
+                  onClick={() => handleViewProperty(property)}
                   className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   View Details
@@ -343,7 +348,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
       {showDetailModal && selectedProperty && (
         <PropertyDetailModal
           token={token}
-          propertyId={selectedProperty}
+          property={selectedProperty}
           onClose={() => setShowDetailModal(false)}
           onPropertyUpdated={() => {
             setShowDetailModal(false);

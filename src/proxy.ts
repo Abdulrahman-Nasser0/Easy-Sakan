@@ -26,7 +26,7 @@ export default async function proxy(req: NextRequest) {
   }
 
   // Redirect admins trying to access user routes to admin dashboard
-  if (session?.role === 'Admin' && (path === "/dashboard" || path === "/profile" || path === "/settings")) {
+  if (session?.role === 'Admin' && (path === "/profile" || path === "/settings")) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.nextUrl));
   }
 
@@ -39,7 +39,13 @@ export default async function proxy(req: NextRequest) {
     
     // Redirect from other auth pages if authenticated
     if (path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email") {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+      // Redirect to role-specific dashboard
+      if (session.role === 'Landlord') {
+        return NextResponse.redirect(new URL("/dashboard/landlord", req.nextUrl));
+      } else if (session.role === 'Student') {
+        return NextResponse.redirect(new URL("/dashboard/student", req.nextUrl));
+      }
+
     }
   }
 

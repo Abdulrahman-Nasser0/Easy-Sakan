@@ -23,11 +23,6 @@ export default function NotFound() {
               Go to Homepage
             </Button>
           </Link>
-          <Link href="/shop">
-            <Button variant="secondary" size="md">
-              Browse Products
-            </Button>
-          </Link>
         </div>
       </div>
     </div>

@@ -135,7 +135,7 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  <Link href="/dashboard">
+                  <Link href={userRole === 'Landlord' ? "/dashboard/landlord" : "/dashboard/student"}>
                     <Button
                       variant="primary"
                       size="lg"

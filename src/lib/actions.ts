@@ -62,9 +62,9 @@ export async function login(_prevState: any, formData: FormData): Promise<LoginS
 
   // 6. Redirect based on role
   if (user.role === 'Student') {
-    redirect("/dashboard");
+    redirect("/dashboard/student");
   } else if (user.role === 'Landlord') {
-    redirect("/dashboard");
+    redirect("/dashboard/landlord");
   } else if (user.role === 'Admin') {
     redirect("/admin/dashboard");
   }
@@ -171,7 +171,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
   );
 
   // 6. Redirect to dashboard
-  redirect("/dashboard");
+  redirect("/dashboard/student");
 }
 
 

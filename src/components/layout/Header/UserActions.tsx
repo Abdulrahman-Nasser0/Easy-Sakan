@@ -30,7 +30,7 @@ export default function UserActions({ isAuthenticated = false, userRole }: UserA
       
       {/* Show dashboard link for authenticated users */}
       {isAuthenticated && userRole !== 'Admin' && (
-        <Link href="/dashboard" className="hidden md:inline-block">
+        <Link href={userRole === 'Landlord' ? "/dashboard/landlord" : "/dashboard/student"} className="hidden md:inline-block">
           <Button variant="ghost" size="sm">
             Dashboard
           </Button>

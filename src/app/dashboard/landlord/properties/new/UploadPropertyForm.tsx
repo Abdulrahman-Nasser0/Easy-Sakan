@@ -64,6 +64,8 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
     setSuccess('');
 
     try {
+      console.log('Token received:', token ? token.substring(0, 30) + '...' : 'NO TOKEN');
+      
       if (!token) {
         setError('Authentication failed. Please login again.');
         setLoading(false);
@@ -71,8 +73,38 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
       }
 
       // Validate required fields
-      if (!formData.title || !formData.description || !formData.price || !formData.address || !formData.city) {
-        setError('Please fill all required fields.');
+      if (!formData.title?.trim()) {
+        setError('Property title is required.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.description?.trim()) {
+        setError('Property description is required.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.price || parseFloat(formData.price) <= 0) {
+        setError('Price must be a valid positive number.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.address?.trim()) {
+        setError('Full address is required.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.city?.trim()) {
+        setError('City is required.');
+        setLoading(false);
+        return;
+      }
+
+      if (!formData.totalCapacity || parseInt(formData.totalCapacity) <= 0) {
+        setError('Total capacity must be at least 1.');
         setLoading(false);
         return;
       }
@@ -83,46 +115,86 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
         return;
       }
 
-      // Create property request
-      const propertyData = {
-        title: formData.title,
-        description: formData.description,
-        listingMode: formData.listingMode,
-        price: parseFloat(formData.price),
-        totalCapacity: parseInt(formData.totalCapacity),
-        gender: formData.gender,
-        location: {
-          address: formData.address,
-          lat: formData.lat ? parseFloat(formData.lat) : 30.0444,
-          lng: formData.lng ? parseFloat(formData.lng) : 31.2357,
-          nearestUniversity: formData.city,
-        },
-        bedrooms: parseInt(formData.bedrooms),
-        bathrooms: parseInt(formData.bathrooms),
-        areaSqm: parseFloat(formData.areaSqm || '0'),
-        amenities: formData.amenities,
-        imageUrls: [], // Will be added after property creation
-      };
+      // Validate numeric fields
+      const price = parseFloat(formData.price);
+      const totalCapacity = parseInt(formData.totalCapacity);
+      const bedrooms = parseInt(formData.bedrooms) || 0;
+      const bathrooms = parseInt(formData.bathrooms) || 1;
+      const areaSqm = formData.areaSqm ? parseFloat(formData.areaSqm) : 0;
 
-      // Create property
-      const createResponse = await createProperty(token, propertyData);
-
-      if (!createResponse.isSuccess) {
-        setError(createResponse.message || 'Failed to create property');
+      if (isNaN(price) || price <= 0) {
+        setError('Price must be a valid positive number.');
         setLoading(false);
         return;
       }
 
-      const propertyId = createResponse.data?.id;
+      if (isNaN(totalCapacity) || totalCapacity <= 0) {
+        setError('Total capacity must be a valid positive number.');
+        setLoading(false);
+        return;
+      }
 
-      // Upload images if property was created successfully
-      if (propertyId && files.length > 0) {
-        const uploadResponse = await uploadPropertyImages(token, propertyId, files);
+      // Create property request
+      const propertyData = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        listingMode: formData.listingMode,
+        price: price,
+        totalCapacity: totalCapacity,
+        gender: formData.gender,
+        location: {
+          address: formData.address.trim(),
+          lat: formData.lat ? parseFloat(formData.lat) : 30.0444,
+          lng: formData.lng ? parseFloat(formData.lng) : 31.2357,
+          nearestUniversity: formData.city.trim(),
+        },
+        bedrooms: bedrooms,
+        bathrooms: bathrooms,
+        areaSqm: areaSqm,
+        amenities: formData.amenities,
+        imageUrls: [], // Will be added after property creation
+      };
 
-        if (!uploadResponse.isSuccess) {
-          console.warn('Images upload warning:', uploadResponse.message);
-          // Don't fail the entire operation if images fail
+      console.log('Submitting property data:', propertyData);
+
+      // Create property with images
+      const createResponse = await createProperty(token, propertyData, files);
+
+      console.log('Create response:', createResponse);
+
+      if (!createResponse.isSuccess) {
+        let errorMessage = createResponse.message || 'Failed to create property';
+        
+        // Handle token invalid error
+        if (createResponse.statusCode === 401 && 
+            createResponse.errors?.some((err: any) => 
+              err.message?.includes('Invalid token') || 
+              err.message?.includes('credentials')
+            )) {
+          errorMessage = 'Your session has expired. Please log out and log back in to continue.';
         }
+        
+        // Handle error details from backend
+        if (createResponse.errors && createResponse.errors.length > 0 && createResponse.statusCode !== 401) {
+          const errorDetails = createResponse.errors
+            .map(err => {
+              // If error is an object, try to get the message property
+              if (typeof err === 'object' && err !== null) {
+                return (err as any).message || JSON.stringify(err);
+              }
+              return String(err);
+            })
+            .filter(msg => msg && msg.trim())
+            .join(', ');
+          
+          if (errorDetails) {
+            errorMessage = errorMessage + ': ' + errorDetails;
+          }
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
+        return;
       }
 
       setSuccess('Property uploaded successfully! It will appear once approved by admin.');

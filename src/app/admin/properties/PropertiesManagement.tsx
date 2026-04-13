@@ -111,18 +111,8 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'PENDING_APPROVAL':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800';
-      case 'DELETED':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-blue-100 text-blue-800';
-    }
+    // Return minimal styled status with just border and gray colors
+    return 'inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white';
   };
 
   return (
@@ -136,7 +126,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+      <div className="bg-white rounded border border-gray-200 p-6 space-y-4">
         <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -153,7 +143,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 setSearchTerm(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
             />
           </div>
 
@@ -166,7 +156,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 setFilterStatus(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
             >
               <option value="">All Status</option>
               <option value="PENDING_APPROVAL">Pending Approval</option>
@@ -185,7 +175,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 setFilterListingMode(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
             >
               <option value="">All Modes</option>
               <option value="Bed">Single Bed</option>
@@ -202,7 +192,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 setSortBy(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
             >
               <option value="createdAt">Newest First</option>
               <option value="price">Price: Low to High</option>
@@ -214,7 +204,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
         {/* Reset Button */}
         <button
           onClick={resetFilters}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors"
+          className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
         >
           Reset Filters
         </button>
@@ -222,7 +212,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        <div className="border border-gray-300 rounded p-4 text-gray-800 bg-gray-50">
           {error}
         </div>
       )}
@@ -231,7 +221,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
           <div className="col-span-full text-center py-12 text-gray-500">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border border-gray-300 border-t-gray-600"></div>
             <p className="mt-4">Loading properties...</p>
           </div>
         ) : properties.length === 0 ? (
@@ -242,7 +232,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
           properties.map((property) => (
             <div
               key={property.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+              className="bg-white rounded border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
             >
               {/* Property Image */}
               <div className="relative h-48 bg-gray-200 overflow-hidden">
@@ -277,10 +267,10 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
 
                 {/* Price and Details */}
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-blue-600">
+                  <span className="text-2xl font-bold text-gray-900">
                     EGP {property.price.toLocaleString()}
                   </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white">
                     {property.listingMode === 'Bed' ? 'Single Bed' : 'Entire Unit'}
                   </span>
                 </div>
@@ -300,7 +290,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                   <p className="text-sm font-medium text-gray-900">{property.landlord.fullName}</p>
                   <p className="text-sm text-gray-600">{property.landlord.email}</p>
                   {property.landlord.isVerified && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
+                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white mt-1">
                       ✓ Verified
                     </span>
                   )}
@@ -309,7 +299,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 {/* Action Button */}
                 <button
                   onClick={() => handleViewProperty(property)}
-                  className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="w-full mt-4 px-3 py-2 bg-gray-900 text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
                 >
                   View Details
                 </button>

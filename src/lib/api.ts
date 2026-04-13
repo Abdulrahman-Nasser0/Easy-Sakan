@@ -12,6 +12,11 @@ async function apiCall<T>(
   const url = `${API_URL}${endpoint}`;
   
   try {
+    console.log('📡 API Request:', {
+      url,
+      method: options.method || 'GET',
+      hasAuth: !!(options.headers && typeof options.headers === 'object' && 'Authorization' in options.headers),
+    });
     
     const response = await fetch(url, {
       ...options,
@@ -21,6 +26,7 @@ async function apiCall<T>(
       },
     });
 
+    console.log('📡 API Response Status:', response.status, response.statusText);
     
     const responseText = await response.text();
 
@@ -317,6 +323,11 @@ export async function adminGetProperties(
 }
 
 export async function adminApproveProperty(token: string, propertyId: number) {
+  console.log('📤 API Call - Approve Property:', {
+    endpoint: `/api/admin/properties/${propertyId}/approve`,
+    propertyId,
+    hasToken: !!token,
+  });
   return apiCall<any>(`/api/admin/properties/${propertyId}/approve`, {
     method: "PUT",
     headers: {

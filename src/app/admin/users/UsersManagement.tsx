@@ -81,22 +81,14 @@ export default function UsersManagement({ token }: UsersManagementProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
-        <div className="text-sm text-gray-500">
-          Total: <span className="font-semibold text-gray-900">{users.length}</span>
-        </div>
-      </div>
+      {/* Filters Section */}
+      <div className="border border-gray-200 rounded-lg p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           {/* Search */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-900 mb-2">
               Search by name, email, or phone
             </label>
             <input
@@ -107,20 +99,20 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                 setSearchTerm(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
             />
           </div>
 
           {/* Role Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Role</label>
             <select
               value={filterRole}
               onChange={(e) => {
                 setFilterRole(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             >
               <option value="">All Roles</option>
               <option value="Student">Student</option>
@@ -131,7 +123,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
 
           {/* Verification Status */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-900 mb-2">
               Verification Status
             </label>
             <select
@@ -140,7 +132,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                 setFilterStatus(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             >
               <option value="">All Status</option>
               <option value="PENDING_REVIEW">Pending Review</option>
@@ -151,7 +143,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
 
           {/* Verified Status */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-900 mb-2">
               Verified Status
             </label>
             <select
@@ -160,7 +152,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                 setFilterVerified(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             >
               <option value="">All</option>
               <option value="true">Verified</option>
@@ -170,16 +162,16 @@ export default function UsersManagement({ token }: UsersManagementProps) {
         </div>
 
         {/* Sort Options */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => {
                 setSortBy(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             >
               <option value="createdAt">Registration Date</option>
               <option value="fullName">Full Name</option>
@@ -188,14 +180,14 @@ export default function UsersManagement({ token }: UsersManagementProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Order</label>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Order</label>
             <select
               value={sortOrder}
               onChange={(e) => {
                 setSortOrder(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900 bg-white"
             >
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
@@ -206,7 +198,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
         {/* Reset Button */}
         <button
           onClick={resetFilters}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition-colors"
+          className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
         >
           Reset Filters
         </button>
@@ -214,20 +206,20 @@ export default function UsersManagement({ token }: UsersManagementProps) {
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        <div className="border border-gray-300 rounded p-4 text-gray-800 bg-gray-50">
           {error}
         </div>
       )}
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="border border-gray-200 rounded overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-500">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="p-8 text-center text-gray-600">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border border-gray-300 border-t-gray-600"></div>
             <p className="mt-4">Loading users...</p>
           </div>
         ) : users.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-gray-600">
             <p>No users found. Try adjusting your filters.</p>
           </div>
         ) : (
@@ -235,22 +227,22 @@ export default function UsersManagement({ token }: UsersManagementProps) {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     Role
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     Verification
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     Joined
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-semibold text-gray-900 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -260,43 +252,27 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                   <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-9 h-9 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 font-semibold text-sm">
                           {user.fullName.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">{user.fullName}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="font-medium text-gray-900 text-sm">{user.fullName}</p>
+                          <p className="text-xs text-gray-600">{user.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        user.role === 'Admin' 
-                          ? 'bg-purple-100 text-purple-800'
-                          : user.role === 'Landlord'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
+                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white">
                         {user.role}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        user.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white">
                         {user.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        user.isVerified
-                          ? 'bg-green-100 text-green-800'
-                          : user.verificationStatus === 'PENDING_REVIEW'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white">
                         {user.verificationStatus || (user.isVerified ? 'Verified' : 'Not Verified')}
                       </span>
                     </td>
@@ -306,9 +282,9 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                     <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => handleViewUser(user.id)}
-                        className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
                       >
-                        View Details
+                        View
                       </button>
                     </td>
                   </tr>
@@ -321,7 +297,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center py-4">
           <div className="text-sm text-gray-600">
             Page {page} of {totalPages}
           </div>
@@ -329,14 +305,14 @@ export default function UsersManagement({ token }: UsersManagementProps) {
             <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>

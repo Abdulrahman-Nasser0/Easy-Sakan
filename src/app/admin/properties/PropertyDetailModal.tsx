@@ -72,14 +72,19 @@ export default function PropertyDetailModal({
   const handleApprove = async () => {
     setActionLoading(true);
     try {
+      console.log('🔵 Approving property:', property.id, property.title);
       const response = await adminApproveProperty(token, property.id);
+      console.log('✅ Approve response:', response);
       if (response.isSuccess) {
+        console.log('✅ Property approved successfully');
         setShowApproveModal(false);
         onPropertyUpdated();
       } else {
+        console.error('❌ Approval failed:', response.message);
         setError(response.message || 'Failed to approve property');
       }
     } catch (err) {
+      console.error('❌ Error approving property:', err);
       setError('Error approving property');
       console.error(err);
     } finally {
@@ -155,7 +160,7 @@ export default function PropertyDetailModal({
         <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           {/* Header */}
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-900">Property Details</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Property Details</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -174,7 +179,7 @@ export default function PropertyDetailModal({
           {/* Content */}
           <div className="p-6 space-y-6">
             {error && !showApproveModal && !showRejectModal && !showDeleteModal ? (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+              <div className="border border-gray-300 rounded p-4 text-gray-800 bg-gray-50">
                 {error}
               </div>
             ) : (
@@ -223,8 +228,8 @@ export default function PropertyDetailModal({
                         <button
                           key={idx}
                           onClick={() => setCurrentImageIndex(idx)}
-                          className={`shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                            idx === currentImageIndex ? 'border-blue-600' : 'border-gray-200'
+                          className={`shrink-0 w-20 h-20 rounded overflow-hidden border-2 transition-colors ${
+                            idx === currentImageIndex ? 'border-gray-900' : 'border-gray-200'
                           }`}
                         >
                           <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
@@ -238,10 +243,10 @@ export default function PropertyDetailModal({
                 <div className="border-t border-gray-200 pt-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">{property.title}</h3>
+                      <h3 className="text-xl font-semibold text-gray-900">{property.title}</h3>
                       <p className="text-gray-600 mt-1">{property.location.address}</p>
                     </div>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white ${
                       property.status === 'PENDING_APPROVAL'
                         ? 'bg-yellow-100 text-yellow-800'
                         : property.status === 'APPROVED'
@@ -300,7 +305,7 @@ export default function PropertyDetailModal({
                   )}
 
                   {/* Availability */}
-                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <div className="border border-gray-200 rounded p-4 mb-6 bg-gray-50">
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <p className="text-sm text-gray-600">Total Capacity</p>
@@ -308,7 +313,7 @@ export default function PropertyDetailModal({
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Available Slots</p>
-                        <p className="font-semibold text-green-600">{property.availability.availableSlots}</p>
+                        <p className="font-semibold text-gray-900">{property.availability.availableSlots}</p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Active Bookings</p>
@@ -321,7 +326,7 @@ export default function PropertyDetailModal({
                   <div className="border-t border-gray-200 pt-6">
                     <p className="text-sm font-medium text-gray-900 mb-4">Landlord Information</p>
                     <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-semibold">
+                      <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 text-2xl font-semibold">
                         {property.landlord.fullName.charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -329,7 +334,7 @@ export default function PropertyDetailModal({
                         <p className="text-sm text-gray-600">{property.landlord.email}</p>
                         <p className="text-sm text-gray-600">{property.landlord.phone}</p>
                         {property.landlord.isVerified && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2">
+                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white mt-2">
                             ✓ Verified Landlord
                           </span>
                         )}
@@ -356,20 +361,20 @@ export default function PropertyDetailModal({
 
                 {/* Admin Actions */}
                 {property.status === 'PENDING_APPROVAL' && (
-                  <div className="bg-blue-50 rounded-lg p-4 space-y-3 border-t border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">Admin Actions</p>
-                    <div className="flex flex-wrap gap-3">
+                  <div className="border border-gray-200 rounded p-4 space-y-3 mt-6">
+                    <p className="text-sm font-semibold text-gray-900">Admin Actions</p>
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => setShowApproveModal(true)}
                         disabled={actionLoading}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors font-medium"
+                        className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition-colors"
                       >
                         Approve
                       </button>
                       <button
                         onClick={() => setShowRejectModal(true)}
                         disabled={actionLoading}
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors font-medium"
+                        className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 transition-colors"
                       >
                         Reject
                       </button>
@@ -382,7 +387,7 @@ export default function PropertyDetailModal({
                   <button
                     onClick={() => setShowDeleteModal(true)}
                     disabled={actionLoading}
-                    className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors font-medium"
+                    className="px-3 py-2 text-sm font-medium bg-gray-900 text-white rounded hover:bg-gray-800 disabled:opacity-50 transition-colors"
                   >
                     Delete Property (Policy Violation)
                   </button>
@@ -396,22 +401,22 @@ export default function PropertyDetailModal({
       {/* Approve Modal */}
       {showApproveModal && property && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Approve Property?</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-white rounded shadow p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Approve Property?</h3>
+            <p className="text-gray-600 text-sm mb-6">
               Are you sure you want to approve "{property.title}" for listing?
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowApproveModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleApprove}
                 disabled={actionLoading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors font-medium"
+                className="px-3 py-2 bg-gray-900 text-white rounded text-sm font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
               >
                 {actionLoading ? 'Approving...' : 'Approve'}
               </button>
@@ -423,16 +428,16 @@ export default function PropertyDetailModal({
       {/* Reject Modal */}
       {showRejectModal && property && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Reject Property</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white rounded shadow p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Reject Property</h3>
+            <p className="text-gray-600 text-sm mb-4">
               Provide a reason for rejection. The landlord will be notified and can resubmit.
             </p>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Rejection reason (min 10 characters)..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent mb-4 min-h-24 text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-gray-400 focus:border-gray-400 mb-4 min-h-24 text-sm text-gray-900"
             />
             <div className="flex gap-3 justify-end">
               <button
@@ -440,14 +445,14 @@ export default function PropertyDetailModal({
                   setShowRejectModal(false);
                   setRejectReason('');
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleReject}
                 disabled={actionLoading || rejectReason.length < 10}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors font-medium"
+                className="px-3 py-2 bg-gray-900 text-white rounded text-sm font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
               >
                 {actionLoading ? 'Rejecting...' : 'Reject'}
               </button>
@@ -459,16 +464,16 @@ export default function PropertyDetailModal({
       {/* Delete Modal */}
       {showDeleteModal && property && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Delete Property</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white rounded shadow p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete Property</h3>
+            <p className="text-gray-600 text-sm mb-4">
               Provide a reason for deletion. This action will cancel all active bookings.
             </p>
             <textarea
               value={deleteReason}
               onChange={(e) => setDeleteReason(e.target.value)}
               placeholder="Deletion reason..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent mb-4 min-h-24 text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-gray-400 focus:border-gray-400 mb-4 min-h-24 text-sm text-gray-900"
             />
             <label className="flex items-center gap-2 mb-4">
               <input
@@ -485,14 +490,14 @@ export default function PropertyDetailModal({
                   setShowDeleteModal(false);
                   setDeleteReason('');
                 }}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={actionLoading || !deleteReason.trim()}
-                className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 transition-colors font-medium"
+                className="px-3 py-2 bg-gray-900 text-white rounded text-sm font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
               >
                 {actionLoading ? 'Deleting...' : 'Delete'}
               </button>

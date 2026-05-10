@@ -15,5 +15,13 @@ export default async function MyListingsPage() {
     );
   }
 
+  if (session.role !== 'Landlord' && session.role !== 'Admin') {
+    return (
+      <div className="p-6 text-center text-red-500">
+        <p>Access Default. Only Landlords can view this page.</p>
+      </div>
+    );
+  }
+
   return <MyListingsForm token={session.token} />;
 }

@@ -2,6 +2,7 @@
 export const dynamic = 'force-dynamic';
 
 import { getSession } from '@/lib/session';
+import { getMyListings } from '@/lib/api';
 import Link from 'next/link';
 
 export default async function LandlordDashboard() {
@@ -13,6 +14,37 @@ export default async function LandlordDashboard() {
         <p>Unable to load dashboard. Please log in again.</p>
       </div>
     );
+  }
+
+  if (session.role !== 'Landlord' && session.role !== 'Admin') {
+    return (
+      <div className="p-6 text-center text-red-500">
+        <p>Access Default. Only Landlords can view this page.</p>
+      </div>
+    );
+  }
+
+  // Fetch properties stats
+  let totalProperties = 0;
+  let pendingApproval = 0;
+  let activeBookings = 0;
+  let totalRevenue = 0;
+  let properties: any[] = [];
+
+  try {
+    const listingsRes = await getMyListings(session.token, 1, 100);
+    if (listingsRes.isSuccess && listingsRes.data?.items) {
+      properties = listingsRes.data.items;
+      totalProperties = listingsRes.data.totalCount || properties.length;
+      
+      properties.forEach(p => {
+        if (p.status === 'PENDING_APPROVAL') pendingApproval++;
+        activeBookings += (p.availability?.occupiedSlots || 0);
+        totalRevenue += (p.availability?.occupiedSlots || 0) * (p.price || 0);
+      });
+    }
+  } catch(e) {
+    console.error('Failed to load listings', e);
   }
 
   return (
@@ -45,7 +77,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm">Total Properties</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">0</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">{totalProperties}</p>
               </div>
               <div className="text-4xl text-blue-500 opacity-20">🏠</div>
             </div>
@@ -55,7 +87,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm">Pending Approval</p>
-                <p className="text-3xl font-bold text-yellow-600 mt-2">0</p>
+                <p className="text-3xl font-bold text-yellow-600 mt-2">{pendingApproval}</p>
               </div>
               <div className="text-4xl text-yellow-500 opacity-20">⏳</div>
             </div>
@@ -65,7 +97,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm">Active Bookings</p>
-                <p className="text-3xl font-bold text-green-600 mt-2">0</p>
+                <p className="text-3xl font-bold text-green-600 mt-2">{activeBookings}</p>
               </div>
               <div className="text-4xl text-green-500 opacity-20">📅</div>
             </div>
@@ -75,7 +107,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm">Total Revenue</p>
-                <p className="text-3xl font-bold text-purple-600 mt-2">0 EGP</p>
+                <p className="text-3xl font-bold text-purple-600 mt-2">{totalRevenue.toLocaleString()} EGP</p>
               </div>
               <div className="text-4xl text-purple-500 opacity-20">💰</div>
             </div>
@@ -113,7 +145,13 @@ export default async function LandlordDashboard() {
 
         {/* Properties Section */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Properties</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Your Properties</h2>
+            <Link href="/dashboard/landlord/my-listings" className="text-blue-600 hover:underline">
+              View All
+            </Link>
+          </div>
+          {properties.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
             <svg
               className="mx-auto h-12 w-12 text-gray-400 mb-4"
@@ -136,6 +174,40 @@ export default async function LandlordDashboard() {
               </button>
             </Link>
           </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {properties.slice(0, 3).map(property => (
+                <div key={property.id} className="bg-white rounded-lg shadow overflow-hidden">
+                  <div className="h-48 bg-gray-200 relative">
+                    {property.images && property.images.length > 0 ? (
+                      <img src={property.images[0].url} alt={property.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                    )}
+                    <div className="absolute top-2 right-2">
+                       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        property.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                        property.status === 'PENDING_APPROVAL' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {property.status}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-900 truncate">{property.title}</h3>
+                    <p className="text-blue-600 font-bold mt-2">{property.price?.toLocaleString()} EGP <span className="text-sm text-gray-500 font-normal">/ month</span></p>
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center text-sm">
+                      <span className="text-gray-600">{property.availability?.occupiedSlots || 0} Bookings</span>
+                      <Link href={`/dashboard/landlord/properties/${property.id}/edit`} className="text-blue-600 hover:underline">
+                        Edit
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

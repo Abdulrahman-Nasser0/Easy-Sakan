@@ -75,8 +75,8 @@ async function apiCall<T>(
     if (error instanceof Response && error.status === 401 && options.headers) {
       const headers = { ...options.headers } as Record<string, string>;
       const session = await getSession();
-      if (session?.refreshTokenExpiration) {
-        const refreshResponse = await refreshTokenApi(session.refreshTokenExpiration);
+      if (session?.refreshToken) {
+        const refreshResponse = await refreshTokenApi(session.refreshToken);
         if (refreshResponse.isSuccess && refreshResponse.data?.token) {
           await createSession(
             session.userId,
@@ -85,7 +85,8 @@ async function apiCall<T>(
             refreshResponse.data.token,
             session.role,
             session.emailConfirmed,
-            refreshResponse.data.tokenExpiresAt,
+            session.refreshToken,
+            refreshResponse.data.tokenExpiresAt || session.tokenExpiresAt,
             session.profileImage
           );
           // Retry the original request with the new token
@@ -141,18 +142,20 @@ export async function registerApi(userData: RegisterRequest) {
 }
 
 // Logout API call
-export async function logoutApi(token: string) {
-  return apiCall<boolean>("/api/Auth/logout", {
+export async function logoutApi(token: string, refreshToken: string) {
+  return apiCall<boolean>("/api/auth/logout", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
+    body: JSON.stringify({ refreshToken })
   });
 }
 
 // Auth Status
 export async function authStatusApi(token: string) {
-  return apiCall<AuthStatusResponse | null>("/api/Auth/status", {
+  return apiCall<AuthStatusResponse | null>("/api/auth/status", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -178,7 +181,7 @@ export async function resendVerificationApi(email: string, verificationType: num
 
 // Forgot Password
 export async function forgotPasswordApi(email: string) {
-  return apiCall<null>("/api/Auth/forgot-password", {
+  return apiCall<null>("/api/auth/forgot-password", {
     method: "POST",
     body: JSON.stringify({ email }),
   });
@@ -187,19 +190,18 @@ export async function forgotPasswordApi(email: string) {
 // Reset Password
 export async function resetPasswordApi(
   email: string,
-  code: string,
-  newPassword: string,
-  confirmPassword: string
+  otp: string,
+  newPassword: string
 ) {
-  return apiCall<null>("/api/Auth/reset-password", {
+  return apiCall<null>("/api/auth/reset-password", {
     method: "POST",
-    body: JSON.stringify({ email, code, newPassword, confirmPassword }),
+    body: JSON.stringify({ email, otp, newPassword }),
   });
 }
 
 // Refresh Token
 export async function refreshTokenApi(refreshToken: string) {
-  return apiCall<LoginResponse>("/api/Auth/refresh-token", {
+  return apiCall<LoginResponse>("/api/auth/refresh-token", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -212,15 +214,15 @@ export async function refreshTokenApi(refreshToken: string) {
 export async function changePasswordApi(
   currentPassword: string,
   newPassword: string,
-  confirmPassword: string,
   token: string
 ) {
-  return apiCall<null>("/api/Auth/change-password", {
-    method: "POST",
+  return apiCall<null>("/api/auth/change-password", {
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
+    body: JSON.stringify({ currentPassword, newPassword }),
   });
 }
 
@@ -671,7 +673,7 @@ export async function togglePropertyAvailability(
   isAvailable: boolean
 ) {
   return apiCall<any>(`/api/properties/${propertyId}/availability`, {
-    method: "PATCH",
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
     },

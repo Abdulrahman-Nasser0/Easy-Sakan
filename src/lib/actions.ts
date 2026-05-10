@@ -56,6 +56,7 @@ export async function login(_prevState: any, formData: FormData): Promise<LoginS
     token,
     user.role as UserRole,
     user.isVerified,
+    refreshToken,
     tokenExpiresAt,
     user.profileImage || null
   );
@@ -156,7 +157,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     };
   }
 
-  const { token, tokenExpiresAt, id, role: userRole, isVerified, fullName: userName } = response.data as any;
+  const { token, refreshToken, tokenExpiresAt, id, role: userRole, isVerified, fullName: userName } = response.data as any;
 
   // 5. Create session with user data
   await createSession(
@@ -166,6 +167,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     token,
     userRole as UserRole,
     isVerified,
+    refreshToken,
     tokenExpiresAt,
     null
   );
@@ -181,8 +183,8 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
 export async function logout() {
   try {
     const session = await getSession();
-    if (session?.token) {
-      await logoutApi(session.token);
+    if (session?.token && session?.refreshToken) {
+      await logoutApi(session.token, session.refreshToken);
     }
     await deleteSession();
     redirect("/login");

@@ -2,22 +2,26 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { createProperty } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { createProperty, uploadPropertyImages } from '@/lib/api';
 
 interface UploadPropertyProps {
   token: string;
 }
 
 export default function UploadProperty({ token }: UploadPropertyProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [images, setImages] = useState<File[]>([]);
 
   const [form, setForm] = useState({
     title: '',
     description: '',
     price: '',
+    areaSqm: '',
     address: '',
     city: '',
     totalCapacity: '',
@@ -30,7 +34,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
 
   const amenitiesList = ['WiFi', 'AC', 'Elevator', 'Security', 'Parking', 'Balcony', 'Kitchen', 'Furnished'];
 
-  const required = ['title', 'description', 'price', 'address', 'city', 'totalCapacity'];
+  const required = ['title', 'description', 'price', 'areaSqm', 'address', 'city', 'totalCapacity'];
   
   const isFieldEmpty = (field: string) => {
     const value = form[field as keyof typeof form];
@@ -58,6 +62,12 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
     }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImages(Array.from(e.target.files));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -81,9 +91,15 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
     // Validate numbers
     const price = parseFloat(form.price);
     const capacity = parseInt(form.totalCapacity);
+    const area = parseFloat(form.areaSqm);
     
     if (isNaN(price) || price <= 0) {
       setError('Price must be a positive number');
+      return;
+    }
+
+    if (isNaN(area) || area <= 0) {
+      setError('Area (sqm) must be a positive number');
       return;
     }
 
@@ -100,6 +116,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
         description: form.description.trim(),
         listingMode: form.listingMode,
         price: price,
+        areaSqm: area,
         totalCapacity: capacity,
         gender: form.gender,
         location: {
@@ -120,21 +137,26 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
       console.log('✅ Response:', response);
 
       if (response.isSuccess) {
-        setSuccess('Property created successfully! Waiting for admin approval.');
-        setForm({
-          title: '',
-          description: '',
-          price: '',
-          address: '',
-          city: '',
-          totalCapacity: '',
-          bedrooms: '',
-          bathrooms: '',
-          listingMode: 'Bed',
-          gender: 'Any',
-          amenities: [],
-        });
-        setTouched({});
+        let imageUploadFailed = false;
+        
+        // If we have a successful property creation and images are attached
+        if (images.length > 0 && response.data?.id) {
+          setSuccess('Property basic info created. Uploading images...');
+          const imageResponse = await uploadPropertyImages(token, response.data.id, images, 0);
+          
+          if (!imageResponse.isSuccess) {
+            imageUploadFailed = true;
+            setError(imageResponse.message || 'Property created, but failed to upload images.');
+          }
+        }
+
+        if (!imageUploadFailed) {
+          setSuccess('Property created successfully! Redirecting...');
+          setTimeout(() => {
+            router.push('/dashboard/landlord/my-listings');
+          }, 1500);
+        }
+        
       } else {
         const errorObj = response.errors?.[0];
         const errorMsg = typeof errorObj === 'object' && errorObj ? 
@@ -213,7 +235,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
               />
             </div>
 
-            {/* Price */}
+            {/* Price and Area */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-1">
@@ -232,7 +254,26 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
                 />
               </div>
 
-              {/* City */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-1">
+                  Area (sqm) <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  name="areaSqm"
+                  value={form.areaSqm}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('areaSqm')}
+                  placeholder="e.g., 120"
+                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                    showError('areaSqm') ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+              </div>
+            </div>
+
+            {/* City and Address */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-1">
                   City <span className="text-red-500">*</span>
@@ -249,24 +290,23 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
                   }`}
                 />
               </div>
-            </div>
 
-            {/* Address */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
-                Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                onBlur={() => handleBlur('address')}
-                placeholder="Full address"
-                className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  showError('address') ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-1">
+                  Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('address')}
+                  placeholder="Full address"
+                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                    showError('address') ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+              </div>
             </div>
 
             {/* Total Capacity */}
@@ -364,6 +404,25 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
                   </label>
                 ))}
               </div>
+            </div>
+
+            {/* Images */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-1">
+                Property Images
+              </label>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              {images.length > 0 && (
+                <p className="text-sm text-gray-600 mt-2">
+                  {images.length} image(s) selected
+                </p>
+              )}
             </div>
 
             {/* Buttons */}

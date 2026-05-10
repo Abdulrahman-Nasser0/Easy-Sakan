@@ -17,7 +17,8 @@ type SessionPayload = {
   role: UserRole;
   token: string;
   emailConfirmed: boolean;
-  refreshTokenExpiration: string;
+  refreshToken: string;
+  tokenExpiresAt: string;
   profileImage: string | null;
   isVerified: boolean;
   expiresAt: Date;
@@ -30,7 +31,8 @@ export interface SessionData {
   token: string;
   role: UserRole;
   emailConfirmed: boolean;
-  refreshTokenExpiration: string;
+  refreshToken: string;
+  tokenExpiresAt: string;
   profileImage: string | null;
   isVerified: boolean;
 }
@@ -45,7 +47,8 @@ export async function createSession(
   token: string,
   role: UserRole,
   isVerified: boolean,
-  refreshTokenExpiration: string,
+  refreshToken: string,
+  tokenExpiresAt: string,
   profileImage: string | null = null
 ) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
@@ -56,7 +59,8 @@ export async function createSession(
     token,
     role,
     emailConfirmed: isVerified,
-    refreshTokenExpiration,
+    refreshToken,
+    tokenExpiresAt,
     profileImage,
     isVerified,
     expiresAt,

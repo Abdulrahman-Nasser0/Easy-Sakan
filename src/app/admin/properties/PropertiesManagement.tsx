@@ -105,15 +105,19 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   const handleApprove = async (propertyId: number) => {
     setActionLoading(propertyId);
     try {
+      console.log('🟢 handleApprove - Starting approval for property:', propertyId);
       const response = await adminApproveProperty(token, propertyId);
+      console.log('🟢 handleApprove - Response:', response);
       if (response.isSuccess) {
+        console.log('✅ Approval successful');
         fetchProperties();
       } else {
+        console.log('❌ Approval failed:', response.message || response);
         setError(response.message || 'Failed to approve property');
       }
     } catch (err) {
+      console.error('❌ handleApprove - Error:', err);
       setError('Error approving property');
-      console.error(err);
     } finally {
       setActionLoading(null);
     }

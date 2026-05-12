@@ -321,22 +321,48 @@ export async function adminApproveProperty(token: string, propertyId: number) {
     propertyId,
     hasToken: !!token,
   });
-  return apiCall<any>(`/api/admin/properties/${propertyId}/approve`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const result = await apiCall<any>(`/api/admin/properties/${propertyId}/approve`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "APPROVED",
+        approvalNotes: "Approved by admin",
+      }),
+    });
+    console.log('📥 API Response - Approve Property:', result);
+    return result;
+  } catch (error) {
+    console.error('❌ API Error - Approve Property:', error);
+    throw error;
+  }
 }
 
 export async function adminRejectProperty(token: string, propertyId: number, reason: string) {
-  return apiCall<any>(`/api/admin/properties/${propertyId}/reject`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ reason }),
+  console.log('📤 API Call - Reject Property:', {
+    endpoint: `/api/admin/properties/${propertyId}/reject`,
+    propertyId,
+    reason,
+    hasToken: !!token,
   });
+  try {
+    const result = await apiCall<any>(`/api/admin/properties/${propertyId}/reject`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ reason }),
+    });
+    console.log('📥 API Response - Reject Property:', result);
+    return result;
+  } catch (error) {
+    console.error('❌ API Error - Reject Property:', error);
+    throw error;
+  }
 }
 
 export async function adminDeleteProperty(

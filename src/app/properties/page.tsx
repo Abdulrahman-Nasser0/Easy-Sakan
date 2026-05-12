@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getAllProperties } from '@/lib/api-client';
+import { getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import Image from 'next/image';
 

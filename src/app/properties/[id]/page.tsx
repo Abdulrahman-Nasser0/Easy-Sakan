@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getPropertyById } from '@/lib/api-client';
+import { getPropertyById } from '@/lib/api';
 import { Property } from '@/lib/types';
 import { useParams } from 'next/navigation';
 import BookingModal from '@/components/common/BookingModal';

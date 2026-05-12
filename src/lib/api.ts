@@ -358,6 +358,67 @@ export async function adminDeleteProperty(
   });
 }
 
+// ==========================================
+// BOOKINGS (STUDENT)
+// ==========================================
+
+export async function getMyBookings(
+  token: string,
+  page: number = 1,
+  pageSize: number = 10,
+  status?: string
+) {
+  let endpoint = `/api/bookings?page=${page}&pageSize=${pageSize}`;
+  if (status) {
+    endpoint += `&status=${status}`;
+  }
+
+  return apiCall<any>(endpoint, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function getBookingById(token: string, bookingId: number) {
+  return apiCall<any>(`/api/bookings/${bookingId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function createBooking(
+  token: string,
+  bookingData: {
+    propertyId: number;
+    checkInDate: string;
+    checkOutDate: string;
+  }
+) {
+  return apiCall<any>("/api/bookings", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bookingData),
+  });
+}
+
+export async function cancelBookingRequest(token: string, bookingId: number, reason?: string) {
+  return apiCall<any>(`/api/bookings/${bookingId}/cancel`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ reason }),
+  });
+}
+
 export async function adminGetBookings(token: string) {
   return apiCall<any>("/api/admin/bookings", {
     method: "GET",

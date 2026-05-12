@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getMyListings, deleteProperty, togglePropertyAvailability } from '@/lib/api-client';
+import { getMyListings, deleteProperty, togglePropertyAvailability } from '@/lib/api';
 import { Property } from '@/lib/types';
 
 interface MyListingsProps {
@@ -33,7 +33,7 @@ export default function MyListings({ token }: MyListingsProps) {
         return;
       }
 
-      const response = await getMyListings(page, 10, statusFilter || undefined);
+      const response = await getMyListings(token, page, 10, statusFilter || undefined);
 
       if (response.isSuccess && response.data?.items) {
         setListings(response.data.items);
@@ -55,7 +55,7 @@ export default function MyListings({ token }: MyListingsProps) {
         return;
       }
 
-      const response = await deleteProperty(propertyId);
+      const response = await deleteProperty(token, propertyId);
 
       if (response.isSuccess) {
         setListings(listings.filter(l => l.id !== propertyId));
@@ -75,7 +75,7 @@ export default function MyListings({ token }: MyListingsProps) {
         return;
       }
 
-      const response = await togglePropertyAvailability(propertyId, !currentStatus);
+      const response = await togglePropertyAvailability(token, propertyId, !currentStatus);
 
       if (response.isSuccess) {
         setListings(

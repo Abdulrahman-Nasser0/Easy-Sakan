@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getMyBookings, cancelBooking } from '@/lib/api-client';
+import { getMyBookings, cancelBookingRequest } from '@/lib/api';
+import { getSession } from '@/lib/session';
 import { BookingStatus } from '@/lib/types';
 
 interface Booking {
@@ -28,17 +29,31 @@ export default function MyBookingsPage() {
   const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [token, setToken] = useState<string>('');
 
   useEffect(() => {
-    fetchBookings();
-  }, [page, statusFilter]);
+    // Get session token on mount
+    const getToken = async () => {
+      const session = await getSession();
+      if (session?.token) {
+        setToken(session.token);
+      }
+    };
+    getToken();
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      fetchBookings();
+    }
+  }, [page, statusFilter, token]);
 
   const fetchBookings = async () => {
     setLoading(true);
     setError('');
 
     try {
-      const response = await getMyBookings(page, 10, statusFilter || undefined);
+      const response = await getMyBookings(token, page, 10, statusFilter || undefined);
 
       if (response.isSuccess && response.data?.items) {
         setBookings(response.data.items);
@@ -65,7 +80,7 @@ export default function MyBookingsPage() {
     setCancelLoading(true);
 
     try {
-      const response = await cancelBooking(selectedBookingId, cancelReason);
+      const response = await cancelBookingRequest(token, selectedBookingId, cancelReason);
 
       if (response.isSuccess) {
         setBookings(bookings.map(b =>

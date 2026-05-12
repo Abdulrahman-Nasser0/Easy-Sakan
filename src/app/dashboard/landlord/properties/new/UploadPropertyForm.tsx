@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createProperty, uploadPropertyImages } from '@/lib/api-client';
+import { createProperty, uploadPropertyImages } from '@/lib/api';
 
 interface UploadPropertyProps {
   token: string;
@@ -132,7 +132,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
 
       console.log('📦 Creating property:', propertyData);
 
-      const response = await createProperty(propertyData);
+      const response = await createProperty(token, propertyData);
 
       console.log('✅ Response:', response);
 
@@ -142,7 +142,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
         // If we have a successful property creation and images are attached
         if (images.length > 0 && response.data?.id) {
           setSuccess('Property basic info created. Uploading images...');
-          const imageResponse = await uploadPropertyImages(response.data.id, images, 0);
+          const imageResponse = await uploadPropertyImages(token, response.data.id, images, 0);
           
           if (!imageResponse.isSuccess) {
             imageUploadFailed = true;

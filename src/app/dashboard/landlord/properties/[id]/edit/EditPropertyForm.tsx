@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { updateProperty, getPropertyById, uploadPropertyImages, deletePropertyImage } from '@/lib/api-client';
+import { updateProperty, getPropertyById, uploadPropertyImages, deletePropertyImage } from '@/lib/api';
 
 interface EditPropertyProps {
   token: string;
@@ -168,7 +168,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
 
       console.log('📦 Updating property:', propertyData);
 
-      const response = await updateProperty(propertyId, propertyData);
+      const response = await updateProperty(token, propertyId, propertyData);
 
       console.log('✅ Response:', response);
 
@@ -179,7 +179,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
         if (images.length > 0) {
           setSuccess('Property basic info updated. Uploading images...');
           // First, upload new images
-          const imageResponse = await uploadPropertyImages(propertyId, images, 0);
+          const imageResponse = await uploadPropertyImages(token, propertyId, images, 0);
           
           if (!imageResponse.isSuccess) {
             imageUploadFailed = true;
@@ -190,7 +190,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
         // Handle deletion of removed images
         for (const img of existingImages) {
           if (!images.find(i => i.name === img.name)) {
-            const deleteResponse = await deletePropertyImage(propertyId, img.id);
+            const deleteResponse = await deletePropertyImage(token, propertyId, img.id);
             if (!deleteResponse.isSuccess) {
               setError(deleteResponse.message || 'Failed to delete removed images.');
               imageUploadFailed = true;

@@ -48,7 +48,6 @@ Easy Sakan is a modern property booking platform for discovering and reserving p
 ### Key Highlights
 
 - **Server-Side Rendering (SSR)** for optimal performance and SEO
-- **Mock/Real Backend Toggle** for flexible development and testing
 - **Client-Side Cart Persistence** using localStorage
 - **Responsive Design** optimized for mobile, tablet, and desktop
 - **Type-Safe** with comprehensive TypeScript types

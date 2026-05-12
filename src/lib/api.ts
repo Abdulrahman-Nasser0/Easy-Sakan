@@ -12,12 +12,6 @@ async function apiCall<T>(
   const url = `${API_URL}${endpoint}`;
   
   try {
-    console.log('📡 API Request:', {
-      url,
-      method: options.method || 'GET',
-      hasAuth: !!(options.headers && typeof options.headers === 'object' && 'Authorization' in options.headers),
-    });
-    
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -26,14 +20,9 @@ async function apiCall<T>(
       },
     });
 
-    console.log('📡 API Response Status:', response.status, response.statusText);
-    
-    const responseText = await response.text();
-    console.log('📡 API Response Body:', responseText);
-
     // Check if response is empty
+    const responseText = await response.text();
     if (!responseText || responseText.trim() === '') {
-      console.error('❌ Empty response body from server');
       return {
         isSuccess: false,
         message: `Our servers are temporarily unavailable. Please try again in a few moments.`,
@@ -49,10 +38,7 @@ async function apiCall<T>(
     let data: ApiResponse<T>;
     try {
       data = JSON.parse(responseText);
-      console.log('✅ Parsed API Response:', data);
     } catch (parseError) {
-      console.error('JSON Parse Error:', parseError);
-      console.error('Invalid JSON:', responseText);
       return {
         isSuccess: false,
         message: "We're experiencing technical difficulties. Please try again later.",

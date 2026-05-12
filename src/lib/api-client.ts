@@ -191,3 +191,50 @@ export async function getMyListings(
     method: "GET",
   });
 }
+
+// ==========================================
+// BOOKINGS
+// ==========================================
+
+export async function getMyBookings(
+  page: number = 1,
+  pageSize: number = 10,
+  status?: string
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  if (status) {
+    params.append("status", status);
+  }
+
+  return apiCall<any>(`/bookings?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+export async function getBookingById(bookingId: number) {
+  return apiCall<any>(`/bookings/${bookingId}`, {
+    method: "GET",
+  });
+}
+
+export async function createBooking(bookingData: {
+  propertyId: number;
+  checkInDate: string;
+  checkOutDate: string;
+}) {
+  return apiCall<any>("/bookings", {
+    method: "POST",
+    body: JSON.stringify(bookingData),
+  });
+}
+
+export async function cancelBooking(bookingId: number, reason?: string) {
+  return apiCall<any>(`/bookings/${bookingId}/cancel`, {
+    method: "PATCH",
+    body: JSON.stringify({ reason }),
+  });
+}

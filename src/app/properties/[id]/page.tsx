@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getPropertyById } from '@/lib/api';
+import { getPropertyById } from '@/lib/api-client';
 import { Property } from '@/lib/types';
 import { useParams } from 'next/navigation';
+import BookingModal from '@/components/common/BookingModal';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -14,6 +15,7 @@ export default function PropertyDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProperty();
@@ -276,6 +278,7 @@ export default function PropertyDetail() {
 
               {/* Booking Button */}
               <button
+                onClick={() => setBookingModalOpen(true)}
                 disabled={isSoldOut || !property.canBook}
                 className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
                   isSoldOut || !property.canBook
@@ -331,6 +334,17 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      {property && (
+        <BookingModal
+          isOpen={bookingModalOpen}
+          onClose={() => setBookingModalOpen(false)}
+          propertyId={property.id}
+          propertyTitle={property.title}
+          monthlyPrice={property.price}
+        />
+      )}
     </div>
   );
 }

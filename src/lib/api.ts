@@ -328,10 +328,7 @@ export async function adminApproveProperty(token: string, propertyId: number) {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        status: "APPROVED",
-        approvalNotes: "Approved by admin",
-      }),
+      body: JSON.stringify({}),
     });
     console.log('📥 API Response - Approve Property:', result);
     return result;
@@ -349,13 +346,18 @@ export async function adminRejectProperty(token: string, propertyId: number, rea
     hasToken: !!token,
   });
   try {
+    const requestBody = {
+      status: "REJECTED",
+      rejectionReason: reason || "Rejected by admin",
+    };
+    console.log('📤 Request Body:', requestBody);
     const result = await apiCall<any>(`/api/admin/properties/${propertyId}/reject`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reason }),
+      body: JSON.stringify(requestBody),
     });
     console.log('📥 API Response - Reject Property:', result);
     return result;

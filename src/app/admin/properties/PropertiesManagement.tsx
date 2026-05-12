@@ -126,15 +126,19 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   const handleReject = async (propertyId: number) => {
     setActionLoading(propertyId);
     try {
+      console.log('🔴 handleReject - Starting rejection for property:', propertyId);
       const response = await adminRejectProperty(token, propertyId, 'Rejected by admin');
+      console.log('🔴 handleReject - Response:', response);
       if (response.isSuccess) {
+        console.log('✅ Rejection successful');
         fetchProperties();
       } else {
+        console.log('❌ Rejection failed:', response.message || response);
         setError(response.message || 'Failed to reject property');
       }
     } catch (err) {
+      console.error('❌ handleReject - Error:', err);
       setError('Error rejecting property');
-      console.error(err);
     } finally {
       setActionLoading(null);
     }

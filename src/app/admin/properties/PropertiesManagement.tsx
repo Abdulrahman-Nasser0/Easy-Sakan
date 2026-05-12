@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { adminGetProperties } from '@/lib/api';
-import PropertyDetailModal from './PropertyDetailModal';
+import { adminGetProperties, adminApproveProperty, adminRejectProperty } from '@/lib/api';
 
 interface Property {
   id: number;
@@ -48,12 +47,11 @@ interface PropertiesManagementProps {
 export default function PropertiesManagement({ token }: PropertiesManagementProps) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
 
   // Filters
   const [filterStatus, setFilterStatus] = useState('');
@@ -96,8 +94,46 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   };
 
   const handleViewProperty = (property: Property) => {
-    setSelectedProperty(property);
-    setShowDetailModal(true);
+    // Validate property has required fields
+    if (!property || !property.id || !property.title) {
+      setError('Invalid property data');
+      return;
+    }
+    // No modal anymore - just approve/reject buttons on card
+  };
+
+  const handleApprove = async (propertyId: number) => {
+    setActionLoading(propertyId);
+    try {
+      const response = await adminApproveProperty(token, propertyId);
+      if (response.isSuccess) {
+        fetchProperties();
+      } else {
+        setError(response.message || 'Failed to approve property');
+      }
+    } catch (err) {
+      setError('Error approving property');
+      console.error(err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleReject = async (propertyId: number) => {
+    setActionLoading(propertyId);
+    try {
+      const response = await adminRejectProperty(token, propertyId, 'Rejected by admin');
+      if (response.isSuccess) {
+        fetchProperties();
+      } else {
+        setError(response.message || 'Failed to reject property');
+      }
+    } catch (err) {
+      setError('Error rejecting property');
+      console.error(err);
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const resetFilters = () => {
@@ -296,13 +332,25 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                   )}
                 </div>
 
-                {/* Action Button */}
-                <button
-                  onClick={() => handleViewProperty(property)}
-                  className="w-full mt-4 px-3 py-2 bg-gray-900 text-white rounded text-sm font-medium hover:bg-gray-800 transition-colors"
-                >
-                  View Details
-                </button>
+                {/* Action Buttons */}
+                {property.status === 'PENDING_APPROVAL' && (
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => handleApprove(property.id)}
+                      disabled={actionLoading === property.id}
+                      className="flex-1 px-3 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    >
+                      {actionLoading === property.id ? 'Approving...' : 'Approve'}
+                    </button>
+                    <button
+                      onClick={() => handleReject(property.id)}
+                      disabled={actionLoading === property.id}
+                      className="flex-1 px-3 py-2 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
+                    >
+                      {actionLoading === property.id ? 'Rejecting...' : 'Reject'}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))
@@ -334,18 +382,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
         </div>
       )}
 
-      {/* Property Detail Modal */}
-      {showDetailModal && selectedProperty && (
-        <PropertyDetailModal
-          token={token}
-          property={selectedProperty}
-          onClose={() => setShowDetailModal(false)}
-          onPropertyUpdated={() => {
-            setShowDetailModal(false);
-            fetchProperties();
-          }}
-        />
-      )}
+      {/* No modal - actions happen directly on cards */}
     </div>
   );
 }

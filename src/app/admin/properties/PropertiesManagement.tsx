@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { adminGetProperties, adminApproveProperty, adminRejectProperty } from '@/lib/api';
+import { adminStyles, statusColors } from '@/styles/adminStyles';
 
 interface Property {
   id: number;
@@ -155,30 +156,31 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   };
 
   const getStatusColor = (status: string) => {
-    // Return minimal styled status with just border and gray colors
-    return 'inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white';
+    const statusUpper = status.toUpperCase().replace('_', '');
+    if (status === 'PENDING_APPROVAL') return statusColors.PENDING;
+    if (status === 'APPROVED') return statusColors.APPROVED;
+    if (status === 'REJECTED') return statusColors.REJECTED;
+    return statusColors.PENDING;
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Properties Management</h1>
-        <div className="text-sm text-gray-500">
-          Total: <span className="font-semibold text-gray-900">{properties.length}</span>
+        <h1 className={adminStyles.sectionHeader}>🏠 Properties Management</h1>
+        <div className="text-sm text-slate-400">
+          Total: <span className="font-semibold text-slate-200">{properties.length}</span>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded border border-gray-200 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+      <div className={adminStyles.filterContainer}>
+        <h2 className="text-lg font-semibold text-white mb-4">Filters & Search</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className={adminStyles.filterGrid}>
           {/* Search */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search by title, address, or landlord
-            </label>
+          <div className={adminStyles.formGroup}>
+            <label className={adminStyles.inputLabel}>Search by title, address, or landlord</label>
             <input
               type="text"
               placeholder="Search..."
@@ -187,20 +189,20 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 setSearchTerm(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
+              className={adminStyles.input}
             />
           </div>
 
           {/* Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+          <div className={adminStyles.formGroup}>
+            <label className={adminStyles.inputLabel}>Status</label>
             <select
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
+              className={adminStyles.select}
             >
               <option value="">All Status</option>
               <option value="PENDING_APPROVAL">Pending Approval</option>
@@ -211,15 +213,15 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
           </div>
 
           {/* Listing Mode */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Listing Mode</label>
+          <div className={adminStyles.formGroup}>
+            <label className={adminStyles.inputLabel}>Listing Mode</label>
             <select
               value={filterListingMode}
               onChange={(e) => {
                 setFilterListingMode(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
+              className={adminStyles.select}
             >
               <option value="">All Modes</option>
               <option value="Bed">Single Bed</option>
@@ -228,15 +230,15 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
           </div>
 
           {/* Sort Options */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+          <div className={adminStyles.formGroup}>
+            <label className={adminStyles.inputLabel}>Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => {
                 setSortBy(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-gray-400 focus:border-gray-400 text-gray-900"
+              className={adminStyles.select}
             >
               <option value="createdAt">Newest First</option>
               <option value="price">Price: Low to High</option>
@@ -248,149 +250,147 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
         {/* Reset Button */}
         <button
           onClick={resetFilters}
-          className="px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+          className={`${adminStyles.btnSecondary} mt-4`}
         >
           Reset Filters
         </button>
       </div>
 
       {/* Error Message */}
-      {error && (
-        <div className="border border-gray-300 rounded p-4 text-gray-800 bg-gray-50">
-          {error}
-        </div>
-      )}
+      {error && <div className={adminStyles.alertError}>{error}</div>}
 
       {/* Properties Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <div className="col-span-full text-center py-12 text-gray-500">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border border-gray-300 border-t-gray-600"></div>
-            <p className="mt-4">Loading properties...</p>
+          <div className={adminStyles.emptyState}>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border border-slate-600 border-t-slate-400"></div>
+            <p className={`mt-4 ${adminStyles.emptyStateText}`}>Loading properties...</p>
           </div>
         ) : properties.length === 0 ? (
-          <div className="col-span-full text-center py-12 text-gray-500">
-            <p>No properties found. Try adjusting your filters.</p>
+          <div className={adminStyles.emptyState}>
+            <div className={`${adminStyles.emptyStateIcon}`}>🏢</div>
+            <p className={adminStyles.emptyStateText}>No properties found. Try adjusting your filters.</p>
           </div>
         ) : (
-          properties.map((property) => (
-            <div
-              key={property.id}
-              className="bg-white rounded border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-            >
-              {/* Property Image */}
-              <div className="relative h-48 bg-gray-200 overflow-hidden">
-                {property.images && property.images.length > 0 ? (
-                  <img
-                    src={property.images[0]}
-                    alt={property.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    No Image
-                  </div>
-                )}
-                <div className="absolute top-3 right-3">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.status)}`}>
-                    {property.status.replace('_', ' ')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Property Info */}
-              <div className="p-4 space-y-3">
-                <div>
-                  <h3 className="font-semibold text-gray-900 text-lg line-clamp-2">
-                    {property.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 line-clamp-1">
-                    {property.location.address}
-                  </p>
-                </div>
-
-                {/* Price and Details */}
-                <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold text-gray-900">
-                    EGP {property.price.toLocaleString()}
-                  </span>
-                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white">
-                    {property.listingMode === 'Bed' ? 'Single Bed' : 'Entire Unit'}
-                  </span>
-                </div>
-
-                {/* Availability */}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">
-                    Available: {property.availability.availableSlots}/{property.availability.totalCapacity}
-                  </span>
-                  <span className="text-gray-600">
-                    Active Bookings: {property.activeBookings}
-                  </span>
-                </div>
-
-                {/* Landlord Info */}
-                <div className="border-t border-gray-200 pt-3">
-                  <p className="text-sm font-medium text-gray-900">{property.landlord.fullName}</p>
-                  <p className="text-sm text-gray-600">{property.landlord.email}</p>
-                  {property.landlord.isVerified && (
-                    <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium text-gray-900 border border-gray-300 bg-white mt-1">
-                      ✓ Verified
+          properties.map((property) => {
+            const statusColor = getStatusColor(property.status);
+            return (
+              <div
+                key={property.id}
+                className={`${adminStyles.card} overflow-hidden flex flex-col`}
+              >
+                {/* Property Image */}
+                <div className="relative h-48 bg-slate-700 overflow-hidden">
+                  {property.images && property.images.length > 0 ? (
+                    <img
+                      src={property.images[0]}
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-500">
+                      📷 No Image
+                    </div>
+                  )}
+                  <div className="absolute top-3 right-3">
+                    <span className={`${adminStyles.badge} ${statusColor.bg} ${statusColor.border} ${statusColor.text}`}>
+                      {property.status.replace(/_/g, ' ')}
                     </span>
+                  </div>
+                </div>
+
+                {/* Property Info */}
+                <div className="p-4 space-y-3 flex-1 flex flex-col">
+                  <div>
+                    <h3 className="font-semibold text-white text-lg line-clamp-2">
+                      {property.title}
+                    </h3>
+                    <p className="text-sm text-slate-400 line-clamp-1">
+                      📍 {property.location.address}
+                    </p>
+                  </div>
+
+                  {/* Price and Details */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold text-emerald-400">
+                      {property.currency} {property.price.toLocaleString()}
+                    </span>
+                    <span className={`${adminStyles.badge} ${adminStyles.badgeInfo}`}>
+                      {property.listingMode === 'Bed' ? 'Single Bed' : 'Entire Unit'}
+                    </span>
+                  </div>
+
+                  {/* Availability */}
+                  <div className="flex items-center justify-between text-sm text-slate-400">
+                    <span>
+                      ✓ Available: {property.availability.availableSlots}/{property.availability.totalCapacity}
+                    </span>
+                    <span>
+                      📅 Bookings: {property.activeBookings}
+                    </span>
+                  </div>
+
+                  {/* Landlord Info */}
+                  <div className="border-t border-slate-700 pt-3 mt-auto">
+                    <p className="text-sm font-medium text-slate-200">{property.landlord.fullName}</p>
+                    <p className="text-sm text-slate-400">{property.landlord.email}</p>
+                    {property.landlord.isVerified && (
+                      <span className={`${adminStyles.badge} ${adminStyles.badgeSuccess} mt-2`}>
+                        ✓ Verified
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  {property.status === 'PENDING_APPROVAL' && (
+                    <div className="flex gap-2 mt-4">
+                      <button
+                        onClick={() => handleApprove(property.id)}
+                        disabled={actionLoading === property.id}
+                        className={`flex-1 ${adminStyles.btnSuccess} ${adminStyles.btnSmall}`}
+                      >
+                        {actionLoading === property.id ? '⏳ Approving...' : '✓ Approve'}
+                      </button>
+                      <button
+                        onClick={() => handleReject(property.id)}
+                        disabled={actionLoading === property.id}
+                        className={`flex-1 ${adminStyles.btnDanger} ${adminStyles.btnSmall}`}
+                      >
+                        {actionLoading === property.id ? '⏳ Rejecting...' : '✕ Reject'}
+                      </button>
+                    </div>
                   )}
                 </div>
-
-                {/* Action Buttons */}
-                {property.status === 'PENDING_APPROVAL' && (
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => handleApprove(property.id)}
-                      disabled={actionLoading === property.id}
-                      className="flex-1 px-3 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
-                    >
-                      {actionLoading === property.id ? 'Approving...' : 'Approve'}
-                    </button>
-                    <button
-                      onClick={() => handleReject(property.id)}
-                      disabled={actionLoading === property.id}
-                      className="flex-1 px-3 py-2 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
-                    >
-                      {actionLoading === property.id ? 'Rejecting...' : 'Reject'}
-                    </button>
-                  </div>
-                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-600">
-            Page {page} of {totalPages}
+        <div className="flex justify-between items-center mt-8">
+          <div className="text-sm text-slate-400">
+            Page <span className="font-semibold text-slate-200">{page}</span> of <span className="font-semibold text-slate-200">{totalPages}</span>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={adminStyles.paginationBtn}
             >
-              Previous
+              ← Previous
             </button>
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={adminStyles.paginationBtn}
             >
-              Next
+              Next →
             </button>
           </div>
         </div>
       )}
-
-      {/* No modal - actions happen directly on cards */}
     </div>
   );
 }

@@ -22,16 +22,21 @@ export default async function AdminFraudDetection() {
   const alerts = response.isSuccess ? response.data?.alerts || [] : [];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-red-500/30">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold">Fraud Detection</h1>
-              <p className="text-gray-400 mt-2">Monitor and resolve fraud alerts</p>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-linear-to-br from-red-400 to-red-600 rounded-lg">
+                <span className="text-lg">⚠️</span>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Fraud Detection</h1>
+                <p className="text-red-300/80 mt-1 text-sm">Monitor and resolve fraud alerts</p>
+              </div>
             </div>
-            <Link href="/admin/dashboard" className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm">
+            <Link href="/admin/dashboard" className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm transition-colors">
               ← Back to Dashboard
             </Link>
           </div>

@@ -16,11 +16,20 @@ export default async function AdminUsers() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
-      <div className="border-b border-gray-200 px-6 py-8">
-        <h1 className="text-3xl font-semibold text-gray-900">Users Management</h1>
-        <p className="text-gray-600 mt-1">Manage user accounts and verification</p>
+      <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-blue-500/30 px-6 py-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-linear-to-br from-blue-400 to-blue-600 rounded-lg">
+              <span className="text-lg">👥</span>
+            </div>
+            <div>
+              <h1 className="text-3xl font-semibold text-white">Users Management</h1>
+              <p className="text-blue-300/80 mt-1 text-sm">Manage user accounts and verification</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Content */}

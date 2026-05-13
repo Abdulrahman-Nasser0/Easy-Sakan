@@ -42,14 +42,22 @@ async function AdminDashboard() {
   };
   console.log('📊 Processed Dashboard Stats:', stats);
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <div className="text-sm text-gray-400">
-              Logged in as: <span className="font-semibold">{session.name}</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-linear-to-br from-indigo-400 to-indigo-600 rounded-lg">
+                <span className="text-lg">📊</span>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+                <p className="text-slate-300/80 mt-1 text-sm">System overview and management</p>
+              </div>
+            </div>
+            <div className="text-sm text-slate-400">
+              Logged in as: <span className="font-semibold text-slate-200">{session.name}</span>
             </div>
           </div>
         </div>
@@ -60,50 +68,50 @@ async function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Users */}
-          <div className="bg-linear-to-br from-blue-900 to-blue-800 border border-blue-700 rounded-lg p-6 hover:border-blue-600 transition-colors">
+          <div className="bg-linear-to-br from-blue-900/50 to-blue-800/50 border border-blue-500/30 rounded-lg p-6 hover:border-blue-500/60 transition-all hover:shadow-lg hover:shadow-blue-500/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-200 text-sm font-medium">Total Users</p>
+                <p className="text-blue-300 text-sm font-medium">Total Users</p>
                 <p className="text-4xl font-bold mt-2 text-white">{stats.totalUsers || 0}</p>
-                <p className="text-blue-300 text-xs mt-1">Registered accounts</p>
+                <p className="text-blue-400/70 text-xs mt-1">Registered accounts</p>
               </div>
-              <div className="text-5xl opacity-20">👥</div>
+              <div className="text-5xl opacity-30">👥</div>
             </div>
           </div>
 
           {/* Total Properties */}
-          <div className="bg-linear-to-br from-green-900 to-green-800 border border-green-700 rounded-lg p-6 hover:border-green-600 transition-colors">
+          <div className="bg-linear-to-br from-emerald-900/50 to-emerald-800/50 border border-emerald-500/30 rounded-lg p-6 hover:border-emerald-500/60 transition-all hover:shadow-lg hover:shadow-emerald-500/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-200 text-sm font-medium">Total Properties</p>
+                <p className="text-emerald-300 text-sm font-medium">Total Properties</p>
                 <p className="text-4xl font-bold mt-2 text-white">{stats.totalProperties || 0}</p>
-                <p className="text-green-300 text-xs mt-1">Listed properties</p>
+                <p className="text-emerald-400/70 text-xs mt-1">Listed properties</p>
               </div>
-              <div className="text-5xl opacity-20">🏠</div>
+              <div className="text-5xl opacity-30">🏠</div>
             </div>
           </div>
 
           {/* Total Bookings */}
-          <div className="bg-linear-to-br from-purple-900 to-purple-800 border border-purple-700 rounded-lg p-6 hover:border-purple-600 transition-colors">
+          <div className="bg-linear-to-br from-purple-900/50 to-purple-800/50 border border-purple-500/30 rounded-lg p-6 hover:border-purple-500/60 transition-all hover:shadow-lg hover:shadow-purple-500/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-200 text-sm font-medium">Total Bookings</p>
+                <p className="text-purple-300 text-sm font-medium">Total Bookings</p>
                 <p className="text-4xl font-bold mt-2 text-white">{stats.totalBookings || 0}</p>
-                <p className="text-purple-300 text-xs mt-1">All time bookings</p>
+                <p className="text-purple-400/70 text-xs mt-1">All time bookings</p>
               </div>
-              <div className="text-5xl opacity-20">📅</div>
+              <div className="text-5xl opacity-30">📅</div>
             </div>
           </div>
 
           {/* Total Revenue */}
-          <div className="bg-linear-to-br from-yellow-900 to-yellow-800 border border-yellow-700 rounded-lg p-6 hover:border-yellow-600 transition-colors">
+          <div className="bg-linear-to-br from-amber-900/50 to-amber-800/50 border border-amber-500/30 rounded-lg p-6 hover:border-amber-500/60 transition-all hover:shadow-lg hover:shadow-amber-500/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-yellow-200 text-sm font-medium">Total Revenue</p>
+                <p className="text-amber-300 text-sm font-medium">Total Revenue</p>
                 <p className="text-4xl font-bold mt-2 text-white">${(stats.totalRevenue || 0).toLocaleString()}</p>
-                <p className="text-yellow-300 text-xs mt-1">Platform revenue</p>
+                <p className="text-amber-400/70 text-xs mt-1">Platform revenue</p>
               </div>
-              <div className="text-5xl opacity-20">💰</div>
+              <div className="text-5xl opacity-30">💰</div>
             </div>
           </div>
         </div>
@@ -111,37 +119,37 @@ async function AdminDashboard() {
         {/* Alerts & Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Pending Verifications */}
-          <div className="bg-linear-to-br from-orange-900 to-orange-800 border border-orange-700 rounded-lg p-6 hover:border-orange-600 transition-colors">
+          <div className="bg-linear-to-br from-orange-900/50 to-orange-800/50 border border-orange-500/30 rounded-lg p-6 hover:border-orange-500/60 transition-all hover:shadow-lg hover:shadow-orange-500/10">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-orange-100">⏳ Pending Verifications</h3>
-              <span className="text-3xl font-bold text-orange-300">{stats.pendingVerifications || 0}</span>
+              <h3 className="text-lg font-semibold text-orange-200">⏳ Pending Verifications</h3>
+              <span className="text-3xl font-bold text-orange-400">{stats.pendingVerifications || 0}</span>
             </div>
-            <p className="text-orange-200 text-sm mb-4">Users awaiting email verification</p>
-            <Link href="/admin/users" className="inline-block bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-sm font-medium transition-colors">
+            <p className="text-orange-300/80 text-sm mb-4">Users awaiting email verification</p>
+            <Link href="/admin/users" className="inline-block bg-linear-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 px-4 py-2 rounded text-sm font-medium transition-all">
               Review Users →
             </Link>
           </div>
 
           {/* Active Disputes */}
-          <div className="bg-linear-to-br from-red-900 to-red-800 border border-red-700 rounded-lg p-6 hover:border-red-600 transition-colors">
+          <div className="bg-linear-to-br from-red-900/50 to-red-800/50 border border-red-500/30 rounded-lg p-6 hover:border-red-500/60 transition-all hover:shadow-lg hover:shadow-red-500/10">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-red-100">⚖️ Active Disputes</h3>
-              <span className="text-3xl font-bold text-red-300">{stats.activeDisputes || 0}</span>
+              <h3 className="text-lg font-semibold text-red-200">⚖️ Active Disputes</h3>
+              <span className="text-3xl font-bold text-red-400">{stats.activeDisputes || 0}</span>
             </div>
-            <p className="text-red-200 text-sm mb-4">Ongoing booking disputes</p>
-            <Link href="/admin/bookings" className="inline-block bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm font-medium transition-colors">
+            <p className="text-red-300/80 text-sm mb-4">Ongoing booking disputes</p>
+            <Link href="/admin/bookings" className="inline-block bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-4 py-2 rounded text-sm font-medium transition-all">
               Handle Disputes →
             </Link>
           </div>
 
           {/* Fraud Alerts */}
-          <div className="bg-linear-to-br from-red-900 to-red-800 border border-red-700 rounded-lg p-6 hover:border-red-600 transition-colors">
+          <div className="bg-linear-to-br from-rose-900/50 to-rose-800/50 border border-rose-500/30 rounded-lg p-6 hover:border-rose-500/60 transition-all hover:shadow-lg hover:shadow-rose-500/10">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-red-100">🚨 Fraud Alerts</h3>
-              <span className="text-3xl font-bold text-red-300">{stats.fraudAlerts || 0}</span>
+              <h3 className="text-lg font-semibold text-rose-200">🚨 Fraud Alerts</h3>
+              <span className="text-3xl font-bold text-rose-400">{stats.fraudAlerts || 0}</span>
             </div>
-            <p className="text-red-200 text-sm mb-4">Suspicious activities detected</p>
-            <Link href="/admin/fraud-detection" className="inline-block bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm font-medium transition-colors">
+            <p className="text-rose-300/80 text-sm mb-4">Suspicious activities detected</p>
+            <Link href="/admin/fraud-detection" className="inline-block bg-linear-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 px-4 py-2 rounded text-sm font-medium transition-all">
               Review Alerts →
             </Link>
           </div>

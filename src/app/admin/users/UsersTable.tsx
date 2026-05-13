@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { adminApproveUser } from '@/lib/api';
+import { adminStyles } from '@/styles/adminStyles';
 
 interface User {
   id: number;
@@ -58,68 +59,65 @@ export default function UsersTable({ users, token }: UsersTableProps) {
   return (
     <>
       {/* Alert Messages */}
-      {error && (
-        <div className="mb-4 bg-red-900 border border-red-700 rounded-lg p-4">
-          <p className="text-sm text-red-200">{error}</p>
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 bg-green-900 border border-green-700 rounded-lg p-4">
-          <p className="text-sm text-green-200">{success}</p>
-        </div>
-      )}
+      {error && <div className={adminStyles.alertError}>{error}</div>}
+      {success && <div className={adminStyles.alertSuccess}>{success}</div>}
 
       {/* Users Table */}
-      <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+      <div className={adminStyles.card}>
         <table className="w-full">
-          <thead className="bg-gray-700 border-b border-gray-600">
+          <thead className={adminStyles.tableHeader}>
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Phone</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Joined</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Action</th>
+              <th className={adminStyles.tableHeaderCell}>Name</th>
+              <th className={adminStyles.tableHeaderCell}>Email</th>
+              <th className={adminStyles.tableHeaderCell}>Role</th>
+              <th className={adminStyles.tableHeaderCell}>Phone</th>
+              <th className={adminStyles.tableHeaderCell}>Status</th>
+              <th className={adminStyles.tableHeaderCell}>Joined</th>
+              <th className={`${adminStyles.tableHeaderCell} text-right`}>Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-700">
+          <tbody className="divide-y divide-slate-700">
             {usersList.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-700 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium">{user.fullName || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm text-gray-300">{user.email}</td>
-                <td className="px-6 py-4 text-sm">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    user.role === 'Admin' ? 'bg-blue-900 text-blue-200' :
-                    user.role === 'Landlord' ? 'bg-purple-900 text-purple-200' :
-                    'bg-green-900 text-green-200'
+              <tr key={user.id} className={adminStyles.tableRow}>
+                <td className={adminStyles.tableCell}>
+                  <span className="font-medium text-white">{user.fullName || 'N/A'}</span>
+                </td>
+                <td className={adminStyles.tableCell}>
+                  <span className="text-slate-400">{user.email}</span>
+                </td>
+                <td className={adminStyles.tableCell}>
+                  <span className={`${adminStyles.badge} ${
+                    user.role === 'Admin' ? 'bg-purple-900/50 border-purple-600 text-purple-200' :
+                    user.role === 'Landlord' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' :
+                    'bg-blue-900/50 border-blue-600 text-blue-200'
                   }`}>
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-300">{user.phone || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    user.emailConfirmed ? 'bg-green-900 text-green-200' : 'bg-yellow-900 text-yellow-200'
+                <td className={`${adminStyles.tableCell} text-slate-400`}>
+                  {user.phone || 'N/A'}
+                </td>
+                <td className={adminStyles.tableCell}>
+                  <span className={`${adminStyles.badge} ${
+                    user.emailConfirmed ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 'bg-amber-900/50 border-amber-600 text-amber-200'
                   }`}>
                     {user.emailConfirmed ? '✓ Verified' : '⏳ Pending'}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-300">
+                <td className={`${adminStyles.tableCell} text-slate-400`}>
                   {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                 </td>
-                <td className="px-6 py-4 text-sm">
+                <td className={`${adminStyles.tableCell} text-right`}>
                   {!user.emailConfirmed ? (
                     <button
                       onClick={() => handleApproveUser(user.id, user.fullName)}
                       disabled={approving === user.id}
-                      className="bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:opacity-50 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                      className={`${adminStyles.btnSuccess} ${adminStyles.btnSmall}`}
                     >
-                      {approving === user.id ? 'Approving...' : 'Approve'}
+                      {approving === user.id ? '⏳ Approving...' : '✓ Approve'}
                     </button>
                   ) : (
-                    <span className="text-gray-400 text-xs">Already Verified</span>
+                    <span className="text-slate-500 text-xs">Verified</span>
                   )}
                 </td>
               </tr>

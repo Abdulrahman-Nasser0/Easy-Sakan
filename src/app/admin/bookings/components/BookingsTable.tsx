@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { adminConfirmPayment, adminCancelBooking, adminCompleteBooking, adminRefundBooking } from '@/lib/api';
+import { adminStyles, statusColors } from '@/styles/adminStyles';
 
 interface Booking {
   id: number;
@@ -49,72 +50,98 @@ export default function BookingsTable({ initialBookings, token }: BookingsTableP
 
   if (bookings.length === 0) {
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-12 text-center">
-        <p className="text-gray-400">No bookings found</p>
+      <div className={`${adminStyles.card} text-center p-12`}>
+        <p className="text-slate-400">No bookings found</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
-      {error && <div className="p-4 bg-red-900/50 text-red-200 border-b border-red-500">{error}</div>}
+    <div className={adminStyles.card}>
+      {error && <div className={adminStyles.alertError}>{error}</div>}
       <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-700 border-b border-gray-600">
-          <tr>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-white">Student</th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-white">Property</th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-white">Dates</th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-white">Status</th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-white">Amount</th>
-            <th className="px-4 py-3 text-right text-sm font-semibold text-white">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-700">
-          {bookings.map((booking: Booking) => (
-            <tr key={booking.id} className="hover:bg-gray-700 transition-colors">
-              <td className="px-4 py-3 text-sm text-gray-300">{booking.studentName || 'Student'}</td>
-              <td className="px-4 py-3 text-sm text-gray-300">{booking.propertyTitle || 'Property'}</td>
-              <td className="px-4 py-3 text-sm text-gray-300">
-                {new Date(booking.checkInDate).toLocaleDateString()} - <br/>
-                {new Date(booking.checkOutDate).toLocaleDateString()}
-              </td>
-              <td className="px-4 py-3 text-sm">
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  booking.status === 'CONFIRMED' ? 'bg-green-900 text-green-200' :
-                  booking.status === 'COMPLETED' ? 'bg-blue-900 text-blue-200' :
-                  booking.status === 'CANCELLED' ? 'bg-red-900 text-red-200' :
-                  booking.hasDispute ? 'bg-orange-900 text-orange-200' :
-                  'bg-yellow-900 text-yellow-200'
-                }`}>
-                  {booking.hasDispute ? 'DISPUTED' : booking.status}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-sm font-semibold text-gray-300">${booking.totalPrice}</td>
-              <td className="px-4 py-3 text-sm text-right space-x-2">
-                {loadingAction === booking.id ? (
-                  <span className="text-gray-400">Processing...</span>
-                ) : (
-                  <>
-                    {(booking.status === 'PENDING' || booking.status === 'PAYMENT_PENDING') && (
-                      <button onClick={() => handleAction(booking.id, 'CONFIRMED', adminConfirmPayment)} className="text-green-500 hover:text-green-400 font-medium">Confirm</button>
-                    )}
-                    {(booking.status === 'CONFIRMED' || booking.status === 'PENDING') && (
-                      <button onClick={() => handleAction(booking.id, 'CANCELLED', adminCancelBooking, "Admin cancelled via Dashboard")} className="text-red-500 hover:text-red-400 font-medium">Cancel</button>
-                    )}
-                    {booking.status === 'CONFIRMED' && (
-                      <button onClick={() => handleAction(booking.id, 'COMPLETED', adminCompleteBooking)} className="text-blue-500 hover:text-blue-400 font-medium">Complete</button>
-                    )}
-                    {booking.hasDispute && (
-                      <button onClick={() => handleAction(booking.id, 'CANCELLED', adminRefundBooking, booking.totalPrice)} className="text-orange-500 hover:text-orange-400 font-medium">Refund</button>
-                    )}
-                  </>
-                )}
-              </td>
+        <table className="w-full">
+          <thead className={adminStyles.tableHeader}>
+            <tr>
+              <th className={adminStyles.tableHeaderCell}>Student</th>
+              <th className={adminStyles.tableHeaderCell}>Property</th>
+              <th className={adminStyles.tableHeaderCell}>Dates</th>
+              <th className={adminStyles.tableHeaderCell}>Status</th>
+              <th className={adminStyles.tableHeaderCell}>Amount</th>
+              <th className={`${adminStyles.tableHeaderCell} text-right`}>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-700">
+            {bookings.map((booking: Booking) => (
+              <tr key={booking.id} className={adminStyles.tableRow}>
+                <td className={adminStyles.tableCell}>
+                  <span className="font-medium text-white">{booking.studentName || 'Student'}</span>
+                </td>
+                <td className={`${adminStyles.tableCell} text-slate-400`}>
+                  {booking.propertyTitle || 'Property'}
+                </td>
+                <td className={`${adminStyles.tableCell} text-slate-400`}>
+                  {new Date(booking.checkInDate).toLocaleDateString()} - <br/>
+                  {new Date(booking.checkOutDate).toLocaleDateString()}
+                </td>
+                <td className={adminStyles.tableCell}>
+                  <span className={`${adminStyles.badge} ${
+                    booking.status === 'CONFIRMED' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' :
+                    booking.status === 'COMPLETED' ? 'bg-blue-900/50 border-blue-600 text-blue-200' :
+                    booking.status === 'CANCELLED' ? 'bg-red-900/50 border-red-600 text-red-200' :
+                    booking.hasDispute ? 'bg-orange-900/50 border-orange-600 text-orange-200' :
+                    'bg-amber-900/50 border-amber-600 text-amber-200'
+                  }`}>
+                    {booking.hasDispute ? '⚠️ DISPUTED' : booking.status}
+                  </span>
+                </td>
+                <td className={`${adminStyles.tableCell} font-semibold text-emerald-400`}>
+                  EGP {booking.totalPrice.toLocaleString()}
+                </td>
+                <td className={`${adminStyles.tableCell} text-right`}>
+                  {loadingAction === booking.id ? (
+                    <span className="text-slate-400 text-sm">⏳ Processing...</span>
+                  ) : (
+                    <div className="flex gap-2 justify-end flex-wrap">
+                      {(booking.status === 'PENDING' || booking.status === 'PAYMENT_PENDING') && (
+                        <button 
+                          onClick={() => handleAction(booking.id, 'CONFIRMED', adminConfirmPayment)} 
+                          className={`${adminStyles.btnSuccess} ${adminStyles.btnSmall}`}
+                        >
+                          ✓ Confirm
+                        </button>
+                      )}
+                      {(booking.status === 'CONFIRMED' || booking.status === 'PENDING') && (
+                        <button 
+                          onClick={() => handleAction(booking.id, 'CANCELLED', adminCancelBooking, "Admin cancelled via Dashboard")} 
+                          className={`${adminStyles.btnDanger} ${adminStyles.btnSmall}`}
+                        >
+                          ✕ Cancel
+                        </button>
+                      )}
+                      {booking.status === 'CONFIRMED' && (
+                        <button 
+                          onClick={() => handleAction(booking.id, 'COMPLETED', adminCompleteBooking)} 
+                          className={`${adminStyles.btnPrimary} ${adminStyles.btnSmall}`}
+                        >
+                          ✔ Complete
+                        </button>
+                      )}
+                      {booking.hasDispute && (
+                        <button 
+                          onClick={() => handleAction(booking.id, 'CANCELLED', adminRefundBooking, booking.totalPrice)} 
+                          className={`${adminStyles.btnWarning} ${adminStyles.btnSmall}`}
+                        >
+                          💰 Refund
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

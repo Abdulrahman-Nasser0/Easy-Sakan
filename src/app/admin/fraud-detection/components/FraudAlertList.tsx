@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { adminResolveFraudAlert } from '@/lib/api';
+import { adminStyles } from '@/styles/adminStyles';
 
 interface FraudAlertListProps {
   initialAlerts: any[];
@@ -32,18 +33,18 @@ export default function FraudAlertList({ initialAlerts, token }: FraudAlertListP
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'CRITICAL': return 'bg-red-900 text-red-200';
-      case 'HIGH': return 'bg-orange-900 text-orange-200';
-      case 'MEDIUM': return 'bg-yellow-900 text-yellow-200';
-      default: return 'bg-blue-900 text-blue-200';
+      case 'CRITICAL': return 'bg-red-900/50 border-red-600 text-red-200';
+      case 'HIGH': return 'bg-orange-900/50 border-orange-600 text-orange-200';
+      case 'MEDIUM': return 'bg-yellow-900/50 border-yellow-600 text-yellow-200';
+      default: return 'bg-blue-900/50 border-blue-600 text-blue-200';
     }
   };
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-12 text-center">
-        <p className="text-gray-400 text-lg">No fraud alerts</p>
-        <p className="text-gray-500 text-sm mt-2">✅ System is operating normally</p>
+      <div className={`${adminStyles.card} text-center p-12`}>
+        <p className="text-slate-400 text-lg">✅ No fraud alerts</p>
+        <p className="text-slate-500 text-sm mt-2">System is operating normally</p>
       </div>
     );
   }
@@ -51,40 +52,46 @@ export default function FraudAlertList({ initialAlerts, token }: FraudAlertListP
   return (
     <div className="space-y-4">
       {alerts.map((alert: any) => (
-        <div key={alert.id} className={`border-l-4 rounded-lg p-6 ${alert.status === 'RESOLVED' ? 'bg-gray-800/50 border-gray-500' : 'bg-gray-800 border-red-500'}`}>
+        <div key={alert.id} className={`border-l-4 rounded-lg p-6 transition-all ${alert.status === 'RESOLVED' ? 'bg-slate-800/50 border-l-slate-600 border-slate-700' : 'bg-slate-800/80 border-l-red-600 border border-slate-700'}`}>
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-white">{alert.alertType?.replace(/_/g, ' ') || 'Unknown Alert'}</h3>
-              <p className="text-gray-400 text-sm">User: {alert.userName}</p>
-              <p className="text-gray-500 text-xs mt-1">Detected: {new Date(alert.detectedAt).toLocaleDateString()}</p>
+              <h3 className="text-lg font-semibold mb-2 text-white flex items-center gap-2">
+                ⚠️ {alert.alertType?.replace(/_/g, ' ') || 'Unknown Alert'}
+              </h3>
+              <p className="text-slate-400 text-sm">👤 User: <span className="text-white font-medium">{alert.userName}</span></p>
+              <p className="text-slate-500 text-xs mt-1">📅 Detected: {new Date(alert.detectedAt).toLocaleDateString()}</p>
             </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getSeverityColor(alert.severity)}`}>
-              {alert.severity}
+            <span className={`${adminStyles.badge} ${getSeverityColor(alert.severity)}`}>
+              {alert.severity === 'CRITICAL' && '🔴'}
+              {alert.severity === 'HIGH' && '🟠'}
+              {alert.severity === 'MEDIUM' && '🟡'}
+              {alert.severity === 'LOW' && '🔵'}
+              {' '}{alert.severity}
             </span>
           </div>
-          <p className="text-gray-300 mb-4">{alert.description}</p>
+          <p className="text-slate-300 mb-4">{alert.description}</p>
           
           {alert.status === 'PENDING' && (
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-wrap">
               <button
                 disabled={loading === alert.id}
                 onClick={() => handleResolve(alert.id, 'Confirmed Fraud')}
-                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm font-medium text-white transition-colors disabled:opacity-50"
+                className={`${adminStyles.btnDanger} ${adminStyles.btnSmall}`}
               >
-                {loading === alert.id ? 'Processing...' : 'Confirm Fraud'}
+                {loading === alert.id ? '⏳ Processing...' : '🚫 Confirm Fraud'}
               </button>
               <button
                 disabled={loading === alert.id}
                 onClick={() => handleResolve(alert.id, 'False Alarm')}
-                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-medium text-white transition-colors disabled:opacity-50"
+                className={`${adminStyles.btnSuccess} ${adminStyles.btnSmall}`}
               >
-                 {loading === alert.id ? 'Processing...' : 'Mark as False Alarm'}
+                 {loading === alert.id ? '⏳ Processing...' : '✓ Mark as False Alarm'}
               </button>
             </div>
           )}
           {alert.status === 'RESOLVED' && (
             <div className="flex items-center gap-2">
-              <span className="text-green-400 text-sm font-medium">✅ Resolved ({alert.resolution})</span>
+              <span className="text-emerald-400 text-sm font-medium">✅ Resolved ({alert.resolution})</span>
             </div>
           )}
         </div>

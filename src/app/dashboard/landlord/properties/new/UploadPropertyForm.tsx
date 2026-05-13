@@ -17,6 +17,10 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
   const [success, setSuccess] = useState('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
 
   const [form, setForm] = useState({
     title: '',
@@ -63,9 +67,83 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
     }));
   };
 
+  // Handle image selection with validation
+  const processImages = (files: FileList | null) => {
+    if (!files) return;
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    const MAX_IMAGES = 10;
+
+    const newFiles: File[] = [];
+    const newPreviews: string[] = [];
+    let errorMsg = '';
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      // Validate file size
+      if (file.size > MAX_FILE_SIZE) {
+        errorMsg = `${file.name} exceeds 5MB limit`;
+        break;
+      }
+
+      // Validate file type
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        errorMsg = `${file.name} is not a supported image format (JPG, PNG, WebP only)`;
+        break;
+      }
+
+      newFiles.push(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreviews(prev => [...prev, e.target?.result as string]);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    if (errorMsg) {
+      setError(errorMsg);
+      return;
+    }
+
+    if (images.length + newFiles.length > MAX_IMAGES) {
+      setError(`Maximum ${MAX_IMAGES} images allowed`);
+      return;
+    }
+
+    setImages([...images, ...newFiles]);
+    setError('');
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImages(Array.from(e.target.files));
+    processImages(e.target.files);
+  };
+
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    processImages(e.dataTransfer.files);
+  };
+
+  const removeImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+    setImagePreviews(imagePreviews.filter((_, i) => i !== index));
+    if (primaryImageIndex >= images.length - 1) {
+      setPrimaryImageIndex(Math.max(0, images.length - 2));
     }
   };
 
@@ -143,11 +221,15 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
         // If we have a successful property creation and images are attached
         if (images.length > 0 && response.data?.id) {
           setSuccess('Property basic info created. Uploading images...');
-          const imageResponse = await uploadPropertyImages(token, response.data.id, images, 0);
+          setUploadProgress(0);
+          
+          const imageResponse = await uploadPropertyImages(token, response.data.id, images, primaryImageIndex);
           
           if (!imageResponse.isSuccess) {
             imageUploadFailed = true;
             setError(imageResponse.message || 'Property created, but failed to upload images.');
+          } else {
+            setUploadProgress(100);
           }
         }
 
@@ -410,18 +492,97 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
 
             {/* Images */}
             <div className={landlordStyles.formGroup}>
-              <label className={landlordStyles.inputLabel}>📸 Property Images</label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
-                className={`${landlordStyles.input} cursor-pointer`}
-              />
+              <label className={landlordStyles.inputLabel}>📸 Property Images (Up to 10)</label>
+              <p className="text-xs text-slate-400 mb-3">Max 5MB each, JPG/PNG/WebP format. First image will be the main photo.</p>
+              
+              {/* Drag and Drop Area */}
+              <div
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+                  dragActive
+                    ? 'border-emerald-500 bg-emerald-900/20'
+                    : 'border-slate-600 bg-slate-800/30 hover:border-emerald-400'
+                }`}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div className="pointer-events-none">
+                  <p className="text-3xl mb-2">🖼️</p>
+                  <p className="text-white font-medium">Drag and drop images here</p>
+                  <p className="text-slate-400 text-sm mt-1">or click to select files</p>
+                </div>
+              </div>
+
+              {/* Image Previews */}
               {images.length > 0 && (
-                <p className="text-emerald-400 text-sm mt-3 font-medium">
-                  ✅ {images.length} image(s) selected
-                </p>
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-emerald-400 font-medium">✅ {images.length} image(s) selected</p>
+                    {uploadProgress > 0 && uploadProgress < 100 && (
+                      <div className="text-xs text-slate-400">
+                        Uploading: {uploadProgress}%
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {imagePreviews.map((preview, idx) => (
+                      <div key={idx} className="relative group">
+                        <div className={`relative h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                          primaryImageIndex === idx
+                            ? 'border-emerald-500'
+                            : 'border-slate-600 hover:border-emerald-400'
+                        }`}>
+                          <img
+                            src={preview}
+                            alt={`Preview ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          
+                          {/* Primary badge */}
+                          {primaryImageIndex === idx && (
+                            <div className="absolute top-1 left-1 bg-emerald-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                              Main
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors rounded-lg flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+                          {primaryImageIndex !== idx && (
+                            <button
+                              type="button"
+                              onClick={() => setPrimaryImageIndex(idx)}
+                              title="Set as main image"
+                              className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-xs font-medium"
+                            >
+                              ⭐ Main
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => removeImage(idx)}
+                            title="Remove image"
+                            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs font-medium"
+                          >
+                            ✕ Remove
+                          </button>
+                        </div>
+
+                        {/* Index */}
+                        <p className="text-xs text-slate-500 mt-1 text-center">Image {idx + 1}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
 

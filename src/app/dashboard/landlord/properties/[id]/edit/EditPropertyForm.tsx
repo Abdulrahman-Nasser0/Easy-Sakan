@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { updateProperty, getPropertyById, uploadPropertyImages, deletePropertyImage } from '@/lib/api';
+import { landlordStyles } from '@/styles/landlordStyles';
 
 interface EditPropertyProps {
   token: string;
@@ -220,276 +221,281 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={landlordStyles.pageContainer}>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-4">
-          <Link href="/dashboard/landlord" className="text-sm text-blue-600 hover:text-blue-700">
-            ← Back
+      <div className="sticky top-0 z-10 bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
+        <div className="max-w-2xl mx-auto px-4 py-6">
+          <Link href="/dashboard/landlord" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium mb-3 inline-block">
+            ← Back to Dashboard
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-2">Edit Property</h1>
+          <h1 className="text-3xl font-bold text-white">✏️ Edit Property</h1>
+          <p className="text-slate-400 mt-1">Update your property information</p>
         </div>
       </div>
 
       {/* Form */}
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-white rounded border border-gray-200 p-6">
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-300 rounded text-red-700 text-sm">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-300 rounded text-green-700 text-sm">
-              {success}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Title */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
-                Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                onBlur={() => handleBlur('title')}
-                placeholder="Property title"
-                className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  showError('title') ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                onBlur={() => handleBlur('description')}
-                placeholder="Describe the property"
-                rows={3}
-                className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                  showError('description') ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-            </div>
-
-            {/* Price and Area */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
-                  Price (EGP) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  value={form.price}
-                  onChange={handleChange}
-                  onBlur={() => handleBlur('price')}
-                  placeholder="e.g., 5000"
-                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    showError('price') ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
+        {initialLoading ? (
+          <div className="flex justify-center py-12">
+            <div className={landlordStyles.loadingSpinner}></div>
+          </div>
+        ) : (
+          <div className={`${landlordStyles.card} rounded-lg border border-slate-700`}>
+            {error && (
+              <div className={`${landlordStyles.alertError} mb-6`}>
+                {error}
               </div>
+            )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
-                  Area (sqm) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="areaSqm"
-                  value={form.areaSqm}
-                  onChange={handleChange}
-                  onBlur={() => handleBlur('areaSqm')}
-                  placeholder="e.g., 120"
-                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    showError('areaSqm') ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
+            {success && (
+              <div className={`${landlordStyles.alertSuccess} mb-6`}>
+                {success}
               </div>
-            </div>
+            )}
 
-            {/* City and Address */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
-                  City <span className="text-red-500">*</span>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Title */}
+              <div className={landlordStyles.formGroup}>
+                <label className={landlordStyles.inputLabel}>
+                  Title <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  name="city"
-                  value={form.city}
+                  name="title"
+                  value={form.title}
                   onChange={handleChange}
-                  onBlur={() => handleBlur('city')}
-                  placeholder="e.g., Cairo"
-                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    showError('city') ? 'border-red-500' : 'border-gray-300'
+                  onBlur={() => handleBlur('title')}
+                  placeholder="Property title"
+                  className={`${landlordStyles.input} ${
+                    showError('title') ? 'border-red-500/50 focus:border-red-500' : ''
                   }`}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
-                  Address <span className="text-red-500">*</span>
+              {/* Description */}
+              <div className={landlordStyles.formGroup}>
+                <label className={landlordStyles.inputLabel}>
+                  Description <span className="text-red-400">*</span>
                 </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={form.address}
+                <textarea
+                  name="description"
+                  value={form.description}
                   onChange={handleChange}
-                  onBlur={() => handleBlur('address')}
-                  placeholder="Full address"
-                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    showError('address') ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-              </div>
-            </div>
-
-            {/* Total Capacity */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">
-                  Total Capacity <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="totalCapacity"
-                  value={form.totalCapacity}
-                  onChange={handleChange}
-                  onBlur={() => handleBlur('totalCapacity')}
-                  placeholder="e.g., 3"
-                  min="1"
-                  className={`w-full px-3 py-2 border rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    showError('totalCapacity') ? 'border-red-500' : 'border-gray-300'
+                  onBlur={() => handleBlur('description')}
+                  placeholder="Describe the property"
+                  rows={4}
+                  className={`${landlordStyles.textarea} ${
+                    showError('description') ? 'border-red-500/50 focus:border-red-500' : ''
                   }`}
                 />
               </div>
 
-              {/* Listing Mode */}
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">Listing Mode</label>
+              {/* Price and Area */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>
+                    Price (EGP) <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={form.price}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('price')}
+                    placeholder="e.g., 5000"
+                    className={`${landlordStyles.input} ${
+                      showError('price') ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
+                  />
+                </div>
+
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>
+                    Area (sqm) <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="areaSqm"
+                    value={form.areaSqm}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('areaSqm')}
+                    placeholder="e.g., 120"
+                    className={`${landlordStyles.input} ${
+                      showError('areaSqm') ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* City and Address */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>
+                    City <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('city')}
+                    placeholder="e.g., Cairo"
+                    className={`${landlordStyles.input} ${
+                      showError('city') ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
+                  />
+                </div>
+
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>
+                    Address <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('address')}
+                    placeholder="Full address"
+                    className={`${landlordStyles.input} ${
+                      showError('address') ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Total Capacity */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>
+                    Total Capacity <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="totalCapacity"
+                    value={form.totalCapacity}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur('totalCapacity')}
+                    placeholder="e.g., 3"
+                    min="1"
+                    className={`${landlordStyles.input} ${
+                      showError('totalCapacity') ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
+                  />
+                </div>
+
+                {/* Listing Mode */}
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>Listing Mode</label>
+                  <select
+                    name="listingMode"
+                    value={form.listingMode}
+                    onChange={handleChange}
+                    className={landlordStyles.select}
+                  >
+                    <option value="Bed">Single Bed</option>
+                    <option value="EntireUnit">Entire Unit</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Bedrooms & Bathrooms */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>Bedrooms</label>
+                  <input
+                    type="number"
+                    name="bedrooms"
+                    value={form.bedrooms}
+                    onChange={handleChange}
+                    placeholder="0"
+                    min="0"
+                    className={landlordStyles.input}
+                  />
+                </div>
+
+                <div className={landlordStyles.formGroup}>
+                  <label className={landlordStyles.inputLabel}>Bathrooms</label>
+                  <input
+                    type="number"
+                    name="bathrooms"
+                    value={form.bathrooms}
+                    onChange={handleChange}
+                    placeholder="1"
+                    min="0"
+                    className={landlordStyles.input}
+                  />
+                </div>
+              </div>
+
+              {/* Gender */}
+              <div className={landlordStyles.formGroup}>
+                <label className={landlordStyles.inputLabel}>👥 Gender Preference</label>
                 <select
-                  name="listingMode"
-                  value={form.listingMode}
+                  name="gender"
+                  value={form.gender}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={landlordStyles.select}
                 >
-                  <option value="Bed">Single Bed</option>
-                  <option value="EntireUnit">Entire Unit</option>
+                  <option value="Any">Any</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
-            </div>
 
-            {/* Bedrooms & Bathrooms */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">Bedrooms</label>
+              {/* Amenities */}
+              <div className={landlordStyles.formSection}>
+                <label className={`${landlordStyles.inputLabel} mb-4`}>✨ Amenities</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {amenitiesList.map(amenity => (
+                    <label key={amenity} className={landlordStyles.checkbox}>
+                      <input
+                        type="checkbox"
+                        checked={form.amenities.includes(amenity)}
+                        onChange={() => toggleAmenity(amenity)}
+                        className="w-4 h-4 rounded border-slate-600 bg-slate-900 accent-emerald-600"
+                      />
+                      <span>{amenity}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Images */}
+              <div className={landlordStyles.formGroup}>
+                <label className={landlordStyles.inputLabel}>📸 Property Images</label>
                 <input
-                  type="number"
-                  name="bedrooms"
-                  value={form.bedrooms}
-                  onChange={handleChange}
-                  placeholder="0"
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className={`${landlordStyles.input} cursor-pointer`}
                 />
+                {images.length > 0 && (
+                  <p className="text-emerald-400 text-sm mt-3 font-medium">
+                    ✅ {images.length} image(s) selected
+                  </p>
+                )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-1">Bathrooms</label>
-                <input
-                  type="number"
-                  name="bathrooms"
-                  value={form.bathrooms}
-                  onChange={handleChange}
-                  placeholder="1"
-                  min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            {/* Gender */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">Gender Preference</label>
-              <select
-                name="gender"
-                value={form.gender}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="Any">Any</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
-
-            {/* Amenities */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">Amenities</label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {amenitiesList.map(amenity => (
-                  <label key={amenity} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.amenities.includes(amenity)}
-                      onChange={() => toggleAmenity(amenity)}
-                      className="w-4 h-4 text-blue-600 rounded border-gray-300"
-                    />
-                    <span className="text-sm text-gray-700">{amenity}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Images */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">
-                Property Images
-              </label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-              {images.length > 0 && (
-                <p className="text-sm text-gray-600 mt-2">
-                  {images.length} image(s) selected
-                </p>
-              )}
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3 pt-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded text-sm transition-colors"
-              >
-                {loading ? 'Updating...' : 'Update Property'}
-              </button>
-              <Link href="/dashboard/landlord" className="flex-1">
-                <button type="button" className="w-full bg-gray-300 hover:bg-gray-400 text-gray-900 font-medium py-2 px-4 rounded text-sm transition-colors">
-                  Cancel
+              {/* Buttons */}
+              <div className="flex gap-3 pt-6 border-t border-slate-700">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`${landlordStyles.btnPrimary} flex-1 disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  {loading ? '⏳ Updating...' : '✨ Update Property'}
                 </button>
-              </Link>
-            </div>
-          </form>
-        </div>
+                <Link href="/dashboard/landlord" className="flex-1">
+                  <button type="button" className={`${landlordStyles.btnSecondary} w-full`}>
+                    Cancel
+                  </button>
+                </Link>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getMyListings, deleteProperty, togglePropertyAvailability } from '@/lib/api';
 import { Property } from '@/lib/types';
+import { landlordStyles, propertyStatusColors } from '@/styles/landlordStyles';
 
 interface MyListingsProps {
   token: string;
@@ -92,27 +93,21 @@ export default function MyListings({ token }: MyListingsProps) {
   };
 
   const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800';
-      case 'PENDING_APPROVAL':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+    return propertyStatusColors[status as keyof typeof propertyStatusColors] || propertyStatusColors.DRAFT;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={landlordStyles.pageContainer}>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">My Listings</h1>
+      <div className="sticky top-0 z-10 bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-1">📋 My Listings</h1>
+            <p className="text-slate-400">Manage your properties and track their status</p>
+          </div>
           <Link href="/dashboard/landlord/properties/new">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
-              + Upload New Property
+            <button className={`${landlordStyles.btnPrimary} flex items-center gap-2`}>
+              <span>➕</span> Upload New Property
             </button>
           </Link>
         </div>
@@ -120,13 +115,13 @@ export default function MyListings({ token }: MyListingsProps) {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-800">{error}</p>
+          <div className={`${landlordStyles.alertError} mb-6`}>
+            <p>{error}</p>
           </div>
         )}
 
         {/* Filter */}
-        <div className="mb-6 flex gap-2">
+        <div className={`${landlordStyles.filterContainer} mb-8`}>
           <button
             onClick={() => {
               setStatusFilter('');
@@ -134,8 +129,8 @@ export default function MyListings({ token }: MyListingsProps) {
             }}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               statusFilter === ''
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                ? landlordStyles.btnPrimary
+                : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
             }`}
           >
             All
@@ -147,11 +142,11 @@ export default function MyListings({ token }: MyListingsProps) {
             }}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               statusFilter === 'APPROVED'
-                ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                ? 'bg-green-600 hover:bg-green-700 text-white'
+                : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
             }`}
           >
-            Approved
+            ✅ Approved
           </button>
           <button
             onClick={() => {
@@ -160,107 +155,112 @@ export default function MyListings({ token }: MyListingsProps) {
             }}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               statusFilter === 'PENDING_APPROVAL'
-                ? 'bg-yellow-600 text-white'
-                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
             }`}
           >
-            Pending
+            ⏳ Pending
           </button>
         </div>
 
         {/* Listings Table */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <p className="text-gray-500">Loading listings...</p>
+            <div className={landlordStyles.loadingSpinner}></div>
           </div>
         ) : listings.length === 0 ? (
-          <div className="bg-gray-100 rounded-lg p-8 text-center">
-            <p className="text-gray-600 text-lg mb-4">No listings found</p>
+          <div className={landlordStyles.emptyState}>
+            <div className="text-4xl mb-4">📭</div>
+            <p className="text-slate-300 text-lg mb-6">No listings found</p>
             <Link href="/dashboard/landlord/properties/new">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+              <button className={landlordStyles.btnPrimary}>
                 Create Your First Listing
               </button>
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className={`${landlordStyles.card} overflow-hidden`}>
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+              <table className={landlordStyles.table}>
+                <thead className={landlordStyles.tableHeader}>
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={landlordStyles.tableHeaderCell}>
                       Property
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={landlordStyles.tableHeaderCell}>
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={landlordStyles.tableHeaderCell}>
                       Price
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={landlordStyles.tableHeaderCell}>
                       Availability
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={landlordStyles.tableHeaderCell}>
                       Bookings
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    <th className={`${landlordStyles.tableHeaderCell} text-right`}>
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-700">
                   {listings.map(listing => (
-                    <tr key={listing.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <Link href={`/properties/${listing.id}`} className="text-blue-600 hover:text-blue-700 font-medium">
+                    <tr key={listing.id} className={landlordStyles.tableRow}>
+                      <td className={landlordStyles.tableCell}>
+                        <Link href={`/properties/${listing.id}`} className="text-emerald-400 hover:text-emerald-300 font-medium">
                           {listing.title}
                         </Link>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className={landlordStyles.tableCell}>
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(listing.status || '')}`}>
                           {listing.status || 'Unknown'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-900 font-medium">
-                        {listing.price.toLocaleString()} EGP
+                      <td className={landlordStyles.tableCell}>
+                        <span className="text-emerald-400 font-medium">
+                          {listing.price.toLocaleString()} EGP
+                        </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-900">
+                      <td className={landlordStyles.tableCell}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-medium text-slate-300">
                             {listing.availability?.availableSlots || 0} / {listing.availability?.totalCapacity}
                           </span>
                           {!listing.isAvailable && (
-                            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                            <span className="inline-block px-2 py-1 bg-slate-700/50 text-slate-400 text-xs rounded">
                               Hidden
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-900 font-medium">
-                        {listing.availability?.occupiedSlots || 0}
+                      <td className={landlordStyles.tableCell}>
+                        <span className="font-medium text-slate-300">
+                          {listing.availability?.occupiedSlots || 0}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className={`${landlordStyles.tableCell} text-right`}>
                         <div className="flex justify-end gap-2">
                           <Link href={`/dashboard/landlord/properties/${listing.id}/edit`}>
-                            <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm font-medium transition-colors">
-                              Edit
+                            <button className={`${landlordStyles.btnSecondary} text-sm`}>
+                              ✏️ Edit
                             </button>
                           </Link>
                           <button
                             onClick={() => handleToggleAvailability(listing.id, listing.isAvailable ?? true)}
                             className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                               listing.isAvailable ?? true
-                                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                ? 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                                : 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30'
                             }`}
                           >
-                            {listing.isAvailable ?? true ? 'Hide' : 'Show'}
+                            {listing.isAvailable ?? true ? '👁️ Hide' : '👁️‍🗨️ Show'}
                           </button>
                           <button
                             onClick={() => setDeleteConfirm(listing.id)}
-                            className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium transition-colors"
+                            className={`${landlordStyles.btnDanger} text-sm`}
                           >
-                            Delete
+                            🗑️ Delete
                           </button>
                         </div>
                       </td>
@@ -278,19 +278,23 @@ export default function MyListings({ token }: MyListingsProps) {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                page === 1
+                  ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+              }`}
             >
-              Previous
+              ← Previous
             </button>
             <div className="flex items-center gap-2">
               {[...Array(Math.min(totalPages, 5))].map((_, i) => (
                 <button
                   key={i + 1}
                   onClick={() => setPage(i + 1)}
-                  className={`px-3 py-2 rounded-lg ${
+                  className={`px-3 py-2 rounded-lg transition-colors ${
                     page === i + 1
-                      ? 'bg-blue-600 text-white'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      ? landlordStyles.btnPrimary
+                      : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
                   }`}
                 >
                   {i + 1}
@@ -300,9 +304,13 @@ export default function MyListings({ token }: MyListingsProps) {
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                page === totalPages
+                  ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+              }`}
             >
-              Next
+              Next →
             </button>
           </div>
         )}
@@ -310,20 +318,24 @@ export default function MyListings({ token }: MyListingsProps) {
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm !== null && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Delete Listing?</h2>
-            <p className="text-gray-600 mb-6">Are you sure you want to delete this listing? This action cannot be undone.</p>
-            <div className="flex gap-4">
+        <div className={landlordStyles.modalBackdrop}>
+          <div className={landlordStyles.modal}>
+            <div className={landlordStyles.modalHeader}>
+              <h2 className="text-xl font-bold text-white">⚠️ Delete Listing?</h2>
+            </div>
+            <div className={landlordStyles.modalBody}>
+              <p className="text-slate-300">Are you sure you want to delete this listing? This action cannot be undone.</p>
+            </div>
+            <div className={landlordStyles.modalFooter}>
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                className={landlordStyles.btnSecondary}
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
+                className={landlordStyles.btnDanger}
               >
                 Delete
               </button>

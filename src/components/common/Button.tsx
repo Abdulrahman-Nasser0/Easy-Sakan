@@ -28,13 +28,13 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:shadow-blue-500/50",
   secondary:
-    "text-white border-2 border-blue-400/30 hover:border-blue-400 backdrop-blur-sm bg-white/5 hover:bg-white/10 focus:ring-blue-500",
+    "text-slate-300 border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 hover:bg-slate-800 focus:ring-blue-500",
   danger:
     "bg-gradient-to-r from-red-600 to-rose-600 text-white hover:from-red-700 hover:to-rose-700 focus:ring-red-500 shadow-lg hover:shadow-xl hover:shadow-red-500/50",
   outline:
-    "bg-transparent border-2 border-gray-300 text-gray-800 hover:border-blue-500 hover:text-blue-600 focus:ring-blue-500 shadow-sm hover:shadow-md",
+    "bg-transparent border-2 border-slate-600 text-slate-300 hover:border-blue-500 hover:text-blue-400 focus:ring-blue-500 shadow-sm hover:shadow-md",
   ghost:
-    "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-blue-500",
+    "bg-transparent text-slate-400 hover:text-blue-400 hover:bg-slate-800/30 focus:ring-blue-500",
   success:
     "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 focus:ring-green-500 shadow-lg hover:shadow-xl hover:shadow-green-500/50",
   warning:

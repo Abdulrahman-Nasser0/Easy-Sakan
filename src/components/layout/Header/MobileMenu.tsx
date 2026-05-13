@@ -12,7 +12,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, isAuthenticated 
   if (!isMenuOpen) return null;
 
   return (
-    <div className="md:hidden border-t border-gray-200 py-4">
+    <div className="md:hidden border-t border-slate-700 py-4 bg-slate-900/50">
       <div className="space-y-4">
         {/* Mobile Search */}
         {/* <SearchBar isMobile={true} onMenuClose={() => setIsMenuOpen(false)} /> */}
@@ -24,7 +24,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, isAuthenticated 
 
         {/* Mobile Auth */}
         {!isAuthenticated && (
-          <div className="border-t border-gray-200 pt-4 space-y-3 gap-4">
+          <div className="border-t border-slate-700 pt-4 space-y-3 gap-4">
             <Link
               href="/login"
               onClick={() => setIsMenuOpen(false)}

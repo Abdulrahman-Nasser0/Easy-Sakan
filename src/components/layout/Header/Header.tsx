@@ -22,7 +22,7 @@ export default function Header({ isAuthenticated = false, userRole }: HeaderProp
     <>
       {/* <PromotionalBanner /> */}
 
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-50">
+      <nav className="bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-md shadow-lg border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Left: Logo */}
@@ -45,7 +45,7 @@ export default function Header({ isAuthenticated = false, userRole }: HeaderProp
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
-                className="lg:hidden p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-all duration-200"
                 aria-label="Toggle menu"
               >
                 <svg

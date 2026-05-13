@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBooking } from '@/lib/api';
-import { getSession } from '@/lib/session';
+import { useAuth } from '@/context/AuthContext';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -21,26 +21,15 @@ export default function BookingModal({
   monthlyPrice,
 }: BookingModalProps) {
   const router = useRouter();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [token, setToken] = useState<string>('');
   
   const [form, setForm] = useState({
     checkInDate: '',
     checkOutDate: '',
   });
-
-  useEffect(() => {
-    // Get session token on mount
-    const getToken = async () => {
-      const session = await getSession();
-      if (session?.token) {
-        setToken(session.token);
-      }
-    };
-    getToken();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -90,13 +79,13 @@ export default function BookingModal({
         return;
       }
 
-      if (!token) {
+      if (!user?.token) {
         setError('Please login to create a booking');
         setLoading(false);
         return;
       }
 
-      const response = await createBooking(token, {
+      const response = await createBooking(user.token, {
         propertyId,
         checkInDate: form.checkInDate,
         checkOutDate: form.checkOutDate,

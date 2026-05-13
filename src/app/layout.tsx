@@ -3,6 +3,7 @@ import { inter } from '@/components/common/fonts';
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import { getSession } from "../lib/session";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Easy Sakan",
@@ -30,7 +31,9 @@ export default async function RootLayout({
         suppressHydrationWarning={true}
       >
         <Header isAuthenticated={isAuthenticated} userRole={session?.role} />
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { getSession } from "../lib/session";
 import { AuthProvider } from "@/context/AuthContext";
+import ClientLayout from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: "Easy Sakan",
@@ -32,7 +33,9 @@ export default async function RootLayout({
       >
         <Header isAuthenticated={isAuthenticated} userRole={session?.role} />
         <AuthProvider>
-          {children}
+          <ClientLayout>
+            {children}
+          </ClientLayout>
         </AuthProvider>
       </body>
     </html>

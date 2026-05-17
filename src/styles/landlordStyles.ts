@@ -72,7 +72,7 @@ export const landlordStyles = {
   alertInfo: 'mb-4 bg-blue-900/30 border border-blue-600 rounded-lg p-4 text-blue-200',
   
   // ============ MODALS ============
-  modal: 'bg-slate-800 rounded-lg shadow-2xl border border-slate-700 max-w-md w-full',
+  modal: 'bg-slate-800 rounded-lg shadow-2xl border border-slate-700 max-w-md w-full ml-auto mr-auto mt-50',
   modalLarge: 'bg-slate-800 rounded-lg shadow-2xl border border-slate-700 max-w-2xl w-full',
   modalContent: 'bg-slate-800 rounded-lg',
   modalHeader: 'sticky top-0 border-b border-slate-700 px-6 py-4 flex justify-between items-center',

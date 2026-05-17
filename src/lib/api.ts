@@ -859,3 +859,102 @@ export async function logUserInteraction(token: string, propertyId: number, inte
     body: JSON.stringify({ propertyId, interactionType }),
   });
 }
+
+// ==========================================
+// DIAGNOSTIC FUNCTION - TEST IMAGE UPLOAD ENDPOINT
+// ==========================================
+
+export async function testImageUploadEndpoint(token: string, propertyId: number) {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`🔍 TESTING IMAGE UPLOAD ENDPOINT`);
+  console.log(`${'='.repeat(60)}\n`);
+
+  const url = `${API_URL}/api/properties/${propertyId}/images`;
+  
+  console.log(`📍 Endpoint URL:`, url);
+  console.log(`🔐 Auth Token:`, `${token.substring(0, 20)}...${token.substring(token.length - 20)}`);
+  console.log(`📦 Property ID:`, propertyId);
+
+  try {
+    // Create a small test image (1x1 transparent PNG)
+    const pngData = new Uint8Array([
+      137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1,
+      8, 6, 0, 0, 0, 31, 21, 196, 137, 0, 0, 0, 10, 73, 68, 65, 84, 8, 29, 1, 0, 0, 0, 0, 1,
+      0, 1, 0, 0, 0, 24, 221, 169, 131, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130
+    ]);
+    
+    const testFile = new File([pngData], 'test-image.png', { type: 'image/png' });
+    
+    console.log(`\n📤 Creating FormData with test image:`);
+    console.log(`  - File name:`, testFile.name);
+    console.log(`  - File size:`, `${(testFile.size / 1024).toFixed(2)}KB`);
+    console.log(`  - File type:`, testFile.type);
+
+    const formData = new FormData();
+    formData.append('images', testFile);
+    formData.append('primaryIndex', '0');
+
+    console.log(`\n⏳ Sending request...`);
+    console.log(`  - Method: POST`);
+    console.log(`  - Content-Type: multipart/form-data`);
+    console.log(`  - Authorization: Bearer <token>`);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+
+    console.log(`\n✅ Response received:`);
+    console.log(`  - Status Code:`, response.status, response.statusText);
+    console.log(`  - Content-Type:`, response.headers.get('content-type'));
+    console.log(`  - Content-Length:`, response.headers.get('content-length'));
+
+    const responseText = await response.text();
+    console.log(`  - Response Body Length:`, responseText.length, 'chars');
+    console.log(`  - Response Preview:`, responseText.substring(0, 200));
+
+    if (!response.ok) {
+      console.log(`\n❌ ERROR: HTTP ${response.status}`);
+      console.log(`Full Response:`, responseText);
+      return {
+        success: false,
+        statusCode: response.status,
+        statusText: response.statusText,
+        body: responseText,
+        message: `Endpoint returned HTTP ${response.status}`
+      };
+    }
+
+    // Try to parse as JSON
+    let jsonData;
+    try {
+      jsonData = JSON.parse(responseText);
+      console.log(`\n✅ Response is valid JSON:`, jsonData);
+      return {
+        success: true,
+        statusCode: response.status,
+        body: jsonData,
+        message: 'Endpoint is working correctly'
+      };
+    } catch (e) {
+      console.log(`\n⚠️ Response is not valid JSON:`, e);
+      return {
+        success: false,
+        statusCode: response.status,
+        body: responseText,
+        message: 'Endpoint returned non-JSON response'
+      };
+    }
+
+  } catch (error) {
+    console.error(`\n❌ Network Error:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      message: 'Network request failed'
+    };
+  } finally {
+    console.log(`\n${'='.repeat(60)}\n`);
+  }
+}

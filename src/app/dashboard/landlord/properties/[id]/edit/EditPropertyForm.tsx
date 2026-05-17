@@ -3,95 +3,44 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { updateProperty, getPropertyById, uploadPropertyImages, deletePropertyImage } from '@/lib/api';
+import { updateProperty, uploadPropertyImages, deletePropertyImage } from '@/lib/api';
 import { landlordStyles } from '@/styles/landlordStyles';
 
 interface EditPropertyProps {
   token: string;
   propertyId: number;
+  initialData?: any;
+  initialError?: string | null;
 }
 
-export default function EditPropertyForm({ token, propertyId }: EditPropertyProps) {
+export default function EditPropertyForm({ token, propertyId, initialData, initialError }: EditPropertyProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError || '');
   const [success, setSuccess] = useState('');
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [existingImages, setExistingImages] = useState<any[]>([]);
+  const [existingImages, setExistingImages] = useState<any[]>(initialData?.images || []);
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
 
   const [form, setForm] = useState({
-    title: '',
-    description: '',
-    price: '',
-    areaSqm: '',
-    address: '',
-    city: '',
-    totalCapacity: '',
-    bedrooms: '',
-    bathrooms: '',
-    listingMode: 'Bed',
-    gender: 'Any',
-    amenities: [] as string[],
+    title: initialData?.title || '',
+    description: initialData?.description || '',
+    price: initialData?.price?.toString() || '',
+    areaSqm: initialData?.areaSqm?.toString() || '',
+    address: initialData?.location?.address || '',
+    city: initialData?.location?.nearestUniversity || '',
+    totalCapacity: initialData?.availability?.totalCapacity?.toString() || initialData?.totalCapacity?.toString() || '',
+    bedrooms: initialData?.bedrooms?.toString() || '',
+    bathrooms: initialData?.bathrooms?.toString() || '',
+    listingMode: initialData?.listingMode || 'Bed',
+    gender: initialData?.gender || 'Any',
+    amenities: initialData?.amenities || [],
   });
-
-  useEffect(() => {
-    let cancelled = false;
-    
-    async function loadProperty() {
-      try {
-        const response = await getPropertyById(propertyId) as any;
-        
-        if (cancelled) return;
-        
-        if (response.isSuccess && response.data) {
-          const p = response.data;
-          
-          const newForm = {
-            title: p.title || '',
-            description: p.description || '',
-            price: p.price?.toString() || '',
-            areaSqm: p.areaSqm?.toString() || '',
-            address: p.location?.address || '',
-            city: p.location?.nearestUniversity || '',
-            totalCapacity: p.availability?.totalCapacity?.toString() || p.totalCapacity?.toString() || '',
-            bedrooms: p.bedrooms?.toString() || '',
-            bathrooms: p.bathrooms?.toString() || '',
-            listingMode: p.listingMode || 'Bed',
-            gender: p.gender || 'Any',
-            amenities: p.amenities || [],
-          };
-          
-          setForm(newForm);
-          setExistingImages(p.images || []);
-        } else {
-          setError(response?.message || 'Failed to load property');
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Error loading property');
-        }
-      } finally {
-        if (!cancelled) {
-          setInitialLoading(false);
-        }
-      }
-    }
-    
-    if(propertyId) {
-      loadProperty();
-    } else {
-      setInitialLoading(false);
-    }
-    
-    return () => { cancelled = true; };
-  }, [propertyId]);
 
   const amenitiesList = ['WiFi', 'AC', 'Elevator', 'Security', 'Parking', 'Balcony', 'Kitchen', 'Furnished'];
 
@@ -118,7 +67,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
     setForm(prev => ({
       ...prev,
       amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter(a => a !== amenity)
+        ? prev.amenities.filter((a:any) => a !== amenity)
         : [...prev.amenities, amenity],
     }));
   };
@@ -330,9 +279,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
   return (
     <div className={landlordStyles.pageContainer}>
       {/* Header */}
-            <div className="bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
-
-
+      <div className="bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Link href="/dashboard/landlord" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium mb-3 inline-block">
             ← Back to Dashboard
@@ -344,11 +291,6 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
 
       {/* Form */}
       <div className="max-w-2xl mx-auto px-4 py-8">
-        {initialLoading ? (
-          <div className="flex justify-center py-12">
-            <div className={landlordStyles.loadingSpinner}></div>
-          </div>
-        ) : (
           <div className={`${landlordStyles.card} rounded-lg border border-slate-700`}>
             {error && (
               <div className={`${landlordStyles.alertError} mb-6`}>
@@ -716,7 +658,6 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
               </div>
             </form>
           </div>
-        )}
       </div>
     </div>
   );

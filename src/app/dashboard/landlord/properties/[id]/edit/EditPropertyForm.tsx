@@ -568,14 +568,17 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
                 <label className={`${landlordStyles.inputLabel} mb-4`}>✨ Amenities</label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {amenitiesList.map(amenity => (
-                    <label key={amenity} className={landlordStyles.checkbox}>
+                    <label
+                      key={amenity}
+                      className="flex items-center gap-3 p-3 bg-slate-900/50 border border-slate-600/50 rounded-lg cursor-pointer hover:border-emerald-500/50 hover:bg-slate-800/60 transition-all"
+                    >
                       <input
                         type="checkbox"
                         checked={form.amenities.includes(amenity)}
                         onChange={() => toggleAmenity(amenity)}
-                        className="w-4 h-4 rounded border-slate-600 bg-slate-900 accent-emerald-600"
+                        className="w-4 h-4 rounded border-slate-500 bg-slate-900 text-emerald-600 focus:ring-emerald-500/30 focus:ring-offset-0 cursor-pointer"
                       />
-                      <span>{amenity}</span>
+                      <span className="text-sm text-slate-200 font-medium">{amenity}</span>
                     </label>
                   ))}
                 </div>

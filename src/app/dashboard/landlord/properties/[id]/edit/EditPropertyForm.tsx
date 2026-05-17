@@ -42,9 +42,22 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
   });
 
   useEffect(() => {
+    let cancelled = false;
+    
     async function loadProperty() {
       try {
-        const response = await getPropertyById(propertyId);
+        // Add a timeout to prevent infinite loading
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timed out. Please check your connection and try again.')), 15000)
+        );
+        
+        const response = await Promise.race([
+          getPropertyById(propertyId),
+          timeoutPromise
+        ]) as any;
+        
+        if (cancelled) return;
+        
         if (response.isSuccess && response.data) {
           const p = response.data;
           setForm({
@@ -66,12 +79,19 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
           setError(response.message || 'Failed to load property');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error loading property');
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Error loading property');
+        }
       } finally {
-        setInitialLoading(false);
+        if (!cancelled) {
+          setInitialLoading(false);
+        }
       }
     }
+    
     if(propertyId) loadProperty();
+    
+    return () => { cancelled = true; };
   }, [propertyId]);
 
   const amenitiesList = ['WiFi', 'AC', 'Elevator', 'Security', 'Parking', 'Balcony', 'Kitchen', 'Furnished'];

@@ -23,6 +23,7 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [existingImages, setExistingImages] = useState<any[]>([]);
+  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
 
   const [form, setForm] = useState({
@@ -184,18 +185,10 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
     }
   };
 
-  const removeExistingImage = async (imageId: number) => {
-    try {
-      const response = await deletePropertyImage(token, propertyId, imageId);
-      if (response.isSuccess) {
-        setExistingImages(existingImages.filter(img => img.id !== imageId));
-        setSuccess('Image deleted successfully');
-      } else {
-        setError(response.message || 'Failed to delete image');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error deleting image');
-    }
+  const removeExistingImage = (imageId: number) => {
+    // Mark the image for deletion on submit instead of deleting immediately
+    setDeletedImageIds(prev => [...prev, imageId]);
+    setExistingImages(prev => prev.filter(img => img.id !== imageId));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -267,36 +260,38 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
       console.log('✅ Response:', response);
 
       if (response.isSuccess) {
-        let imageUploadFailed = false;
-        
-        // If we have a successful property update and images are attached
+        let imageOperationFailed = false;
+
+        // 1. Delete images that were marked for removal
+        for (const imageId of deletedImageIds) {
+          const deleteResponse = await deletePropertyImage(token, propertyId, imageId);
+          if (!deleteResponse.isSuccess) {
+            imageOperationFailed = true;
+            setError(`Warning: Failed to delete image #${imageId}: ${deleteResponse.message}`);
+          }
+        }
+
+        // 2. Upload new images if any
         if (images.length > 0) {
-          setSuccess('Property basic info updated. Uploading images...');
-          // First, upload new images
-          const imageResponse = await uploadPropertyImages(token, propertyId, images, 0);
+          setSuccess('Property info updated. Uploading new images...');
+          const imageResponse = await uploadPropertyImages(token, propertyId, images, primaryImageIndex);
           
           if (!imageResponse.isSuccess) {
-            imageUploadFailed = true;
+            imageOperationFailed = true;
             setError(imageResponse.message || 'Property updated, but failed to upload new images.');
           }
         }
 
-        // Handle deletion of removed images
-        for (const img of existingImages) {
-          if (!images.find(i => i.name === img.name)) {
-            const deleteResponse = await deletePropertyImage(token, propertyId, img.id);
-            if (!deleteResponse.isSuccess) {
-              setError(deleteResponse.message || 'Failed to delete removed images.');
-              imageUploadFailed = true;
-            }
-          }
-        }
-
-        if (!imageUploadFailed) {
+        if (!imageOperationFailed) {
           setSuccess('Property updated successfully! Redirecting...');
           setTimeout(() => {
             router.push('/dashboard/landlord/my-listings');
           }, 1500);
+        } else if (!error) {
+          setSuccess('Property updated (with some image operation warnings). Redirecting...');
+          setTimeout(() => {
+            router.push('/dashboard/landlord/my-listings');
+          }, 2000);
         }
         
       } else {

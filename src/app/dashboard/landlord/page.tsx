@@ -5,6 +5,7 @@ import { getSession } from '@/lib/session';
 import { getMyListings } from '@/lib/api';
 import Link from 'next/link';
 import { landlordStyles, propertyStatusColors } from '@/styles/landlordStyles';
+import { getImageUrl } from '@/lib/utils';
 
 export default async function LandlordDashboard() {
   const session = await getSession();
@@ -181,7 +182,7 @@ export default async function LandlordDashboard() {
                 <div key={property.id} className={landlordStyles.propertyCard}>
                   <div className={landlordStyles.propertyImage}>
                     {property.images && property.images.length > 0 ? (
-                      <img src={property.images[0].url} alt={property.title} className="w-full h-full object-cover" />
+                      <img src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)} alt={property.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-500">📷 No Image</div>
                     )}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { adminGetProperties, adminApproveProperty, adminRejectProperty } from '@/lib/api';
 import { adminStyles, statusColors } from '@/styles/adminStyles';
+import { getImageUrl } from '@/lib/utils';
 
 interface Property {
   id: number;
@@ -283,7 +284,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 <div className="relative h-48 bg-slate-700 overflow-hidden">
                   {property.images && property.images.length > 0 ? (
                     <img
-                      src={property.images[0]}
+                      src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : (property.images[0] as any).url)}
                       alt={property.title}
                       className="w-full h-full object-cover"
                     />

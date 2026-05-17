@@ -56,7 +56,7 @@ export function getStockBadgeColor(stockStatus: string): {
   border: string;
 } {
   const status = stockStatus.toLowerCase();
-  
+
   switch (status) {
     case 'instock':
     case 'in stock':
@@ -102,7 +102,7 @@ export function getStockBadgeColor(stockStatus: string): {
  */
 export function getStockStatusLabel(stockStatus: string): string {
   const status = stockStatus.toLowerCase().replace(/\s+/g, '');
-  
+
   const labels: Record<string, string> = {
     instock: 'In Stock',
     lowstock: 'Low Stock',
@@ -110,7 +110,7 @@ export function getStockStatusLabel(stockStatus: string): string {
     preorder: 'Pre-Order',
     discontinued: 'Discontinued',
   };
-  
+
   return labels[status] || stockStatus;
 }
 
@@ -127,7 +127,7 @@ export function isVariantAvailable(
   isActive: boolean = true
 ): boolean {
   if (!isActive) return false;
-  
+
   const status = stockStatus.toLowerCase().replace(/\s+/g, '');
   return (status === 'instock' || status === 'lowstock') && availableQuantity > 0;
 }
@@ -173,3 +173,18 @@ export function getDiscountBadgeColor(discountPercentage: number): {
     return { bg: 'bg-blue-500', text: 'text-white' };
   }
 }
+
+/**
+ * Get full image URL, prepending backend API URL if necessary
+ * @param imagePath - The relative or absolute image path
+ * @returns Full URL to the image
+ */
+export function getImageUrl(imagePath: string): string {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('blob:')) {
+    return imagePath;
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+}
+

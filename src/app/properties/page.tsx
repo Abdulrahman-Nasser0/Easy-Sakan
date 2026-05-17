@@ -6,6 +6,7 @@ import { getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import Image from 'next/image';
 import { studentStyles } from '@/styles/studentStyles';
+import { getImageUrl } from '@/lib/utils';
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -201,7 +202,7 @@ export default function PropertiesPage() {
                         <div className="relative h-48 bg-slate-700">
                           {property.images && property.images.length > 0 ? (
                             <img
-                              src={property.images[0].url}
+                              src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)}
                               alt={property.title}
                               className="w-full h-full object-cover"
                             />

@@ -7,6 +7,7 @@ import { Property } from '@/lib/types';
 import { useParams } from 'next/navigation';
 import BookingModal from '@/components/common/BookingModal';
 import { studentStyles } from '@/styles/studentStyles';
+import { getImageUrl } from '@/lib/utils';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -89,7 +90,7 @@ export default function PropertyDetail() {
                 {property.images && property.images.length > 0 ? (
                   <>
                     <img
-                      src={property.images[selectedImageIdx].url}
+                      src={getImageUrl(typeof property.images[selectedImageIdx] === 'string' ? (property.images[selectedImageIdx] as any) : property.images[selectedImageIdx].url)}
                       alt={property.title}
                       className="w-full h-full object-cover"
                     />
@@ -117,7 +118,7 @@ export default function PropertyDetail() {
                         selectedImageIdx === idx ? 'border-blue-500' : 'border-slate-600'
                       }`}
                     >
-                      <img src={image.url} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
+                      <img src={getImageUrl(typeof image === 'string' ? image : (image as any).url)} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>

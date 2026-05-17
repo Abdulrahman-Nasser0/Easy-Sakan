@@ -93,7 +93,7 @@ export default function TestImageEndpoint() {
               {result.body && (
                 <div className="mt-3 pt-3 border-t border-slate-700">
                   <span className="text-slate-400">Response:</span>
-                  <pre className="mt-2 text-xs whitespace-pre-wrap break-words">
+                  <pre className="mt-2 text-xs whitespace-pre-wrap wrap-break-word">
                     {typeof result.body === 'string'
                       ? result.body.substring(0, 500)
                       : JSON.stringify(result.body, null, 2).substring(0, 500)}

@@ -1,10 +1,8 @@
 "use client";
 
 import { useMenuState } from "@/hooks/useMenuState";
-import PromotionalBanner from "./PromotionalBanner";
 import Logo from "./Logo";
 import DesktopNavigation from "./DesktopNavigation";
-import SearchBar from "./SearchBar";
 import UserActions from "./UserActions";
 import MobileMenu from "./MobileMenu";
 
@@ -20,8 +18,6 @@ export default function Header({ isAuthenticated = false, userRole }: HeaderProp
 
   return (
     <>
-      {/* <PromotionalBanner /> */}
-
       <nav className="bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-md shadow-lg border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -30,12 +26,9 @@ export default function Header({ isAuthenticated = false, userRole }: HeaderProp
               <Logo />
             </div>
 
-            {/* Center: Navigation & Search */}
+            {/* Center: Navigation */}
             <div className="hidden lg:flex items-center flex-1 justify-center gap-8 max-w-2xl">
               <DesktopNavigation />
-              {/* <div className="flex-1 max-w-md">
-                <SearchBar />
-              </div> */}
             </div>
 
             {/* Right: User Actions */}

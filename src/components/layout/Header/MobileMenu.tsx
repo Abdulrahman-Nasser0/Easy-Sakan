@@ -1,5 +1,4 @@
 import Link from "next/link";
-import SearchBar from "./SearchBar";
 import { Button } from "@/components/common/Button";
 
 interface MobileMenuProps {
@@ -14,10 +13,7 @@ export default function MobileMenu({ isMenuOpen, setIsMenuOpen, isAuthenticated 
   return (
     <div className="md:hidden border-t border-slate-700 py-4 bg-slate-900/50">
       <div className="space-y-4">
-        {/* Mobile Search */}
-        {/* <SearchBar isMobile={true} onMenuClose={() => setIsMenuOpen(false)} /> */}
-
-        {/* Mobile Navigation - Add booking features here */}
+        {/* Mobile Navigation */}
         <div className="space-y-1">
           {/* Navigation items for booking features */}
         </div>

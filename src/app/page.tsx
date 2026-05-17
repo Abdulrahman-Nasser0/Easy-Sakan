@@ -8,7 +8,25 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
 
-  
+  useEffect(() => {
+    // Check session from the API
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.role) {
+            setIsAuthenticated(true);
+            setUserRole(data.role);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to check auth:", error);
+      }
+    };
+    checkAuth();
+  }, []);
+
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Hero Section */}

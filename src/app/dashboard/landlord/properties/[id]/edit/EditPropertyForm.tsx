@@ -45,29 +45,15 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
     let cancelled = false;
     
     async function loadProperty() {
-      console.log('🔍 EditPropertyForm: Starting to load property', propertyId);
       try {
-        // Add a timeout to prevent infinite loading
-        const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Request timed out. Please check your connection and try again.')), 15000)
-        );
-        
-        console.log('🔍 EditPropertyForm: Calling getPropertyById...');
-        const response = await Promise.race([
-          getPropertyById(propertyId),
-          timeoutPromise
-        ]) as any;
-        
-        console.log('🔍 EditPropertyForm: Response received:', response?.isSuccess, response?.message);
+        const response = await getPropertyById(propertyId) as any;
         
         if (cancelled) return;
         
         if (response.isSuccess && response.data) {
           const p = response.data;
-          console.log('🔍 EditPropertyForm: Property data:', p.title, 'images:', p.images?.length);
           
-          // Map API response fields correctly
-          setForm({
+          const newForm = {
             title: p.title || '',
             description: p.description || '',
             price: p.price?.toString() || '',
@@ -80,13 +66,14 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
             listingMode: p.listingMode || 'Bed',
             gender: p.gender || 'Any',
             amenities: p.amenities || [],
-          });
+          };
+          
+          setForm(newForm);
           setExistingImages(p.images || []);
         } else {
-          setError(response.message || 'Failed to load property');
+          setError(response?.message || 'Failed to load property');
         }
       } catch (err) {
-        console.error('🔍 EditPropertyForm: Error:', err);
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Error loading property');
         }

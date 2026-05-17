@@ -65,7 +65,7 @@ export default function PropertiesPage() {
   return (
     <div className={studentStyles.pageContainer}>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className="bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-white">🏠 Available Properties</h1>
           <p className="text-slate-400 mt-1">Browse and filter properties near you</p>

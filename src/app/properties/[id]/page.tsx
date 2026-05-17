@@ -70,7 +70,7 @@ export default function PropertyDetail() {
   return (
     <div className={studentStyles.pageContainer}>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className="bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/properties" className="text-blue-400 hover:text-blue-300 text-sm font-medium mb-3 inline-block">
             ← Back to Properties
@@ -214,7 +214,7 @@ export default function PropertyDetail() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             {/* Price Card */}
-            <div className={`${studentStyles.card} border border-slate-700 rounded-lg p-6 sticky top-24`}>
+            <div className={`${studentStyles.card} border border-slate-700 rounded-lg p-6`}>
               <div className="mb-6">
                 <p className="text-slate-400 text-sm mb-1">💰 Monthly Price</p>
                 <p className="text-4xl font-bold text-blue-400">{property.price.toLocaleString()}</p>

@@ -8,24 +8,7 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check session from the API
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/auth/session");
-        if (response.ok) {
-          const data = await response.json();
-          if (data?.role) {
-            setIsAuthenticated(true);
-            setUserRole(data.role);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to check auth:", error);
-      }
-    };
-    checkAuth();
-  }, []);
+  
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Hero Section */}
@@ -76,89 +59,54 @@ export default function Home() {
             
             {/* Conditional buttons based on auth status */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link href="/properties">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  rightIcon={
+                    <svg
+                      className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                  }
+                >
+                  Browse Properties
+                </Button>
+              </Link>
               {!isAuthenticated ? (
                 <>
-                  <Link href="/login">
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      rightIcon={
-                        <svg
-                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
-                          />
-                        </svg>
-                      }
-                    >
-                      Explore Properties
-                    </Button>
-                  </Link>
                   <Link href="/signup">
                     <Button variant="secondary" size="lg">
                       Create Account
                     </Button>
                   </Link>
+                  <Link href="/login">
+                    <Button variant="outline" size="lg">
+                      Sign In
+                    </Button>
+                  </Link>
                 </>
               ) : userRole === 'Admin' ? (
-                <>
-                  <Link href="/admin/dashboard">
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      rightIcon={
-                        <svg
-                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
-                          />
-                        </svg>
-                      }
-                    >
-                      Admin Dashboard
-                    </Button>
-                  </Link>
-                </>
+                <Link href="/admin/dashboard">
+                  <Button variant="secondary" size="lg">
+                    Admin Dashboard
+                  </Button>
+                </Link>
               ) : (
-                <>
-                  <Link href={userRole === 'Landlord' ? "/dashboard/landlord" : "/dashboard/student"}>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      rightIcon={
-                        <svg
-                          className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
-                          />
-                        </svg>
-                      }
-                    >
-                      Continue Browsing
-                    </Button>
-                  </Link>
-                </>
+                <Link href={userRole === 'Landlord' ? "/dashboard/landlord" : "/dashboard/student"}>
+                  <Button variant="secondary" size="lg">
+                    Continue Browsing
+                  </Button>
+                </Link>
               )}
             </div>
 

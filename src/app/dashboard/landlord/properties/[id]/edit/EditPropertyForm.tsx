@@ -330,7 +330,9 @@ export default function EditPropertyForm({ token, propertyId }: EditPropertyProp
   return (
     <div className={landlordStyles.pageContainer}>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
+            <div className="bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
+
+
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Link href="/dashboard/landlord" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium mb-3 inline-block">
             ← Back to Dashboard

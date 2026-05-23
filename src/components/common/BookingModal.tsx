@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createBooking } from '@/lib/api';
 import { studentStyles } from '@/styles/studentStyles';
+import { getSession } from '@/lib/session';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -15,8 +16,7 @@ interface BookingModalProps {
 
 export default function BookingModal({ isOpen, onClose, propertyId, propertyTitle, monthlyPrice }: BookingModalProps) {
   const router = useRouter();
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
+  const [moveInDate, setMoveInDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -27,16 +27,8 @@ export default function BookingModal({ isOpen, onClose, propertyId, propertyTitl
     setLoading(true);
     setError('');
 
-    // Local validation
-    if (!checkInDate || !checkOutDate) {
-      setError('Please select both check-in and check-out dates.');
-      setLoading(false);
-      return;
-    }
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    if (checkOut <= checkIn) {
-      setError('Check-out date must be after check-in date.');
+    if (!moveInDate) {
+      setError('Please select a move-in date.');
       setLoading(false);
       return;
     }
@@ -58,12 +50,10 @@ export default function BookingModal({ isOpen, onClose, propertyId, propertyTitl
 
       const response = await createBooking(session.token, {
         propertyId,
-        checkInDate,
-        checkOutDate,
+        moveInDate,
       });
 
       if (response.isSuccess) {
-        // Close modal and redirect to my bookings
         onClose();
         router.push('/dashboard/student/my-bookings');
       } else {
@@ -87,25 +77,17 @@ export default function BookingModal({ isOpen, onClose, propertyId, propertyTitl
         <form onSubmit={handleSubmit} className={studentStyles.modalBody}>
           {error && <div className={studentStyles.alertError + " mb-4"}>{error}</div>}
           
-          <div className="mb-4">
-            <label className={studentStyles.inputLabel}>Check-in Date</label>
-            <input 
-              type="date" 
-              value={checkInDate}
-              onChange={(e) => setCheckInDate(e.target.value)}
-              className={studentStyles.input}
-              required
-            />
-          </div>
           <div className="mb-6">
-            <label className={studentStyles.inputLabel}>Check-out Date</label>
+            <label className={studentStyles.inputLabel}>Move-in Date</label>
             <input 
               type="date" 
-              value={checkOutDate}
-              onChange={(e) => setCheckOutDate(e.target.value)}
+              value={moveInDate}
+              onChange={(e) => setMoveInDate(e.target.value)}
               className={studentStyles.input}
+              min={new Date().toISOString().split('T')[0]}
               required
             />
+            <p className="text-xs text-slate-500 mt-1">You will have 48 hours to complete payment after booking.</p>
           </div>
 
           <div className="bg-slate-800/50 p-4 rounded-lg mb-6 border border-slate-700">
@@ -113,7 +95,9 @@ export default function BookingModal({ isOpen, onClose, propertyId, propertyTitl
               <span className="text-slate-400">Monthly Price:</span>
               <span className="text-blue-400 font-bold">{monthlyPrice.toLocaleString()} EGP</span>
             </div>
-            <p className="text-xs text-slate-500">Total price will be calculated based on your stay duration.</p>
+            <p className="text-xs text-slate-500">
+              A deposit of {monthlyPrice.toLocaleString()} EGP is required to confirm your booking.
+            </p>
           </div>
 
           <div className={studentStyles.modalFooter}>

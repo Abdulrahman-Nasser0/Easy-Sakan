@@ -8,6 +8,34 @@ import Image from 'next/image';
 import { studentStyles } from '@/styles/studentStyles';
 import { getImageUrl } from '@/lib/utils';
 
+const COMMON_AMENITIES = [
+  'WiFi',
+  'Air Conditioning',
+  'Heating',
+  'Parking',
+  'Laundry',
+  'Gym',
+  'Pool',
+  'Security',
+  'Elevator',
+  'Furnished',
+  'Kitchen',
+  'Balcony',
+];
+
+const UNIVERSITIES = [
+  'Cairo University',
+  'AUC',
+  'GUC',
+  'BUE',
+  'MSA',
+  'Helwan University',
+  'Ain Shams University',
+  'German Academy',
+  'MIU',
+  'MTI',
+];
+
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,10 +46,16 @@ export default function PropertiesPage() {
   const [filters, setFilters] = useState({
     search: '',
     location: '',
+    university: '',
     minPrice: '',
     maxPrice: '',
     gender: 'Any',
+    rentalType: '',
+    amenities: '',
     sortBy: 'createdAt',
+    sortOrder: 'desc',
+    includeSoldOut: false,
+    minRating: '',
   });
 
   useEffect(() => {
@@ -36,11 +70,16 @@ export default function PropertiesPage() {
       const response = await getAllProperties(page, 12, {
         search: filters.search || undefined,
         location: filters.location || undefined,
+        university: filters.university || undefined,
         minPrice: filters.minPrice ? parseInt(filters.minPrice) : undefined,
         maxPrice: filters.maxPrice ? parseInt(filters.maxPrice) : undefined,
         gender: filters.gender !== 'Any' ? filters.gender : undefined,
+        rentalType: filters.rentalType || undefined,
+        amenities: filters.amenities || undefined,
         sortBy: filters.sortBy,
-        sortOrder: 'desc',
+        sortOrder: filters.sortOrder as 'asc' | 'desc' | undefined,
+        includeSoldOut: filters.includeSoldOut || undefined,
+        minRating: filters.minRating ? parseInt(filters.minRating) : undefined,
       });
 
       if (response.isSuccess && response.data?.items) {
@@ -57,8 +96,27 @@ export default function PropertiesPage() {
   };
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    setFilters(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    setPage(1);
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      search: '',
+      location: '',
+      university: '',
+      minPrice: '',
+      maxPrice: '',
+      gender: 'Any',
+      rentalType: '',
+      amenities: '',
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+      includeSoldOut: false,
+      minRating: '',
+    });
     setPage(1);
   };
 
@@ -104,6 +162,21 @@ export default function PropertiesPage() {
                   />
                 </div>
 
+                <div>
+                  <label className={studentStyles.inputLabel}>Nearby University</label>
+                  <select
+                    name="university"
+                    value={filters.university}
+                    onChange={handleFilterChange}
+                    className={studentStyles.select}
+                  >
+                    <option value="">Any University</option>
+                    {UNIVERSITIES.map(u => (
+                      <option key={u} value={u}>{u}</option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className={studentStyles.inputLabel}>Min Price</label>
@@ -144,6 +217,52 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
+                  <label className={studentStyles.inputLabel}>Rental Type</label>
+                  <select
+                    name="rentalType"
+                    value={filters.rentalType}
+                    onChange={handleFilterChange}
+                    className={studentStyles.select}
+                  >
+                    <option value="">All Types</option>
+                    <option value="Bed">Bed (Shared Room)</option>
+                    <option value="EntireUnit">Entire Unit</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={studentStyles.inputLabel}>Min Rating</label>
+                  <select
+                    name="minRating"
+                    value={filters.minRating}
+                    onChange={handleFilterChange}
+                    className={studentStyles.select}
+                  >
+                    <option value="">Any Rating</option>
+                    <option value="1">1+ Stars</option>
+                    <option value="2">2+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="5">5 Stars</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={studentStyles.inputLabel}>Amenities</label>
+                  <select
+                    name="amenities"
+                    value={filters.amenities}
+                    onChange={handleFilterChange}
+                    className={studentStyles.select}
+                  >
+                    <option value="">Any Amenities</option>
+                    {COMMON_AMENITIES.map(a => (
+                      <option key={a} value={a}>{a}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
                   <label className={studentStyles.inputLabel}>Sort By</label>
                   <select
                     name="sortBy"
@@ -152,23 +271,37 @@ export default function PropertiesPage() {
                     className={studentStyles.select}
                   >
                     <option value="createdAt">Latest</option>
-                    <option value="price">Price: Low to High</option>
+                    <option value="price">Price</option>
                     <option value="rating">Rating</option>
                   </select>
                 </div>
 
+                <div>
+                  <label className={studentStyles.inputLabel}>Sort Order</label>
+                  <select
+                    name="sortOrder"
+                    value={filters.sortOrder}
+                    onChange={handleFilterChange}
+                    className={studentStyles.select}
+                  >
+                    <option value="desc">High to Low</option>
+                    <option value="asc">Low to High</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="includeSoldOut"
+                    checked={filters.includeSoldOut}
+                    onChange={handleFilterChange}
+                    className="w-4 h-4 rounded bg-slate-700 border-slate-600 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label className="text-sm text-slate-300">Show Sold Out</label>
+                </div>
+
                 <button
-                  onClick={() => {
-                    setFilters({
-                      search: '',
-                      location: '',
-                      minPrice: '',
-                      maxPrice: '',
-                      gender: 'Any',
-                      sortBy: 'createdAt',
-                    });
-                    setPage(1);
-                  }}
+                  onClick={resetFilters}
                   className={studentStyles.btnSecondary}
                 >
                   Reset Filters
@@ -216,12 +349,20 @@ export default function PropertiesPage() {
                               Sold Out
                             </div>
                           )}
+                          {property.mlInsights?.dealRating && property.mlInsights.dealRating === 'Excellent' && (
+                            <div className="absolute top-2 left-2 bg-emerald-600/90 text-white px-3 py-1 rounded-full text-sm font-medium">
+                              🔥 Best Deal
+                            </div>
+                          )}
                         </div>
 
                         {/* Content */}
                         <div className="p-4">
                           <h3 className="text-lg font-bold text-white truncate">{property.title}</h3>
                           <p className="text-sm text-slate-400 mb-2">{property.location.address}</p>
+                          {property.location.nearestUniversity && (
+                            <p className="text-xs text-blue-400 mb-2">🎓 Near {property.location.nearestUniversity}</p>
+                          )}
 
                           <div className="flex justify-between items-center mb-3">
                             <div>
@@ -255,6 +396,11 @@ export default function PropertiesPage() {
                             <span>🛏️ {property.bedrooms} bed</span>
                             <span>🚿 {property.bathrooms} bath</span>
                             <span>📐 {property.areaSqm}m²</span>
+                            {property.listingMode && (
+                              <span className={property.listingMode === 'Bed' ? 'text-emerald-400' : 'text-blue-400'}>
+                                {property.listingMode === 'Bed' ? '🛌 Bed' : '🏠 Unit'}
+                              </span>
+                            )}
                           </div>
 
                           {/* Amenities Preview */}
@@ -268,6 +414,19 @@ export default function PropertiesPage() {
                               {property.amenities.length > 3 && (
                                 <span className="inline-block text-xs text-slate-500">+{property.amenities.length - 3}</span>
                               )}
+                            </div>
+                          )}
+
+                          {/* ML Price Insight */}
+                          {property.mlInsights && (
+                            <div className="mb-3">
+                              <span className={`text-xs font-medium px-2 py-1 rounded ${
+                                property.mlInsights.dealRating === 'Excellent' ? 'bg-emerald-600/30 text-emerald-300' :
+                                property.mlInsights.dealRating === 'Good' ? 'bg-blue-600/30 text-blue-300' :
+                                'bg-yellow-600/30 text-yellow-300'
+                              }`}>
+                                💰 {property.mlInsights.dealRating} Deal: {property.mlInsights.priceDifferencePercentage > 0 ? '+' : ''}{property.mlInsights.priceDifferencePercentage}% vs market
+                              </span>
                             </div>
                           )}
 

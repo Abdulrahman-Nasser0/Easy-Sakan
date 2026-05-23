@@ -107,7 +107,7 @@ export interface User {
 
 export type UserStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'DEACTIVATED';
 export type PropertyStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
-export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'DISPUTED';
+export type BookingStatus = 'PENDING_PAYMENT' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED' | 'DISPUTED' | 'REFUNDED';
 export type DisputeStatus = 'OPEN' | 'RESOLVED' | 'DISMISSED';
 export type FraudStatus = 'PENDING' | 'RESOLVED' | 'DISMISSED';
 
@@ -152,12 +152,19 @@ export interface AdminBooking {
   propertyId: number;
   propertyTitle: string;
   status: BookingStatus;
-  checkInDate: string;
-  checkOutDate: string;
-  totalPrice: number;
+  amountDue: number;
+  amountPaid: number;
+  moveInDate: string;
+  paymentDeadline: string | null;
   paymentStatus: 'PENDING' | 'CONFIRMED' | 'REFUNDED';
-  createdAt: string;
   hasDispute: boolean;
+  disputeStatus?: DisputeStatus;
+  createdAt: string;
+  confirmedAt?: string;
+  landlordContact?: string;
+  studentContact?: string;
+  paymentMethod?: string;
+  transactionReference?: string;
 }
 
 export interface AdminDispute {

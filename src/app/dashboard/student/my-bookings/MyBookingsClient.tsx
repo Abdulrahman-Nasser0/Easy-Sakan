@@ -3,18 +3,45 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getMyBookings, cancelBookingRequest } from '@/lib/api';
-import { BookingStatus } from '@/lib/types';
 import { studentStyles, bookingStatusColors, paymentStatusColors } from '@/styles/studentStyles';
 
-interface Booking {
+type ApiBookingStatus = 'PENDING_PAYMENT' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED' | 'DISPUTED' | 'REFUNDED';
+
+interface BookingSummary {
+  pending: number;
+  confirmed: number;
+  completed: number;
+  cancelled: number;
+  expired: number;
+}
+
+interface BookingItem {
   id: number;
   propertyId: number;
   propertyTitle: string;
-  checkInDate: string;
-  checkOutDate: string;
-  totalPrice: number;
-  status: BookingStatus;
-  paymentStatus: 'PENDING' | 'CONFIRMED' | 'REFUNDED';
+  propertyImage?: string;
+  propertyLocation?: string;
+  status: ApiBookingStatus;
+  amountDue: number;
+  currency: string;
+  moveInDate: string;
+  paymentDeadline: string | null;
+  timeLeftSeconds: number | null;
+  paymentInstructions?: {
+    method: string;
+    walletNumber: string;
+    accountName?: string;
+    steps: string[];
+  } | null;
+  whatsappLink?: string | null;
+  landlordContact?: {
+    name: string;
+    phone: string;
+  } | null;
+  trustPeriodEndsAt?: string | null;
+  canReview?: boolean;
+  reviewId?: number | null;
+  canCancel?: boolean;
   createdAt: string;
 }
 
@@ -22,8 +49,54 @@ interface MyBookingsClientProps {
   token: string;
 }
 
+// Countdown timer helper component
+function CountdownTimer({ expiresAt }: { expiresAt: string }) {
+  const [timeLeft, setTimeLeft] = useState('');
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const deadline = new Date(expiresAt).getTime();
+      const diff = deadline - now;
+
+      if (diff <= 0) {
+        setExpired(true);
+        setTimeLeft('EXPIRED');
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (hours > 24) {
+        const days = Math.floor(hours / 24);
+        setTimeLeft(`${days}d ${hours % 24}h`);
+      } else {
+        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [expiresAt]);
+
+  if (expired) {
+    return <span className="text-red-400 font-mono font-bold">Expired</span>;
+  }
+
+  return (
+    <span className={`font-mono font-bold ${timeLeft.startsWith('0') ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`}>
+      {timeLeft}
+    </span>
+  );
+}
+
 export function MyBookingsClient({ token }: MyBookingsClientProps) {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [summary, setSummary] = useState<BookingSummary | null>(null);
+  const [bookings, setBookings] = useState<BookingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
@@ -43,45 +116,24 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
     setError('');
 
     try {
-      console.log('📤 Fetching bookings with token:', token?.substring(0, 20) + '...');
       const response = await getMyBookings(token, page, 10, statusFilter || undefined);
-      
-      console.log('📥 Bookings response:', response);
-      console.log('✅ isSuccess:', response.isSuccess);
-      console.log('📊 data:', response.data);
 
       if (!response.isSuccess) {
-        console.log('❌ Response not successful:', response.message);
         setError(response.message || 'Failed to load bookings');
         setLoading(false);
         return;
       }
 
-      // Handle different response data structures
-      let bookingsList: Booking[] = [];
-      let pages = 1;
-
       if (response.data?.items && Array.isArray(response.data.items)) {
-        // Standard paginated response: { items: [], totalPages: 1 }
-        bookingsList = response.data.items;
-        pages = response.data.totalPages || 1;
-      } else if (Array.isArray(response.data)) {
-        // Direct array response
-        bookingsList = response.data;
-        pages = 1;
-      } else if (response.data && typeof response.data === 'object') {
-        // Response is an object, maybe it's a single booking wrapped
-        console.warn('⚠️ Unexpected response data structure:', response.data);
-        setError('Unexpected response format from server');
-        setLoading(false);
-        return;
+        setBookings(response.data.items);
+        setTotalPages(response.data.totalPages || 1);
+        if (response.data.summary) {
+          setSummary(response.data.summary);
+        }
+      } else {
+        setBookings([]);
       }
-
-      console.log('✅ Loaded bookings:', bookingsList.length);
-      setBookings(bookingsList);
-      setTotalPages(pages);
     } catch (err) {
-      console.log('❌ Error fetching bookings:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
@@ -96,15 +148,13 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
   const handleConfirmCancel = async () => {
     if (!selectedBookingId) return;
-
     setCancelLoading(true);
 
     try {
-      const response = await cancelBookingRequest(token, selectedBookingId, cancelReason);
-
+      const response = await cancelBookingRequest(token, selectedBookingId, cancelReason || undefined);
       if (response.isSuccess) {
         setBookings(bookings.map(b =>
-          b.id === selectedBookingId ? { ...b, status: 'CANCELLED' as BookingStatus } : b
+          b.id === selectedBookingId ? { ...b, status: 'CANCELLED' } : b
         ));
         setCancelDialogOpen(false);
         setSelectedBookingId(null);
@@ -118,12 +168,30 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
     }
   };
 
-  const getStatusColor = (status: BookingStatus) => {
-    return bookingStatusColors[status] || bookingStatusColors.PENDING;
+  const getStatusColor = (status: ApiBookingStatus) => {
+    const colors: Record<string, string> = {
+      PENDING_PAYMENT: 'bg-yellow-900/50 border-yellow-600 text-yellow-200',
+      CONFIRMED: 'bg-emerald-900/50 border-emerald-600 text-emerald-200',
+      COMPLETED: 'bg-blue-900/50 border-blue-600 text-blue-200',
+      CANCELLED: 'bg-red-900/50 border-red-600 text-red-200',
+      EXPIRED: 'bg-slate-700 border-slate-600 text-slate-300',
+      DISPUTED: 'bg-orange-900/50 border-orange-600 text-orange-200',
+      REFUNDED: 'bg-purple-900/50 border-purple-600 text-purple-200',
+    };
+    return colors[status] || colors.PENDING_PAYMENT;
   };
 
-  const getPaymentColor = (status: string) => {
-    return paymentStatusColors[status as keyof typeof paymentStatusColors] || paymentStatusColors.PENDING;
+  const formatStatus = (status: ApiBookingStatus) => {
+    const labels: Record<string, string> = {
+      PENDING_PAYMENT: '⏳ Pending Payment',
+      CONFIRMED: '✅ Confirmed',
+      COMPLETED: '✓ Completed',
+      CANCELLED: '✕ Cancelled',
+      EXPIRED: '⌛ Expired',
+      DISPUTED: '⚠️ Disputed',
+      REFUNDED: '↩ Refunded',
+    };
+    return labels[status] || status;
   };
 
   return (
@@ -134,6 +202,24 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
           <h1 className={studentStyles.pageTitle}>📅 My Bookings</h1>
           <p className={studentStyles.pageSubtitle}>View and manage your property bookings</p>
         </div>
+
+        {/* Summary Cards */}
+        {summary && (
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+            {[
+              { label: 'Pending', count: summary.pending, color: 'bg-yellow-600/20 border-yellow-600/30 text-yellow-300' },
+              { label: 'Confirmed', count: summary.confirmed, color: 'bg-emerald-600/20 border-emerald-600/30 text-emerald-300' },
+              { label: 'Completed', count: summary.completed, color: 'bg-blue-600/20 border-blue-600/30 text-blue-300' },
+              { label: 'Cancelled', count: summary.cancelled, color: 'bg-red-600/20 border-red-600/30 text-red-300' },
+              { label: 'Expired', count: summary.expired, color: 'bg-slate-600/20 border-slate-600/30 text-slate-300' },
+            ].map(item => (
+              <div key={item.label} className={`${item.color} border rounded-lg p-3 text-center`}>
+                <p className="text-2xl font-bold">{item.count}</p>
+                <p className="text-xs mt-1 opacity-80">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Status Filter */}
         <div className="flex gap-2 mb-8 flex-wrap">
@@ -147,7 +233,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
           >
             All
           </button>
-          {(['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'] as BookingStatus[]).map(status => (
+          {(['PENDING_PAYMENT', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'EXPIRED'] as ApiBookingStatus[]).map(status => (
             <button
               key={status}
               onClick={() => { setStatusFilter(status); setPage(1); }}
@@ -157,7 +243,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                   : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
               }`}
             >
-              {status}
+              {formatStatus(status)}
             </button>
           ))}
         </div>
@@ -199,56 +285,156 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                       <div>
                         <h3 className="text-lg font-bold text-white">{booking.propertyTitle}</h3>
                         <p className="text-sm text-slate-400">Booking ID: #{booking.id}</p>
+                        {booking.propertyLocation && (
+                          <p className="text-sm text-slate-500">📍 {booking.propertyLocation}</p>
+                        )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>
-                        {booking.status}
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(booking.status)}`}>
+                        {formatStatus(booking.status)}
                       </span>
                     </div>
 
+                    {/* Payment Timer - for PENDING_PAYMENT bookings */}
+                    {booking.status === 'PENDING_PAYMENT' && booking.paymentDeadline && (
+                      <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 mb-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-yellow-300 text-sm font-medium">⏳ Payment Deadline:</span>
+                          <CountdownTimer expiresAt={booking.paymentDeadline} />
+                        </div>
+                        {booking.timeLeftSeconds && (
+                          <p className="text-yellow-400/60 text-xs mt-1">
+                            Complete payment within 48 hours to secure your booking
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Trust Period - for CONFIRMED bookings */}
+                    {booking.status === 'CONFIRMED' && booking.trustPeriodEndsAt && (
+                      <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-3 mb-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-blue-300 text-sm font-medium">🛡️ Trust Period ends:</span>
+                          <CountdownTimer expiresAt={booking.trustPeriodEndsAt} />
+                        </div>
+                        <p className="text-blue-400/60 text-xs mt-1">
+                          You can report issues within the 72-hour trust period
+                        </p>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-400">Check-in</p>
+                        <p className="text-sm text-slate-400">Move-in Date</p>
                         <p className="font-medium text-white">
-                          {new Date(booking.checkInDate).toLocaleDateString()}
+                          {new Date(booking.moveInDate).toLocaleDateString()}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-400">Check-out</p>
-                        <p className="font-medium text-white">
-                          {new Date(booking.checkOutDate).toLocaleDateString()}
+                        <p className="text-sm text-slate-400">Amount Due</p>
+                        <p className="font-medium text-blue-400">
+                          {booking.amountDue.toLocaleString()} {booking.currency}
                         </p>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-slate-700">
-                      <p className={`text-sm font-medium ${getPaymentColor(booking.paymentStatus)}`}>
-                        Payment: {booking.paymentStatus}
-                      </p>
-                    </div>
+                    {/* Landlord Contact (after CONFIRMED) */}
+                    {booking.landlordContact && (
+                      <div className="mt-4 pt-4 border-t border-slate-700">
+                        <p className="text-sm text-slate-400 mb-2">👤 Landlord Contact</p>
+                        <div className="bg-slate-800/50 rounded-lg p-3">
+                          <p className="text-white font-medium">{booking.landlordContact.name}</p>
+                          <a href={`tel:${booking.landlordContact.phone}`} className="text-blue-400 hover:text-blue-300 text-sm">
+                            📞 {booking.landlordContact.phone}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Payment Instructions */}
+                    {booking.paymentInstructions && (
+                      <div className="mt-4 pt-4 border-t border-slate-700">
+                        <p className="text-sm text-slate-400 mb-2">💳 Payment Instructions</p>
+                        <div className="bg-slate-800/50 rounded-lg p-3 space-y-2">
+                          <p className="text-white text-sm">
+                            Method: <span className="font-bold text-yellow-400">{booking.paymentInstructions.method}</span>
+                          </p>
+                          <p className="text-white text-sm">
+                            Wallet: <span className="font-mono text-blue-400">{booking.paymentInstructions.walletNumber}</span>
+                          </p>
+                          {booking.paymentInstructions.accountName && (
+                            <p className="text-white text-sm">
+                              Account: <span className="font-medium">{booking.paymentInstructions.accountName}</span>
+                            </p>
+                          )}
+                          {booking.paymentInstructions.steps.length > 0 && (
+                            <div>
+                              <p className="text-xs text-slate-400 mt-2 mb-1">Steps:</p>
+                              <ol className="list-decimal list-inside text-xs text-slate-300 space-y-1">
+                                {booking.paymentInstructions.steps.map((step, i) => (
+                                  <li key={i}>{step}</li>
+                                ))}
+                              </ol>
+                            </div>
+                          )}
+                          {booking.whatsappLink && (
+                            <a
+                              href={booking.whatsappLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors"
+                            >
+                              💬 Send via WhatsApp
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Review Section for COMPLETED bookings */}
+                    {booking.status === 'COMPLETED' && (
+                      <div className="mt-4 pt-4 border-t border-slate-700">
+                        {booking.canReview ? (
+                          <Link
+                            href={`/properties/${booking.propertyId}/review?bookingId=${booking.id}`}
+                            className={`${studentStyles.btnPrimary} inline-flex items-center gap-2 text-sm`}
+                          >
+                            ⭐ Write a Review
+                          </Link>
+                        ) : booking.reviewId ? (
+                          <p className="text-sm text-emerald-400">⭐ Review submitted ✓</p>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Price & Actions */}
+                  {/* Actions */}
                   <div className="md:col-span-1">
                     <div className="bg-blue-600/10 border border-blue-600/30 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-slate-400">Total Price</p>
+                      <p className="text-sm text-slate-400">Amount Due</p>
                       <p className="text-2xl font-bold text-blue-400">
-                        {booking.totalPrice.toLocaleString()} EGP
+                        {booking.amountDue.toLocaleString()} {booking.currency}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {booking.status === 'PENDING_PAYMENT' ? 'Payment required to confirm' :
+                         booking.status === 'CONFIRMED' ? 'Payment confirmed ✓' :
+                         booking.status === 'COMPLETED' ? 'Transaction completed ✓' :
+                         booking.status}
                       </p>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2">
                       <Link
                         href={`/properties/${booking.propertyId}`}
-                        className={`${studentStyles.btnSecondary} flex-1 text-center text-sm`}
+                        className={`${studentStyles.btnSecondary} text-center text-sm`}
                       >
                         View Property
                       </Link>
-                      {booking.status === 'PENDING' && (
+                      {booking.canCancel && booking.status === 'PENDING_PAYMENT' && (
                         <button
                           onClick={() => handleCancelClick(booking.id)}
-                          className={`${studentStyles.btnDanger} flex-1 text-sm`}
+                          className={`${studentStyles.btnDanger} text-sm`}
                         >
-                          Cancel
+                          Cancel Booking
                         </button>
                       )}
                     </div>
@@ -313,7 +499,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
             <div className={studentStyles.modalBody}>
               <p className="text-slate-300 mb-4">
-                Are you sure you want to cancel this booking? This action cannot be undone.
+                Are you sure you want to cancel this booking? Your reserved slot will be released.
               </p>
 
               <textarea

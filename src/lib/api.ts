@@ -37,9 +37,9 @@ async function apiCall<T>(
       };
     }
 
-    let data: ApiResponse<T>;
+    let parsedBody: any;
     try {
-      data = JSON.parse(responseText);
+      parsedBody = JSON.parse(responseText);
     } catch (parseError) {
       return {
         isSuccess: false,
@@ -52,7 +52,18 @@ async function apiCall<T>(
       };
     }
     
-    return data;
+    // If the API response doesn't have an isSuccess field, treat it as successful if status is 2xx
+    if (parsedBody.isSuccess === undefined && response.ok) {
+      return {
+        isSuccess: true,
+        message: 'Success',
+        data: parsedBody,
+        statusCode: response.status,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    
+    return parsedBody as ApiResponse<T>;
     
   } catch (error) {
     console.error("❌ API call failed:", error);
@@ -433,11 +444,68 @@ export async function getMyListings(token: string, page: number = 1, pageSize: n
 }
 
 export async function togglePropertyAvailability(token: string, propertyId: number, isAvailable: boolean) {
-  return apiCall<any>(`/api/properties/${propertyId}/availability`, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ isAvailable }),
-  });
+  const endpoint = `/api/properties/${propertyId}/availability`;
+  const url = `${API_URL}${endpoint}`;
+  
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ isAvailable }),
+    });
+
+    const responseText = await response.text();
+    console.log('🔁 Toggle response status:', response.status, responseText.substring(0, 500));
+
+    if (!responseText || responseText.trim() === '') {
+      return {
+        isSuccess: true,
+        message: 'Availability updated',
+        data: { isAvailable },
+        statusCode: response.status,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    let data: ApiResponse<any>;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      if (response.ok) {
+        return {
+          isSuccess: true,
+          message: 'Availability updated',
+          data: { isAvailable },
+          statusCode: response.status,
+          timestamp: new Date().toISOString(),
+        };
+      }
+      return {
+        isSuccess: false,
+        message: 'Failed to update availability',
+        messageAr: "فشل في تحديث التوفر",
+        data: null,
+        errors: [`Invalid response: ${responseText.substring(0, 100)}`],
+        statusCode: response.status,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    return data;
+  } catch (error) {
+    console.error("❌ Toggle availability failed:", error);
+    return {
+      isSuccess: false,
+      message: error instanceof Error ? error.message : 'Failed to update availability',
+      messageAr: "فشل في تحديث التوفر",
+      data: null,
+      errors: [error instanceof Error ? error.message : "Network error"],
+      statusCode: 500,
+      timestamp: new Date().toISOString(),
+    };
+  }
 }
 
 export async function getRecommendedProperties(token: string, page: number = 1, pageSize: number = 10, basedOn: string = "views") {

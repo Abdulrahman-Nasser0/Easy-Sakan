@@ -80,12 +80,15 @@ export default function MyListings({ token }: MyListingsProps) {
         return;
       }
 
-      const response = await togglePropertyAvailability(token, propertyId, !currentStatus);
+      const newAvailability = !currentStatus;
+      const response = await togglePropertyAvailability(token, propertyId, newAvailability);
+
+      console.log('🔁 Toggle availability response:', response);
 
       if (response.isSuccess) {
         setListings(
           listings.map(l =>
-            l.id === propertyId ? { ...l, isAvailable: !currentStatus } : l
+            l.id === propertyId ? { ...l, isAvailable: newAvailability } : l
           )
         );
       } else {

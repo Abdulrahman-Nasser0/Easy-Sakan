@@ -708,7 +708,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
 
       {/* Confirmation Modal */}
       {showConfirmModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60]">
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-60">
           <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-md w-full mx-4 p-6">
             <h3 className="text-lg font-bold text-white mb-4">{confirmTitle}</h3>
             <p className="text-slate-300 mb-6">{confirmMessage}</p>

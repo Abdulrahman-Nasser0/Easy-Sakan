@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -27,13 +28,18 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
       return;
     }
 
+    if (!bookingId) {
+      setError('Cannot submit review: no booking reference found. Please submit from your bookings page.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
       const response = await createReview(token, {
         propertyId,
-        bookingId: bookingId || 0,
+        bookingId,
         rating,
         comment: comment || undefined,
       });

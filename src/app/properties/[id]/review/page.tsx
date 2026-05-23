@@ -9,8 +9,8 @@ export default async function ReviewPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { bookingId?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ bookingId?: string }>;
 }) {
   const session = await getSession();
 
@@ -18,8 +18,10 @@ export default async function ReviewPage({
     redirect('/login');
   }
 
-  const propertyId = parseInt(params.id);
-  const bookingId = searchParams.bookingId ? parseInt(searchParams.bookingId) : undefined;
+  const { id } = await params;
+  const { bookingId: bookingIdStr } = await searchParams;
+  const propertyId = parseInt(id);
+  const bookingId = bookingIdStr ? parseInt(bookingIdStr) : undefined;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">

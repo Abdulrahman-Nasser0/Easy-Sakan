@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { adminGetProperties, adminApproveProperty, adminRejectProperty } from '@/lib/api';
+import { adminGetProperties, adminApproveProperty, adminRejectProperty, adminDeleteProperty } from '@/lib/api';
 import { adminStyles, statusColors } from '@/styles/adminStyles';
 import { getImageUrl } from '@/lib/utils';
 
@@ -54,6 +54,10 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [propertyToDelete, setPropertyToDelete] = useState<number | null>(null);
+  const [deleteReason, setDeleteReason] = useState('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Filters
   const [filterStatus, setFilterStatus] = useState('');
@@ -143,6 +147,33 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
       setError('Error rejecting property');
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  const handleDeleteClick = (propertyId: number) => {
+    setPropertyToDelete(propertyId);
+    setDeleteReason('');
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!propertyToDelete || !deleteReason.trim()) return;
+    setDeleteLoading(true);
+    try {
+      const response = await adminDeleteProperty(token, propertyToDelete, deleteReason, true);
+      if (response.isSuccess) {
+        setShowDeleteModal(false);
+        setPropertyToDelete(null);
+        setDeleteReason('');
+        fetchProperties();
+      } else {
+        setError(response.message || 'Failed to delete property');
+      }
+    } catch (err) {
+      setError('Error deleting property');
+      console.error(err);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -361,6 +392,17 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                       </button>
                     </div>
                   )}
+                  {property.status !== 'DELETED' && (
+                    <div className="mt-2">
+                      <button
+                        onClick={() => handleDeleteClick(property.id)}
+                        disabled={actionLoading === property.id}
+                        className={`w-full ${adminStyles.btnDanger} ${adminStyles.btnSmall} opacity-60 hover:opacity-100`}
+                      >
+                        🗑️ Force Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -389,6 +431,44 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
             >
               Next →
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Property Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-md w-full">
+            <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700 px-6 py-4">
+              <h3 className="text-lg font-semibold text-white">🗑️ Force Delete Property</h3>
+            </div>
+            <div className="px-6 py-6">
+              <div className="bg-red-900/20 border border-red-600/30 rounded-lg p-4 mb-6">
+                <p className="text-sm text-red-300 font-medium">⚠️ Warning</p>
+                <p className="text-sm text-red-200/80 mt-1">
+                  This action will permanently delete this property and cancel all active bookings. This cannot be undone.
+                </p>
+              </div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Reason for deletion</label>
+              <textarea
+                value={deleteReason}
+                onChange={(e) => setDeleteReason(e.target.value)}
+                placeholder="Specify the reason for force deletion..."
+                className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 mb-4 min-h-24"
+              />
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => setShowDeleteModal(false)} className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={deleteLoading || !deleteReason.trim()}
+                  className="bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {deleteLoading ? '⏳ Deleting...' : '🗑️ Force Delete'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

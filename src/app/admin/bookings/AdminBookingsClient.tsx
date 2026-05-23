@@ -69,10 +69,16 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  // Dispute/Refund modals
+  // Action modals
   const [showDisputeModal, setShowDisputeModal] = useState(false);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
+  const [showDismissModal, setShowDismissModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<(() => Promise<void>) | null>(null);
+  const [confirmTitle, setConfirmTitle] = useState('');
+  const [confirmMessage, setConfirmMessage] = useState('');
   const [disputeResolution, setDisputeResolution] = useState('');
   const [refundAmount, setRefundAmount] = useState('');
   const [cancelReason, setCancelReason] = useState('');
@@ -130,11 +136,16 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   };
 
   const handleConfirmPayment = async (bookingId: number) => {
-    if (!confirm('Confirm payment received for this booking?')) return;
+    console.log('🔵 Confirm Payment clicked for booking:', bookingId);
     setActionLoading(true);
-
     try {
-      const response = await adminConfirmPayment(token, bookingId);
+      const booking = bookings.find(b => b.id === bookingId);
+      const response = await adminConfirmPayment(token, bookingId, {
+        paymentMethod: "MANUAL",
+        amountReceived: booking?.amountDue || 0,
+        note: "Confirmed by admin"
+      });
+      console.log('🟢 Confirm Payment response:', response);
       if (response.isSuccess) {
         fetchBookings();
         setShowDetailModal(false);
@@ -142,6 +153,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
         setError(response.message || 'Failed to confirm payment');
       }
     } catch (err) {
+      console.error('🔴 Confirm Payment error:', err);
       setError('Error confirming payment');
     } finally {
       setActionLoading(false);
@@ -149,9 +161,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   };
 
   const handleCompleteBooking = async (bookingId: number) => {
-    if (!confirm('Mark this booking as completed?')) return;
     setActionLoading(true);
-
     try {
       const response = await adminCompleteBooking(token, bookingId);
       if (response.isSuccess) {
@@ -239,9 +249,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   };
 
   const handleDismissDispute = async (bookingId: number) => {
-    if (!confirm('Dismiss this dispute?')) return;
     setActionLoading(true);
-
     try {
       const response = await adminDismissDispute(token, bookingId, 'No valid evidence found');
       if (response.isSuccess) {
@@ -264,6 +272,13 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
     setSortBy('createdAt');
     setSortOrder('desc');
     setPage(1);
+  };
+
+  const requestConfirmation = (title: string, message: string, action: () => Promise<void>) => {
+    setConfirmTitle(title);
+    setConfirmMessage(message);
+    setConfirmAction(() => action);
+    setShowConfirmModal(true);
   };
 
   return (
@@ -514,7 +529,11 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               <div className="flex flex-wrap gap-3">
                 {selectedBooking.status === 'PENDING_PAYMENT' && (
                   <button
-                    onClick={() => handleConfirmPayment(selectedBooking.id)}
+                    onClick={() => requestConfirmation(
+                      'Confirm Payment',
+                      `Are you sure you want to confirm payment of ${selectedBooking.amountDue.toLocaleString()} ${selectedBooking.currency || 'EGP'} for booking #${selectedBooking.id}?`,
+                      () => handleConfirmPayment(selectedBooking.id)
+                    )}
                     disabled={actionLoading}
                     className="bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
                   >
@@ -524,7 +543,11 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
 
                 {selectedBooking.status === 'CONFIRMED' && (
                   <button
-                    onClick={() => handleCompleteBooking(selectedBooking.id)}
+                    onClick={() => requestConfirmation(
+                      'Complete Booking',
+                      `Mark booking #${selectedBooking.id} as completed? This will trigger the review period for the student.`,
+                      () => handleCompleteBooking(selectedBooking.id)
+                    )}
                     disabled={actionLoading}
                     className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
                   >
@@ -558,11 +581,15 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                       ↩ Process Refund
                     </button>
                     <button
-                      onClick={() => handleDismissDispute(selectedBooking.id)}
+                      onClick={() => requestConfirmation(
+                        'Dismiss Dispute',
+                        `Dismiss the dispute on booking #${selectedBooking.id}? This will clear the dispute flag.`,
+                        () => handleDismissDispute(selectedBooking.id)
+                      )}
                       disabled={actionLoading}
                       className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
                     >
-                      Dismiss Dispute
+                      {actionLoading ? '⏳...' : 'Dismiss Dispute'}
                     </button>
                   </>
                 )}
@@ -673,6 +700,36 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                 className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 {actionLoading ? '⏳...' : 'Process Refund'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60]">
+          <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-md w-full mx-4 p-6">
+            <h3 className="text-lg font-bold text-white mb-4">{confirmTitle}</h3>
+            <p className="text-slate-300 mb-6">{confirmMessage}</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (confirmAction) {
+                    await confirmAction();
+                    setShowConfirmModal(false);
+                  }
+                }}
+                disabled={actionLoading}
+                className="bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+              >
+                {actionLoading ? '⏳ Processing...' : 'Confirm'}
               </button>
             </div>
           </div>

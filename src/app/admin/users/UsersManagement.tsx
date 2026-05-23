@@ -49,7 +49,16 @@ export default function UsersManagement({ token }: UsersManagementProps) {
     setError('');
 
     try {
-      const response = await adminGetUsers(token, page, pageSize);
+      const response = await adminGetUsers(token, {
+        page,
+        pageSize,
+        role: filterRole || undefined,
+        verificationStatus: filterStatus || undefined,
+        isVerified: filterVerified ? filterVerified === 'true' : undefined,
+        search: searchTerm || undefined,
+        sortBy,
+        sortOrder,
+      });
 
       if (response.isSuccess) {
         setUsers(response.data.items || []);

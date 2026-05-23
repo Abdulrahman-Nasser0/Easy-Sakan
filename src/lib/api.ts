@@ -855,7 +855,11 @@ export async function adminConfirmPayment(token: string, bookingId: number, paym
   return apiCall<any>(`/api/admin/bookings/${bookingId}/confirm-payment`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify(paymentData || {}),
+    body: JSON.stringify(paymentData || {
+      paymentMethod: "MANUAL",
+      amountReceived: 0,
+      note: "Confirmed by admin"
+    }),
   });
 }
 

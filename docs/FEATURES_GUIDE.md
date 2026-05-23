@@ -67,13 +67,14 @@ This document tracks all features across the three user roles (Student, Landlord
 | Browse All Properties | `GET /api/properties` | ✅ Done | Page at `/properties` with filters |
 | Search Properties | `GET /api/properties?search=` | ✅ Done | Search bar in header |
 | Filter by location | `GET /api/properties?location=` | ✅ Done | Filter UI on properties page |
-| Filter by university | `GET /api/properties?university=` | 🟡 Partial | API param exists, UI filter may be missing |
+| Filter by university | `GET /api/properties?university=` | ✅ Done | Dropdown with common universities |
 | Filter by price range | `GET /api/properties?minPrice=&maxPrice=` | ✅ Done | Price range slider |
 | Filter by gender | `GET /api/properties?gender=` | ✅ Done | Gender toggle |
 | Filter by rental type | `GET /api/properties?rentalType=` | ✅ Done | Bed vs EntireUnit |
-| Filter by amenities | `GET /api/properties?amenities=` | 🟡 Partial | API param exists |
+| Filter by amenities | `GET /api/properties?amenities=` | ✅ Done | Dropdown with common amenities |
 | Sort properties | `GET /api/properties?sortBy=&sortOrder=` | ✅ Done | Sort by price, rating, date |
-| Include sold-out | `GET /api/properties?includeSoldOut=true` | 🟡 Partial | API param exists |
+| Include sold-out | `GET /api/properties?includeSoldOut=true` | ✅ Done | Checkbox to show sold-out |
+| Min rating filter | `GET /api/properties?minRating=` | ✅ Done | Dropdown 1-5 stars |
 | View Property Details | `GET /api/properties/{id}` | ✅ Done | Detail page at `/properties/[id]` |
 | View Landlord Info | — | ✅ Done | Shown on property detail page |
 | View Reviews on Property | `GET /api/reviews/property/{id}` | ✅ Done | Shown on detail page |
@@ -89,24 +90,21 @@ This document tracks all features across the three user roles (Student, Landlord
 | View Booking Detail | `GET /api/bookings/{id}` | ✅ Done | Detail view |
 | Cancel Booking (Student) | `PUT /api/bookings/{id}/cancel` | ✅ Done | Available for PENDING_PAYMENT |
 | View Booking History | `GET /api/bookings/{id}/history` | ✅ Done | Status timeline |
-| Payment Timer (48h countdown) | — | ⬜ Not Started | No countdown UI |
-| WhatsApp Payment Instructions | — | ⬜ Not Started | No payment instructions display |
-| Trust Period Display (72h) | — | ⬜ Not Started | No trust period UI |
-| Landlord Contact (after confirm) | — | 🟡 Partial | API returns data, UI display pending |
+| Payment Timer (48h countdown) | — | ✅ Done | Countdown timer on each booking card |
+| WhatsApp Payment Instructions | — | ✅ Done | Payment instructions + WhatsApp link |
+| Trust Period Display (72h) | — | ✅ Done | Trust period countdown on CONFIRMED |
+| Landlord Contact (after confirm) | — | ✅ Done | Name and phone displayed after CONFIRMED |
+| Summary Cards (pending/confirmed/cancelled/expired counts) | — | ✅ Done | Summary cards at top of my-bookings |
 
 ### 2.4 Reviews
 
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
-| Create Review | `POST /api/reviews` | 🟡 Partial | API exists, student review UI needed |
+| Create Review | `POST /api/reviews` | ✅ Done | Review form at `/properties/[id]/review` |
 | View Property Reviews | `GET /api/reviews/property/{id}` | ✅ Done | Shown on property detail page |
 | Reviews Sorting | — | ✅ Done | Sort by date, rating |
 
 ### Issues / Missing
-- ⬜ No "canReview" flag display on completed bookings
-- ⬜ No review submission UI on student dashboard
-- ⬜ No 48h payment countdown timer
-- ⬜ No WhatsApp payment receipt instructions
 - ⬜ No recommended properties section on student dashboard/homepage
 
 ---
@@ -169,12 +167,12 @@ This document tracks all features across the three user roles (Student, Landlord
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
 | List Users | `GET /api/admin/users` | ✅ Done | Table with filters |
-| View User Details | `GET /api/admin/users/{id}` | 🟡 Partial | API exists, modal/UI may be limited |
+| View User Details | `GET /api/admin/users/{id}` | ✅ Done | Modal with tabs (info/documents/bookings) |
 | Approve User | `PUT /api/admin/users/{id}/approve` | ✅ Done | Verifies documents |
 | Reject User | `PUT /api/admin/users/{id}/reject` | ✅ Done | With rejection reason |
-| Deactivate User | `PUT /api/admin/users/{id}/deactivate` | 🟡 Partial | API exists |
-| Reactivate User | `PUT /api/admin/users/{id}/reactivate` | 🟡 Partial | API exists |
-| Search/Filter Users | — | 🟡 Partial | Basic filters, more needed |
+| Deactivate User | `PUT /api/admin/users/{id}/deactivate` | ✅ Done | Modal with reason input |
+| Reactivate User | `PUT /api/admin/users/{id}/reactivate` | ✅ Done | Action button |
+| Search/Filter Users | — | ✅ Done | Role, verification, active, search, sort |
 
 ### 4.3 Property Management
 
@@ -183,33 +181,33 @@ This document tracks all features across the three user roles (Student, Landlord
 | List All Properties | `GET /api/admin/properties` | ✅ Done | Table with filters |
 | Approve Listing | `PUT /api/admin/properties/{id}/approve` | ✅ Done | Action button |
 | Reject Listing | `PUT /api/admin/properties/{id}/reject` | ✅ Done | With rejection reason |
-| Delete Listing (Force) | `DELETE /api/admin/properties/{id}` | 🟡 Partial | API exists, admin UI may need modal |
+| Delete Listing (Force) | `DELETE /api/admin/properties/{id}` | ✅ Done | Delete modal with reason + cancel active bookings |
 
 ### 4.4 Booking Management
 
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
-| List All Bookings | `GET /api/admin/bookings` | ✅ Done | Table at `/admin/bookings` |
-| View Booking Details | `GET /api/admin/bookings/{id}` | 🟡 Partial | API exists, detail modal/UI needed |
-| Confirm Payment | `PUT /api/admin/bookings/{id}/confirm-payment` | ✅ Done | Action button |
-| Cancel Booking | `PUT /api/admin/bookings/{id}/cancel` | ✅ Done | With reason |
-| Complete Booking | `PUT /api/admin/bookings/{id}/complete` | 🟡 Partial | API exists |
-| Handle Dispute | `PUT /api/admin/bookings/{id}/dispute` | 🟡 Partial | API exists |
-| Refund Booking | `PUT /api/admin/bookings/{id}/refund` | 🟡 Partial | API exists, UI may need refinement |
-| Dismiss Dispute | `PUT /api/admin/bookings/{id}/dismiss-dispute` | 🟡 Partial | API exists |
+| List All Bookings | `GET /api/admin/bookings` | ✅ Done | Client component with filters at `/admin/bookings` |
+| View Booking Details | `GET /api/admin/bookings/{id}` | ✅ Done | Detail modal with all booking info, student/landlord/amount |
+| Confirm Payment | `PUT /api/admin/bookings/{id}/confirm-payment` | ✅ Done | Action button in modal |
+| Cancel Booking | `PUT /api/admin/bookings/{id}/cancel` | ✅ Done | With reason modal |
+| Complete Booking | `PUT /api/admin/bookings/{id}/complete` | ✅ Done | Confirmation before completing |
+| Handle Dispute | `PUT /api/admin/bookings/{id}/dispute` | ✅ Done | Dispute flag modal |
+| Refund Booking | `PUT /api/admin/bookings/{id}/refund` | ✅ Done | Refund amount + resolution modal |
+| Dismiss Dispute | `PUT /api/admin/bookings/{id}/dismiss-dispute` | ✅ Done | Confirmation before dismissing |
 
 ### 4.5 Reviews & Moderation
 
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
-| Delete Review | `DELETE /api/admin/reviews/{id}` | 🟡 Partial | API exists, admin UI needed |
+| Delete Review | `DELETE /api/admin/reviews/{id}` | 🟡 Partial | API exists, admin UI for review moderation needed |
 
 ### 4.6 Security & Fraud Detection
 
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
-| View Fraud Alerts | `GET /api/admin/fraud-detection` | 🟡 Partial | Page exists at `/admin/fraud-detection` |
-| Resolve Fraud Alert | `PUT /api/admin/fraud-detection/{id}/resolve` | 🟡 Partial | API exists |
+| View Fraud Alerts | `GET /api/admin/fraud-detection` | ✅ Done | Client component with severity badges, resolve/dismiss |
+| Resolve Fraud Alert | `PUT /api/admin/fraud-detection/{id}/resolve` | ✅ Done | Confirm fraud or mark as false alarm |
 | View Audit Log | `GET /api/admin/audit-log` | ✅ Done | Page exists at `/admin/audit-log` |
 
 ### 4.7 Reports
@@ -220,12 +218,8 @@ This document tracks all features across the three user roles (Student, Landlord
 | Update Report Status | `PUT /api/admin/reports/{id}` | 🟡 Partial | API exists |
 
 ### Issues / Missing
-- ⬜ No user detail modal (view documents, audit trail)
-- ⬜ No booking detail modal
-- ⬜ No dispute resolution workflow UI
 - ⬜ No fraud detection dashboard detail view
-- ⬜ No user document preview
-- ⬜ No property image preview in admin listing
+- ⬜ No reports page UI
 
 ---
 
@@ -284,22 +278,34 @@ This document tracks all features across the three user roles (Student, Landlord
 
 ## 7. PRIORITY ROADMAP
 
-### Phase 1 — Critical Fixes (Immediate)
+### Phase 1 — Critical Fixes (Completed ✅)
 
-| Priority | Feature | Reason |
+| Priority | Feature | Status |
 |----------|---------|--------|
-| 🔴 High | Verify Hide/Show toggle works with PATCH | Recently changed, needs testing |
-| 🔴 High | Fix booking success/error handling after API changes | createBooking field changed |
-| 🔴 High | Test admin dashboard stats after API refinements | adminGetBookings signature changed |
+| 🔴 High | Booking client fields (checkInDate → moveInDate) | ✅ Done |
+| 🔴 High | Booking status (PENDING → PENDING_PAYMENT) | ✅ Done |
+| 🔴 High | 48h payment countdown timer | ✅ Done |
+| 🔴 High | Trust period display (72h) | ✅ Done |
+| 🔴 High | WhatsApp payment instructions | ✅ Done |
+| 🔴 High | Landlord contact display after CONFIRMED | ✅ Done |
+| 🔴 High | Admin bookings full client refactor | ✅ Done |
+| 🔴 High | Admin booking detail modal | ✅ Done |
+| 🔴 High | Admin dispute resolution workflow | ✅ Done |
 
-### Phase 2 — Core UX Gaps (This Sprint)
+### Phase 2 — Core UX Gaps (Completed ✅)
 
-| Priority | Feature | Reason |
+| Priority | Feature | Status |
 |----------|---------|--------|
-| 🟡 Medium | Student booking 48h countdown timer | Critical for payment flow |
-| 🟡 Medium | WhatsApp payment instructions display | Required for payment completion |
-| 🟡 Medium | Review submission UI for students | Enables review system |
-| 🟡 Medium | Admin user detail modal | Needed for verification workflow |
+| 🟡 Medium | University filter | ✅ Done |
+| 🟡 Medium | Amenities filter | ✅ Done |
+| 🟡 Medium | Rental type filter | ✅ Done |
+| 🟡 Medium | Include sold-out option | ✅ Done |
+| 🟡 Medium | Min rating filter | ✅ Done |
+| 🟡 Medium | Sort order (asc/desc) | ✅ Done |
+| 🟡 Medium | ML deal rating on property cards | ✅ Done |
+| 🟡 Medium | Review submission UI for students | ✅ Done |
+| 🟡 Medium | Booking modal (moveInDate + 48h info) | ✅ Done |
+| 🟡 Medium | Admin force delete property | ✅ Done |
 
 ### Phase 3 — Enhancement (Next Sprint)
 
@@ -310,6 +316,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | 🟢 Low | System config integration | Replace hardcoded values |
 | 🟢 Low | In-app report problem UI | Support channel |
 | 🟢 Low | Toast notification system | Better UX feedback |
+| 🟢 Low | Admin reports page | Missing page |
 
 ### Phase 4 — Polish (Future)
 
@@ -318,7 +325,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | ⚪ Backlog | Arabic UI translations | i18n support |
 | ⚪ Backlog | Search autocomplete | UX improvement |
 | ⚪ Backlog | Property sharing/QR codes | Viral growth |
-| ⚪ Backlog | Admin dispute workflow UI | Moderation tool |
+| ⚪ Backlog | Fraud detection detail view | Moderation tool |
 
 ---
 
@@ -331,9 +338,7 @@ This document tracks all features across the three user roles (Student, Landlord
 
 ### Frontend Issues
 1. **Delete button** — After soft-delete, properties reappear on page refresh (client-side filter added as workaround)
-2. **Hide/Show toggle** — Changed from PUT to PATCH, needs verification
-3. **Booking create fields** — Changed from `checkInDate`/`checkOutDate` to `moveInDate`, needs UI update
-4. **Landlord dashboard stats** — Hardcoded calculation, not from a dedicated endpoint
+2. **Landlord dashboard stats** — Hardcoded calculation, not from a dedicated endpoint
 
 ### Backend Dependencies
 1. Verification document upload requires AI analysis service
@@ -372,4 +377,41 @@ This document tracks all features across the three user roles (Student, Landlord
 
 ---
 
-*Last Updated: June 2026*
+*Last Updated: June 2024*
+
+---
+
+## RECENTLY COMPLETED
+
+### Phase 1 — Critical Fixes (Completed ✅)
+
+| Feature | Previous Status | New Status | Commit |
+|---------|----------------|------------|--------|
+| Booking client fields (checkInDate → moveInDate) | 🟡 Partial | ✅ Done | PH1-F1 |
+| Booking status (PENDING → PENDING_PAYMENT) | 🟡 Partial | ✅ Done | PH1-F1 |
+| Payment countdown timer (48h) | ⬜ Not Started | ✅ Done | PH1-F1 |
+| Trust period display (72h) | ⬜ Not Started | ✅ Done | PH1-F1 |
+| WhatsApp payment instructions | ⬜ Not Started | ✅ Done | PH1-F1 |
+| Landlord contact display (after confirm) | 🟡 Partial | ✅ Done | PH1-F1 |
+| Review submission link for completed bookings | ⬜ Not Started | ✅ Done | PH1-F1 |
+| Admin bookings page refactor (client component) | 🟡 Partial | ✅ Done | PH1-F2 |
+| Admin booking detail modal | ⬜ Not Started | ✅ Done | PH1-F2 |
+| Admin dispute resolution workflow UI | ⬜ Not Started | ✅ Done | PH1-F2 |
+| Admin cancel booking with reason | 🟡 Partial | ✅ Done | PH1-F2 |
+| Admin refund processing | 🟡 Partial | ✅ Done | PH1-F2 |
+| Admin dismiss dispute | 🟡 Partial | ✅ Done | PH1-F2 |
+
+### Phase 2 — Core UX Gaps (Completed ✅)
+
+| Feature | Previous Status | New Status | Commit |
+|---------|----------------|------------|--------|
+| University filter | 🟡 Partial | ✅ Done | PH2-F3 |
+| Amenities filter | 🟡 Partial | ✅ Done | PH2-F3 |
+| Rental type filter | 🟡 Partial | ✅ Done | PH2-F3 |
+| Include sold-out option | 🟡 Partial | ✅ Done | PH2-F3 |
+| Min rating filter | 🟡 Partial | ✅ Done | PH2-F3 |
+| Sort order (asc/desc) | 🟡 Partial | ✅ Done | PH2-F3 |
+| ML deal rating on property cards | 🟡 Partial | ✅ Done | PH2-F3 |
+| Review submission UI for students | 🟡 Partial | ✅ Done | PH2-F4 |
+| Booking modal (moveInDate + 48h info) | 🟡 Partial | ✅ Done | PH2-F4 |
+| Admin force delete property | 🟡 Partial | ✅ Done | PH1-F5 |

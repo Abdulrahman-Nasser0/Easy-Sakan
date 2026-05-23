@@ -7,9 +7,10 @@ import { createReview } from '@/lib/api';
 interface ReviewFormProps {
   token: string;
   propertyId: number;
+  bookingId?: number;
 }
 
-export default function ReviewForm({ token, propertyId }: ReviewFormProps) {
+export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormProps) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -32,6 +33,7 @@ export default function ReviewForm({ token, propertyId }: ReviewFormProps) {
     try {
       const response = await createReview(token, {
         propertyId,
+        bookingId: bookingId || 0,
         rating,
         comment: comment || undefined,
       });

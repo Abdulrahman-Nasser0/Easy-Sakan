@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { updateProperty, uploadPropertyImages, deletePropertyImage } from '@/lib/api';
+import { updateProperty, uploadPropertyImages, deletePropertyImage, predictPrice } from '@/lib/api';
 import { landlordStyles } from '@/styles/landlordStyles';
 
 interface EditPropertyProps {
@@ -26,6 +26,12 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
   const [existingImages, setExistingImages] = useState<any[]>(initialData?.images || []);
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
+  const [predictedPrice, setPredictedPrice] = useState<{
+    predictedFairPrice: number;
+    dealRating: string;
+    priceDifferencePercentage: number;
+  } | null>(null);
+  const [predictingPrice, setPredictingPrice] = useState(false);
 
   const [form, setForm] = useState({
     title: initialData?.title || '',
@@ -358,6 +364,69 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                       showError('price') ? 'border-red-500/50 focus:border-red-500' : ''
                     }`}
                   />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const price = parseFloat(form.price);
+                      const area = parseFloat(form.areaSqm);
+                      const bedrooms = parseInt(form.bedrooms || '0');
+                      const bathrooms = parseInt(form.bathrooms || '1');
+                      
+                      if (!form.city || !area || !price) {
+                        setError('Please fill in city, area, and price first');
+                        return;
+                      }
+                      
+                      setPredictingPrice(true);
+                      setError('');
+                      try {
+                        const response = await predictPrice(token, {
+                          location: form.city,
+                          bedrooms,
+                          bathrooms,
+                          areaSqm: area,
+                          listingMode: form.listingMode,
+                          amenities: form.amenities,
+                        });
+                        if (response.isSuccess) {
+                          setPredictedPrice(response.data);
+                        } else {
+                          setError(response.message || 'Price prediction unavailable');
+                        }
+                      } catch {
+                        setError('Failed to get price prediction');
+                      } finally {
+                        setPredictingPrice(false);
+                      }
+                    }}
+                    disabled={predictingPrice || !form.city || !form.areaSqm}
+                    className="mt-2 text-xs bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                  >
+                    {predictingPrice ? '⏳ Analyzing...' : '🧠 Predict Fair Price'}
+                  </button>
+
+                  {/* Predicted Price Display */}
+                  {predictedPrice && (
+                    <div className={`mt-2 p-2 rounded-lg text-xs ${
+                      predictedPrice.dealRating === 'Excellent' ? 'bg-emerald-900/30 border border-emerald-600/30' :
+                      predictedPrice.dealRating === 'Good' ? 'bg-blue-900/30 border border-blue-600/30' :
+                      'bg-yellow-900/30 border border-yellow-600/30'
+                    }`}>
+                      <p className={`font-bold ${
+                        predictedPrice.dealRating === 'Excellent' ? 'text-emerald-300' :
+                        predictedPrice.dealRating === 'Good' ? 'text-blue-300' :
+                        'text-yellow-300'
+                      }`}>
+                        💰 Fair Price: {predictedPrice.predictedFairPrice.toLocaleString()} EGP
+                      </p>
+                      <p className="text-slate-300 mt-1">
+                        {predictedPrice.dealRating} Deal
+                        {' · '}
+                        {predictedPrice.priceDifferencePercentage > 0 ? '📈 +' : '📉 '}
+                        {Math.abs(predictedPrice.priceDifferencePercentage)}% vs market
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className={landlordStyles.formGroup}>

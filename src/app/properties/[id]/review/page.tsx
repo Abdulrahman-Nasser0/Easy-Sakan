@@ -5,7 +5,13 @@ import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import ReviewForm from './ReviewForm';
 
-export default async function ReviewPage({ params }: { params: { id: string } }) {
+export default async function ReviewPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { bookingId?: string };
+}) {
   const session = await getSession();
 
   if (!session?.token) {
@@ -13,6 +19,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
   }
 
   const propertyId = parseInt(params.id);
+  const bookingId = searchParams.bookingId ? parseInt(searchParams.bookingId) : undefined;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -20,6 +27,7 @@ export default async function ReviewPage({ params }: { params: { id: string } })
         <ReviewForm
           token={session.token}
           propertyId={propertyId}
+          bookingId={bookingId}
         />
       </div>
     </div>

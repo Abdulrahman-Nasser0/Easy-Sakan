@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Increase Server Actions body size limit for image uploads
+  serverExternalPackages: [],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50MB",
+    },
+  },
+
   // Image configuration for external hosts
   images: {
     remotePatterns: [
@@ -35,7 +43,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
 };
 

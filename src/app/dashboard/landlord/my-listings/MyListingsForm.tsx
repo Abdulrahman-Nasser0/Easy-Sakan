@@ -37,7 +37,11 @@ export default function MyListings({ token }: MyListingsProps) {
       const response = await getMyListings(token, page, 10, statusFilter || undefined);
 
       if (response.isSuccess && response.data?.items) {
-        setListings(response.data.items);
+        // Filter out deleted/soft-deleted properties so they don't reappear after refresh
+        const activeListings = response.data.items.filter(
+          (item: any) => item.status !== 'DELETED' && item.status !== 'DELETED_BY_ADMIN'
+        );
+        setListings(activeListings);
         setTotalPages(response.data.totalPages || 1);
       } else {
         setError(response.message || 'Failed to load listings');

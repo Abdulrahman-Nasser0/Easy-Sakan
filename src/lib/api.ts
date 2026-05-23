@@ -549,7 +549,7 @@ export async function getBookingHistory(token: string, bookingId: number) {
   });
 }
 
-export async function createBooking(token: string, bookingData: { propertyId: number; checkInDate: string; checkOutDate: string }) {
+export async function createBooking(token: string, bookingData: { propertyId: number; moveInDate: string }) {
   return apiCall<any>("/api/bookings", {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -559,7 +559,7 @@ export async function createBooking(token: string, bookingData: { propertyId: nu
 
 export async function cancelBookingRequest(token: string, bookingId: number, reason?: string) {
   return apiCall<any>(`/api/bookings/${bookingId}/cancel`, {
-    method: "PATCH",
+    method: "PUT",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ reason }),
   });
@@ -666,8 +666,35 @@ export async function adminGetDashboardStats(token: string) {
   });
 }
 
-export async function adminGetUsers(token: string, page: number = 1, limit: number = 20) {
-  return apiCall<any>("/api/admin/users", {
+export async function adminGetUsers(token: string, params?: {
+  page?: number;
+  pageSize?: number;
+  role?: string;
+  isVerified?: boolean;
+  verificationStatus?: string;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: string;
+  createdFrom?: string;
+  createdTo?: string;
+  isFlagged?: boolean;
+}) {
+  const searchParams = new URLSearchParams();
+  if (params) {
+    if (params.page) searchParams.append('page', params.page.toString());
+    if (params.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params.role) searchParams.append('role', params.role);
+    if (params.isVerified !== undefined) searchParams.append('isVerified', params.isVerified.toString());
+    if (params.verificationStatus) searchParams.append('verificationStatus', params.verificationStatus);
+    if (params.search) searchParams.append('search', params.search);
+    if (params.sortBy) searchParams.append('sortBy', params.sortBy);
+    if (params.sortOrder) searchParams.append('sortOrder', params.sortOrder);
+    if (params.createdFrom) searchParams.append('createdFrom', params.createdFrom);
+    if (params.createdTo) searchParams.append('createdTo', params.createdTo);
+    if (params.isFlagged !== undefined) searchParams.append('isFlagged', params.isFlagged.toString());
+  }
+  const queryString = searchParams.toString();
+  return apiCall<any>(`/api/admin/users${queryString ? `?${queryString}` : ''}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -680,19 +707,19 @@ export async function adminGetUserDetails(token: string, userId: number) {
   });
 }
 
-export async function adminApproveUser(token: string, userId: number) {
+export async function adminApproveUser(token: string, userId: number, note?: string) {
   return apiCall<any>(`/api/admin/users/${userId}/approve`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify({}),
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ isApproved: true, note: note || "All documents verified successfully" }),
   });
 }
 
-export async function adminRejectUser(token: string, userId: number, reason: string) {
+export async function adminRejectUser(token: string, userId: number, rejectionReason: string, rejectionReasonAr?: string) {
   return apiCall<any>(`/api/admin/users/${userId}/reject`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ reason }),
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ rejectionReason, rejectionReasonAr }),
   });
 }
 
@@ -765,8 +792,40 @@ export async function adminDeleteProperty(token: string, propertyId: number, rea
 // SECTION 9: ADMIN - BOOKINGS API
 // ==========================================
 
-export async function adminGetBookings(token: string) {
-  return apiCall<any>("/api/admin/bookings", {
+export async function adminGetBookings(
+  token: string,
+  params?: {
+    page?: number;
+    pageSize?: number;
+    status?: string;
+    propertyId?: number;
+    studentId?: number;
+    landlordId?: number;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: string;
+    createdFrom?: string;
+    createdTo?: string;
+    expiringWithinHours?: number;
+  }
+) {
+  const searchParams = new URLSearchParams();
+  if (params) {
+    if (params.page) searchParams.append('page', params.page.toString());
+    if (params.pageSize) searchParams.append('pageSize', params.pageSize.toString());
+    if (params.status) searchParams.append('status', params.status);
+    if (params.propertyId) searchParams.append('propertyId', params.propertyId.toString());
+    if (params.studentId) searchParams.append('studentId', params.studentId.toString());
+    if (params.landlordId) searchParams.append('landlordId', params.landlordId.toString());
+    if (params.search) searchParams.append('search', params.search);
+    if (params.sortBy) searchParams.append('sortBy', params.sortBy);
+    if (params.sortOrder) searchParams.append('sortOrder', params.sortOrder);
+    if (params.createdFrom) searchParams.append('createdFrom', params.createdFrom);
+    if (params.createdTo) searchParams.append('createdTo', params.createdTo);
+    if (params.expiringWithinHours) searchParams.append('expiringWithinHours', params.expiringWithinHours.toString());
+  }
+  const queryString = searchParams.toString();
+  return apiCall<any>(`/api/admin/bookings${queryString ? `?${queryString}` : ''}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -779,48 +838,68 @@ export async function adminGetBookingDetail(token: string, bookingId: number) {
   });
 }
 
-export async function adminConfirmPayment(token: string, bookingId: number) {
-  return apiCall<any>(`/api/admin/bookings/${bookingId}/confirm-payment`, {
+export async function adminCompleteBooking(token: string, bookingId: number) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/complete`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({}),
+  });
+}
+
+export async function adminConfirmPayment(token: string, bookingId: number, paymentData?: {
+  paymentMethod?: string;
+  transactionReference?: string;
+  amountReceived?: number;
+  note?: string;
+}) {
+  return apiCall<any>(`/api/admin/bookings/${bookingId}/confirm-payment`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(paymentData || {}),
   });
 }
 
 export async function adminCancelBooking(token: string, bookingId: number, reason: string) {
   return apiCall<any>(`/api/admin/bookings/${bookingId}/cancel`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ reason }),
   });
 }
 
-export async function adminCompleteBooking(token: string, bookingId: number) {
-  return apiCall<any>(`/api/admin/bookings/${bookingId}/complete`, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-}
-
-export async function adminHandleDispute(token: string, bookingId: number, resolution: string) {
+export async function adminHandleDispute(token: string, bookingId: number, disputeData: {
+  disputeType: string;
+  description: string;
+  evidence?: string[];
+  reportedBy: string;
+}) {
   return apiCall<any>(`/api/admin/bookings/${bookingId}/dispute`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ resolution }),
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(disputeData),
   });
 }
 
-export async function adminRefundBooking(token: string, bookingId: number, amount: number) {
+export async function adminRefundBooking(token: string, bookingId: number, refundData: {
+  refundAmount: number;
+  refundMethod: string;
+  refundTransactionReference?: string;
+  resolution: string;
+  penalizeLandlord?: boolean;
+  penaltyAction?: string;
+}) {
   return apiCall<any>(`/api/admin/bookings/${bookingId}/refund`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ amount }),
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(refundData),
   });
 }
 
-export async function adminDismissDispute(token: string, bookingId: number) {
+export async function adminDismissDispute(token: string, bookingId: number, resolution: string) {
   return apiCall<any>(`/api/admin/bookings/${bookingId}/dismiss-dispute`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ resolution }),
   });
 }
 

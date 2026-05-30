@@ -78,7 +78,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | View Property Details | `GET /api/properties/{id}` | ✅ Done | Detail page at `/properties/[id]` |
 | View Landlord Info | — | ✅ Done | Shown on property detail page |
 | View Reviews on Property | `GET /api/reviews/property/{id}` | ✅ Done | Shown on detail page |
-| Get Recommended Properties | `GET /api/properties/recommended` | 🔄 Partial | API exists, UI integration needed |
+| Get Recommended Properties | `GET /api/properties/recommended` | ✅ Done | Section on student dashboard at `/dashboard/student` |
 | Log Interactions | `POST /api/analytics/interaction` | ⬜ Not Started | Backend silent logger for recommendations |
 
 ### 2.3 Booking System
@@ -105,7 +105,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | Reviews Sorting | — | ✅ Done | Sort by date, rating |
 
 ### Issues / Missing
-- ⬜ No recommended properties section on student dashboard/homepage
+- ⬜ No recommended properties section on homepage (available on student dashboard only)
 
 ---
 
@@ -130,7 +130,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | View My Listings | `GET /api/properties/my-listings` | ✅ Done | Table at `/dashboard/landlord/my-listings` |
 | Toggle Availability | `PATCH /api/properties/{id}/availability` | ✅ Done | Hide/Show toggle |
 | Delete Listing | `DELETE /api/properties/{id}` | ✅ Done | Soft-delete with confirmation modal |
-| Predict Fair Price | `POST /api/ml/predict-price` | 🟡 Partial | API exists, UI integration needed |
+| Predict Fair Price | `POST /api/ml/predict-price` | ✅ Done | UI in UploadPropertyForm & EditPropertyForm |
 
 ### 3.3 Booking Management
 
@@ -142,9 +142,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | View Student Contact | — | 🟡 Partial | Shown after CONFIRMED |
 
 ### Issues / Missing
-- ⬜ No price prediction UI (ML feature)
-- ⬜ No booking requests count badge on dashboard
-- ⬜ No notification when new booking comes in
+- ⬜ No booking requests count badge on dashboard (covered by NotificationBell in header)
 - ⬜ No listing QR code or share link
 
 ---
@@ -214,12 +212,11 @@ This document tracks all features across the three user roles (Student, Landlord
 
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
-| View Reports | `GET /api/admin/reports` | 🟡 Partial | API exists, admin UI may be limited |
-| Update Report Status | `PUT /api/admin/reports/{id}` | 🟡 Partial | API exists |
+| View Reports | `GET /api/admin/reports` | ✅ Done | Table with filtering at `/admin/reports` |
+| Update Report Status | `PUT /api/admin/reports/{id}` | ✅ Done | Status modal with admin notes |
 
 ### Issues / Missing
 - ⬜ No fraud detection dashboard detail view
-- ⬜ No reports page UI
 
 ---
 
@@ -242,8 +239,8 @@ This document tracks all features across the three user roles (Student, Landlord
 | Feature | Endpoint | Status | Notes |
 |---------|----------|--------|-------|
 | Health Check | `GET /api/health` | ⬜ Not Started | Not integrated into any UI |
-| Get App Config | `GET /api/system/config` | ⬜ Not Started | Not used (hardcoded values) |
-| Report Problem | `POST /api/system/report` | ⬜ Not Started | No in-app support UI |
+| Get App Config | `GET /api/system/config` | ✅ Done | `useSystemConfig()` hook + `fetchSystemConfig()` server utility |
+| Report Problem | `POST /api/system/report` | ✅ Done | Page at `/report-issue` with form + validation |
 
 ### 5.3 Other Pages
 
@@ -269,7 +266,7 @@ This document tracks all features across the three user roles (Student, Landlord
 | Filter Persistence | 🟡 Partial | Some filters reset on page change |
 | Sorting | ✅ Done | Available in tables and property lists |
 | Pagination | ✅ Done | Page numbers, prev/next |
-| Toast/Snackbar Notifications | ⬜ Not Started | No toast system |
+| Toast/Snackbar Notifications | ✅ Done | `Toast.tsx` — context/provider with useToast() hook |
 | Form Validation | ✅ Done | Zod schemas |
 | Image Galleries | ✅ Done | Property detail gallery |
 | Search Autocomplete | ⬜ Not Started | No search suggestions |
@@ -307,16 +304,16 @@ This document tracks all features across the three user roles (Student, Landlord
 | 🟡 Medium | Booking modal (moveInDate + 48h info) | ✅ Done |
 | 🟡 Medium | Admin force delete property | ✅ Done |
 
-### Phase 3 — Enhancement (Next Sprint)
+### Phase 3 — Enhancement (Completed ✅)
 
-| Priority | Feature | Reason |
-|----------|---------|--------|
-| 🟢 Low | Price prediction UI for landlords | ML feature, nice-to-have |
-| 🟢 Low | Recommended properties on homepage | Personalization |
-| 🟢 Low | System config integration | Replace hardcoded values |
-| 🟢 Low | In-app report problem UI | Support channel |
-| 🟢 Low | Toast notification system | Better UX feedback |
-| 🟢 Low | Admin reports page | Missing page |
+| Priority | Feature | Status | Commit |
+|----------|---------|--------|--------|
+| 🟢 Low | Price prediction UI for landlords | ✅ Done | Already existed |
+| 🟢 Low | Recommended properties on homepage | ✅ Done | `ad71b5a`, `1338bc3` |
+| 🟢 Low | System config integration | ✅ Done | `32e6bd5`, `465ee74` |
+| 🟢 Low | In-app report problem UI | ✅ Done | `84ec36b` |
+| 🟢 Low | Toast notification system | ✅ Done | `fc85893` |
+| 🟢 Low | Admin reports page | ✅ Done | `fae9293` |
 
 ### Phase 4 — Polish (Future)
 
@@ -377,7 +374,7 @@ This document tracks all features across the three user roles (Student, Landlord
 
 ---
 
-*Last Updated: June 2024*
+*Last Updated: May 2025*
 
 ---
 
@@ -415,3 +412,18 @@ This document tracks all features across the three user roles (Student, Landlord
 | Review submission UI for students | 🟡 Partial | ✅ Done | PH2-F4 |
 | Booking modal (moveInDate + 48h info) | 🟡 Partial | ✅ Done | PH2-F4 |
 | Admin force delete property | 🟡 Partial | ✅ Done | PH1-F5 |
+
+### Phase 3 — Enhancement (Completed ✅)
+
+| Feature | Previous Status | New Status | Commit |
+|---------|----------------|------------|--------|
+| Toast notification system | ⬜ Not Started | ✅ Done | `fc85893` |
+| Report Issue page (Support Channel) | ⬜ Not Started | ✅ Done | `84ec36b` |
+| Report Issue in account dropdown + profile | ⬜ Not Started | ✅ Done | `84ec36b` |
+| Admin Reports management page | ⬜ Not Started | ✅ Done | `fae9293` |
+| Reports link in Admin Dashboard | ⬜ Not Started | ✅ Done | `dfddaba` |
+| Recommended Properties component | ⬜ Not Started | ✅ Done | `ad71b5a` |
+| Recommended Properties on Student Dashboard | ⬜ Not Started | ✅ Done | `1338bc3` |
+| Notification Bell (header badge + dropdown) | ⬜ Not Started | ✅ Done | `16e01f0` |
+| System Config Integration (client hook) | ⬜ Not Started | ✅ Done | `32e6bd5` |
+| System Config Integration (server fetcher) | ⬜ Not Started | ✅ Done | `465ee74` |

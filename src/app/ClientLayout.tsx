@@ -2,6 +2,7 @@
 
 import React, { ReactNode } from 'react';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { ToastProvider } from '@/components/common/Toast';
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -9,13 +10,15 @@ interface ClientLayoutProps {
 
 /**
  * Client-side layout wrapper that provides error boundary coverage
- * for the entire app. Must be a client component since ErrorBoundary
- * uses React lifecycle methods.
+ * and toast notification system for the entire app.
+ * Must be a client component since ErrorBoundary uses React lifecycle methods.
  */
 export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <ErrorBoundary>
-      {children}
+      <ToastProvider>
+        {children}
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

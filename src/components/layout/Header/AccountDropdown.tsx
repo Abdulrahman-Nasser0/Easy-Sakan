@@ -36,6 +36,12 @@ export default function AccountDropdown({isAuthenticated = false, userRole } : U
         )}
         {isAuthenticated && (
           <>
+            <Link href="/report-issue" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Report Issue
+            </Link>
             <div className="border-t border-gray-100 my-1"></div>
             <form action={logout} className="px-4 py-2 hover:bg-red-50 transition-all duration-200">
               <button

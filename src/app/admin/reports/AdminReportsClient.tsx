@@ -370,7 +370,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
 
       {/* Update Status Modal */}
       {showStatusModal && selectedReport && (
-        <div className="fixed inset-0 bg-black/70 z-[60] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 z-60 flex items-center justify-center p-4">
           <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b border-slate-700">
               <h3 className="text-lg font-bold text-white">📝 Update Report Status</h3>

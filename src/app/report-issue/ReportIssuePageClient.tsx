@@ -73,7 +73,6 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
           ? response.errors.map((e: any) => typeof e === 'string' ? e : e.message || JSON.stringify(e)).join('; ')
           : '';
         setError(serverErrors ? `${serverMsg}: ${serverErrors}` : serverMsg);
-        console.error('Report submission error - full response:', response);
         setStep('form');
       }
     } catch (err) {

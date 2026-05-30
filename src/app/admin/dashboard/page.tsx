@@ -188,6 +188,13 @@ async function AdminDashboard() {
               <div className="text-sm font-medium">Fraud</div>
             </Link>
             <Link
+              href="/admin/reports"
+              className="bg-gray-700 hover:bg-gray-600 rounded-lg p-4 text-center transition-colors"
+            >
+              <div className="text-2xl mb-2">📊</div>
+              <div className="text-sm font-medium">Reports</div>
+            </Link>
+            <Link
               href="/admin/audit-log"
               className="bg-gray-700 hover:bg-gray-600 rounded-lg p-4 text-center transition-colors"
             >

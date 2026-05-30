@@ -5,6 +5,7 @@ import { getSession } from '@/lib/session';
 import { getMyBookings, getAllProperties } from '@/lib/api';
 import Link from 'next/link';
 import { studentStyles } from '@/styles/studentStyles';
+import RecommendedProperties from '@/components/home/RecommendedProperties';
 
 export default async function StudentDashboard() {
   const session = await getSession();
@@ -90,6 +91,9 @@ export default async function StudentDashboard() {
             </Link>
           </div>
         </div>
+
+        {/* Recommended Properties */}
+        <RecommendedProperties token={session.token} />
 
         {/* Browse Properties CTA */}
         <div className={`${studentStyles.card} mb-12 text-center border-l-4 border-l-blue-500`}>

@@ -7,13 +7,15 @@ import UserActions from "./UserActions";
 import MobileMenu from "./MobileMenu";
 
 import { UserRole } from "@/lib/types";
+import NotificationBell from "@/components/common/NotificationBell";
 
 interface HeaderProps {
   isAuthenticated?: boolean;
   userRole?: UserRole;
+  token?: string;
 }
 
-export default function Header({ isAuthenticated = false, userRole }: HeaderProps) {
+export default function Header({ isAuthenticated = false, userRole, token }: HeaderProps) {
   const [isMenuOpen, toggleMenu, setIsMenuOpen] = useMenuState();
 
   return (
@@ -32,7 +34,8 @@ export default function Header({ isAuthenticated = false, userRole }: HeaderProp
             </div>
 
             {/* Right: User Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
+              {isAuthenticated && token && <NotificationBell token={token} userRole={userRole} />}
               <UserActions isAuthenticated={isAuthenticated} userRole={userRole} />
 
               {/* Mobile Menu Button */}

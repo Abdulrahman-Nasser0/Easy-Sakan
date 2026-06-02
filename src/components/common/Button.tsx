@@ -22,23 +22,29 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const baseStyles =
-  "group relative inline-flex items-center justify-center font-semibold cursor-pointer rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105";
+  "group relative inline-flex items-center justify-center font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:shadow-blue-500/50",
+    "bg-sky-500 hover:bg-sky-600 text-white active:scale-[0.98]",
   secondary:
-    "text-slate-300 border-2 border-slate-600 hover:border-slate-500 bg-slate-800/50 hover:bg-slate-800 focus:ring-blue-500",
+    "bg-slate-700 hover:bg-slate-600 text-slate-100 active:scale-[0.98]",
   danger:
-    "bg-gradient-to-r from-red-600 to-rose-600 text-white hover:from-red-700 hover:to-rose-700 focus:ring-red-500 shadow-lg hover:shadow-xl hover:shadow-red-500/50",
+    "bg-red-600 hover:bg-red-700 text-white active:scale-[0.98]",
   outline:
-    "bg-transparent border-2 border-slate-600 text-slate-300 hover:border-blue-500 hover:text-blue-400 focus:ring-blue-500 shadow-sm hover:shadow-md",
+    "border border-slate-600 text-slate-300 hover:border-sky-500 hover:text-sky-400 active:scale-[0.98]",
   ghost:
-    "bg-transparent text-slate-400 hover:text-blue-400 hover:bg-slate-800/30 focus:ring-blue-500",
+    "text-slate-400 hover:text-sky-400 hover:bg-slate-800/50",
   success:
-    "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 focus:ring-green-500 shadow-lg hover:shadow-xl hover:shadow-green-500/50",
+    "bg-emerald-600 hover:bg-emerald-700 text-white active:scale-[0.98]",
   warning:
-    "bg-gradient-to-r from-yellow-500 to-amber-500 text-white hover:from-yellow-600 hover:to-amber-600 focus:ring-yellow-400 shadow-lg hover:shadow-xl hover:shadow-yellow-500/50",
+    "bg-amber-600 hover:bg-amber-700 text-white active:scale-[0.98]",
+};
+
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-3 text-base",
+  lg: "px-8 py-4 text-lg",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

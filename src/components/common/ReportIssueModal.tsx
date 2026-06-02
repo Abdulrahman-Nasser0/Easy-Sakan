@@ -92,7 +92,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
       <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-lg w-full">
         {/* Header */}
-        <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
+        <div className="border-b border-slate-700 px-6 py-4 flex justify-between items-center">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             🚨 Report a Problem
           </h2>
@@ -109,7 +109,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
             </p>
             <button
               onClick={handleClose}
-              className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-lg font-medium transition-all"
+              className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-lg font-medium transition-all"
             >
               Close
             </button>
@@ -130,7 +130,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
                       onClick={() => setIssueType(type.value)}
                       className={`p-3 rounded-lg border text-sm font-medium transition-all ${
                         issueType === type.value
-                          ? 'bg-blue-600/30 border-blue-500 text-blue-300'
+                          ? 'bg-sky-600/30 border-sky-500 text-sky-300'
                           : 'bg-slate-700/50 border-slate-600 text-slate-300 hover:border-slate-500'
                       }`}
                     >
@@ -150,7 +150,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Brief summary of the issue"
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                  className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-colors"
                   maxLength={200}
                 />
               </div>
@@ -164,7 +164,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the issue in detail (minimum 20 characters). Include any relevant information that might help us resolve it."
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors min-h-[120px]"
+                  className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-colors min-h-[120px]"
                   maxLength={1000}
                   rows={4}
                 />
@@ -201,7 +201,7 @@ export default function ReportIssueModal({ token, isOpen, onClose, relatedBookin
               <button
                 type="submit"
                 disabled={step === 'submitting'}
-                className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {step === 'submitting' ? (
                   <>

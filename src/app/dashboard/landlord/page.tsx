@@ -61,9 +61,9 @@ export default async function LandlordDashboard() {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-slate-300">
-                Welcome, <span className="font-semibold text-emerald-400">{session.name}</span>
+                Welcome, <span className="font-semibold text-sky-400">{session.name}</span>
               </span>
-              <Link href="/profile" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
+              <Link href="/profile" className="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">
                 Profile
               </Link>
             </div>
@@ -99,7 +99,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className={landlordStyles.statLabel}>Active Bookings</p>
-                <p className="text-3xl font-bold text-blue-400 mt-2">{activeBookings}</p>
+                <p className="text-3xl font-bold text-sky-400 mt-2">{activeBookings}</p>
               </div>
               <div className="text-4xl opacity-20">📅</div>
             </div>
@@ -109,7 +109,7 @@ export default async function LandlordDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className={landlordStyles.statLabel}>Total Revenue</p>
-                <p className="text-3xl font-bold text-emerald-400 mt-2">{totalRevenue.toLocaleString()} EGP</p>
+                <p className="text-3xl font-bold text-sky-400 mt-2">{totalRevenue.toLocaleString()} EGP</p>
               </div>
               <div className="text-4xl opacity-20">💰</div>
             </div>
@@ -149,7 +149,7 @@ export default async function LandlordDashboard() {
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className={`${landlordStyles.sectionHeader}`}>📦 Your Properties</h2>
-            <Link href="/dashboard/landlord/my-listings" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+            <Link href="/dashboard/landlord/my-listings" className="text-sky-400 hover:text-sky-300 transition-colors">
               View All →
             </Link>
           </div>
@@ -199,7 +199,7 @@ export default async function LandlordDashboard() {
                     <p className={`${landlordStyles.propertyPrice}`}>{property.price?.toLocaleString()} EGP <span className="text-sm text-slate-400 font-normal">/ month</span></p>
                     <div className="mt-4 pt-4 border-t border-slate-600 flex justify-between items-center text-sm">
                       <span className={landlordStyles.propertyMeta}>📅 {property.availability?.occupiedSlots || 0} Bookings</span>
-                      <Link href={`/dashboard/landlord/properties/${property.id}/edit`} className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
+                      <Link href={`/dashboard/landlord/properties/${property.id}/edit`} className="text-sky-400 hover:text-sky-300 transition-colors font-medium">
                         Edit →
                       </Link>
                     </div>

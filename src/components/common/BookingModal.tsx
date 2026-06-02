@@ -93,7 +93,7 @@ export default function BookingModal({ isOpen, onClose, propertyId, propertyTitl
           <div className="bg-slate-800/50 p-4 rounded-lg mb-6 border border-slate-700">
             <div className="flex justify-between items-center mb-2">
               <span className="text-slate-400">Monthly Price:</span>
-              <span className="text-blue-400 font-bold">{monthlyPrice.toLocaleString()} EGP</span>
+              <span className="text-sky-400 font-bold">{monthlyPrice.toLocaleString()} EGP</span>
             </div>
             <p className="text-xs text-slate-500">
               A deposit of {monthlyPrice.toLocaleString()} EGP is required to confirm your booking.

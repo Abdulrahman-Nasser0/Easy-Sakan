@@ -215,7 +215,7 @@ export default function MyListings({ token }: MyListingsProps) {
                   {listings.map(listing => (
                     <tr key={listing.id} className={landlordStyles.tableRow}>
                       <td className={landlordStyles.tableCell}>
-                        <Link href={`/properties/${listing.id}`} className="text-emerald-400 hover:text-emerald-300 font-medium">
+                        <Link href={`/properties/${listing.id}`} className="text-sky-400 hover:text-sky-300 font-medium">
                           {listing.title}
                         </Link>
                       </td>
@@ -225,7 +225,7 @@ export default function MyListings({ token }: MyListingsProps) {
                         </span>
                       </td>
                       <td className={landlordStyles.tableCell}>
-                        <span className="text-emerald-400 font-medium">
+                        <span className="text-sky-400 font-medium">
                           {listing.price.toLocaleString()} EGP
                         </span>
                       </td>
@@ -258,7 +258,7 @@ export default function MyListings({ token }: MyListingsProps) {
                             className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
                               listing.isAvailable ?? true
                                 ? 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
-                                : 'bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30'
+                                : 'bg-emerald-600/20 text-sky-400 hover:bg-emerald-600/30'
                             }`}
                           >
                             {listing.isAvailable ?? true ? '👁️ Hide' : '👁️‍🗨️ Show'}

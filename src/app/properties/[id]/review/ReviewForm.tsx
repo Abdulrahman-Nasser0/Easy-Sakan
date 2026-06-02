@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -78,13 +77,12 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
       </p>
 
       {error && (
-        <div className="bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg p-4 mb-6">
+        <div className="bg-red-900/30 border border-red-600/30 text-red-200 rounded-lg p-4 mb-6">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
-        {/* Rating Stars */}
         <div className="mb-8">
           <label className="block text-sm font-medium text-slate-300 mb-3">
             Your Rating
@@ -102,7 +100,7 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
                 <span
                   className={
                     star <= (hoverRating || rating)
-                      ? 'text-yellow-400 drop-shadow-lg drop-shadow-yellow-400/50'
+                      ? 'text-yellow-400'
                       : 'text-slate-600'
                   }
                 >
@@ -120,7 +118,6 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
           </p>
         </div>
 
-        {/* Comment */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Your Review (optional)
@@ -129,7 +126,7 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Describe your experience staying at this property..."
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+            className="w-full bg-slate-900/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors"
             rows={5}
             maxLength={1000}
           />
@@ -138,14 +135,12 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
           </p>
         </div>
 
-        {/* Submitting info */}
-        <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-4 mb-6">
-          <p className="text-sm text-blue-300">
+        <div className="bg-sky-900/20 border border-sky-600/30 rounded-lg p-4 mb-6">
+          <p className="text-sm text-sky-300">
             💡 Your honest review helps other students make informed decisions. Reviews cannot be edited after submission.
           </p>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <button
             type="button"
@@ -157,7 +152,7 @@ export default function ReviewForm({ token, propertyId, bookingId }: ReviewFormP
           <button
             type="submit"
             disabled={loading || rating === 0}
-            className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg font-medium transition-all flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-sky-500 hover:bg-sky-600 disabled:bg-sky-500/50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-all flex-1"
           >
             {loading ? '⏳ Submitting...' : '⭐ Submit Review'}
           </button>

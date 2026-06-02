@@ -259,7 +259,7 @@ export default function UsersManagement({ token }: UsersManagementProps) {
                   <tr key={user.id} className={adminStyles.tableRow}>
                     <td className={adminStyles.tableCell}>
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        <div className="w-9 h-9 bg-sky-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                           {user.fullName.charAt(0).toUpperCase()}
                         </div>
                         <div>

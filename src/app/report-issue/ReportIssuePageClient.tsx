@@ -86,11 +86,11 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-slate-950">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/profile" className="text-blue-400 hover:text-blue-300 text-sm font-medium mb-4 inline-block">
+          <Link href="/profile" className="text-sky-400 hover:text-sky-300 text-sm font-medium mb-4 inline-block">
             ← Back to Profile
           </Link>
           <h1 className="text-3xl font-bold text-white">🚨 Report a Problem</h1>
@@ -110,7 +110,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
             <div className="flex gap-4 justify-center">
               <button
                 onClick={handleBackToDashboard}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 ← Back to Profile
               </button>
@@ -133,7 +133,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
             <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 space-y-6">
               {/* User Info (read-only) */}
               <div className="bg-slate-700/30 rounded-lg p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold">
                   {userName.charAt(0).toUpperCase()}
                 </div>
                 <div>
@@ -156,11 +156,11 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                       onClick={() => setIssueType(type.value)}
                       className={`p-4 rounded-lg border text-left transition-all ${
                         issueType === type.value
-                          ? 'bg-blue-600/20 border-blue-500 ring-2 ring-blue-500/30'
+                          ? 'bg-sky-600/20 border-sky-500 ring-2 ring-sky-500/30'
                           : 'bg-slate-700/50 border-slate-600 hover:border-slate-500'
                       }`}
                     >
-                      <p className={`font-medium ${issueType === type.value ? 'text-blue-300' : 'text-slate-200'}`}>
+                      <p className={`font-medium ${issueType === type.value ? 'text-sky-300' : 'text-slate-200'}`}>
                         {type.label}
                       </p>
                       <p className="text-xs text-slate-400 mt-0.5">{type.desc}</p>
@@ -179,7 +179,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Brief summary of the issue"
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors"
                   maxLength={200}
                 />
                 <p className="text-xs text-slate-500 mt-1 text-right">{subject.length}/200</p>
@@ -194,7 +194,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the issue in detail (minimum 20 characters). What were you doing when it happened? What did you expect to happen? Any error messages?"
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors min-h-[150px]"
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors min-h-[150px]"
                   maxLength={1000}
                   rows={5}
                 />
@@ -213,7 +213,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                 <button
                   type="submit"
                   disabled={step === 'submitting'}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-500/50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
                 >
                   {step === 'submitting' ? (
                     <>
@@ -239,7 +239,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
           <div className="mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-6">
             <h3 className="text-white font-semibold mb-3">💡 Before you submit</h3>
             <ul className="space-y-2 text-sm text-slate-400">
-              <li>• Check our <Link href="/" className="text-blue-400 hover:text-blue-300">Help Center</Link> for common solutions</li>
+              <li>• Check our <Link href="/" className="text-sky-400 hover:text-sky-300">Help Center</Link> for common solutions</li>
               <li>• Include steps to reproduce the issue if it&apos;s a bug</li>
               <li>• For urgent booking issues, contact your landlord directly</li>
               <li>• We typically respond within 24 hours during business days</li>

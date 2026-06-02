@@ -406,7 +406,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                     <td className="px-6 py-4 text-sm text-right">
                       <button
                         onClick={() => handleViewBooking(booking)}
-                        className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-3 py-1 text-xs rounded font-medium transition-all"
+                        className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-1 text-xs rounded font-medium transition-all"
                       >
                         View
                       </button>
@@ -475,7 +475,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Student</p>
                   <p className="text-white font-medium">{selectedBooking.studentName}</p>
-                  {selectedBooking.studentContact && <p className="text-sm text-blue-400">{selectedBooking.studentContact}</p>}
+                  {selectedBooking.studentContact && <p className="text-sm text-sky-400">{selectedBooking.studentContact}</p>}
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Property</p>
@@ -488,7 +488,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Amount</p>
-                  <p className="text-2xl font-bold text-blue-400">{selectedBooking.amountDue.toLocaleString()} {selectedBooking.currency || 'EGP'}</p>
+                  <p className="text-2xl font-bold text-sky-400">{selectedBooking.amountDue.toLocaleString()} {selectedBooking.currency || 'EGP'}</p>
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Created</p>
@@ -549,7 +549,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                       () => handleCompleteBooking(selectedBooking.id)
                     )}
                     disabled={actionLoading}
-                    className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
                   >
                     {actionLoading ? '⏳...' : '✓ Mark Complete'}
                   </button>

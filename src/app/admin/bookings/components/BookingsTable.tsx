@@ -95,7 +95,7 @@ export default function BookingsTable({ initialBookings, token }: BookingsTableP
                     {booking.hasDispute ? '⚠️ DISPUTED' : booking.status}
                   </span>
                 </td>
-                <td className={`${adminStyles.tableCell} font-semibold text-emerald-400`}>
+                <td className={`${adminStyles.tableCell} font-semibold text-sky-400`}>
                   EGP {booking.totalPrice.toLocaleString()}
                 </td>
                 <td className={`${adminStyles.tableCell} text-right`}>

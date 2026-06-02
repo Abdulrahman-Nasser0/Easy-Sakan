@@ -18,7 +18,7 @@ interface ProfileContentProps {
 
 export default function ProfileContent({ session }: ProfileContentProps) {
   const inputClass =
-    'w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-colors';
+    'w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors';
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -31,7 +31,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
           </div>
           <Link
             href={session.role === 'Landlord' ? '/dashboard/landlord' : '/dashboard/student'}
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+            className="text-sky-400 hover:text-sky-300 font-medium transition-colors"
           >
             ← Back to Dashboard
           </Link>
@@ -103,7 +103,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
                 <p className="mt-1">
                   <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                     session.isVerified 
-                      ? 'bg-green-900/50 border border-green-600 text-green-200' 
+                      ? 'bg-emerald-900/50 border border-emerald-600 text-emerald-200' 
                       : 'bg-amber-900/50 border border-amber-600 text-amber-200'
                   }`}>
                     {session.isVerified ? '✓ Verified' : 'Pending Verification'}
@@ -136,7 +136,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
           <div className="px-6 py-6 space-y-4">
             <div className="flex items-center p-4 bg-slate-900/30 border border-slate-700 rounded-lg">
               <div className={`w-3 h-3 rounded-full mr-3 ${
-                session.isVerified ? 'bg-green-500' : 'bg-amber-500'
+                session.isVerified ? 'bg-emerald-500' : 'bg-amber-500'
               }`}></div>
               <span className="text-sm text-slate-200">
                 {session.isVerified ? '✓ Account Verified' : '⚠ Account Pending Verification'}
@@ -144,7 +144,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
             </div>
             
             <div className="flex items-center p-4 bg-slate-900/30 border border-slate-700 rounded-lg">
-              <div className="w-3 h-3 rounded-full mr-3 bg-green-500"></div>
+              <div className="w-3 h-3 rounded-full mr-3 bg-emerald-500"></div>
               <span className="text-sm text-slate-200">✓ Logged In</span>
             </div>
           </div>

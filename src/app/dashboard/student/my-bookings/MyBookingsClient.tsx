@@ -209,7 +209,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
             {[
               { label: 'Pending', count: summary.pending, color: 'bg-yellow-600/20 border-yellow-600/30 text-yellow-300' },
               { label: 'Confirmed', count: summary.confirmed, color: 'bg-emerald-600/20 border-emerald-600/30 text-emerald-300' },
-              { label: 'Completed', count: summary.completed, color: 'bg-blue-600/20 border-blue-600/30 text-blue-300' },
+              { label: 'Completed', count: summary.completed, color: 'bg-sky-600/20 border-sky-600/30 text-sky-300' },
               { label: 'Cancelled', count: summary.cancelled, color: 'bg-red-600/20 border-red-600/30 text-red-300' },
               { label: 'Expired', count: summary.expired, color: 'bg-slate-600/20 border-slate-600/30 text-slate-300' },
             ].map(item => (
@@ -316,7 +316,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                           <span className="text-blue-300 text-sm font-medium">🛡️ Trust Period ends:</span>
                           <CountdownTimer expiresAt={booking.trustPeriodEndsAt} />
                         </div>
-                        <p className="text-blue-400/60 text-xs mt-1">
+                        <p className="text-sky-400/60 text-xs mt-1">
                           You can report issues within the 72-hour trust period
                         </p>
                       </div>
@@ -331,7 +331,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                       </div>
                       <div>
                         <p className="text-sm text-slate-400">Amount Due</p>
-                        <p className="font-medium text-blue-400">
+                        <p className="font-medium text-sky-400">
                           {booking.amountDue.toLocaleString()} {booking.currency}
                         </p>
                       </div>
@@ -343,7 +343,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                         <p className="text-sm text-slate-400 mb-2">👤 Landlord Contact</p>
                         <div className="bg-slate-800/50 rounded-lg p-3">
                           <p className="text-white font-medium">{booking.landlordContact.name}</p>
-                          <a href={`tel:${booking.landlordContact.phone}`} className="text-blue-400 hover:text-blue-300 text-sm">
+                          <a href={`tel:${booking.landlordContact.phone}`} className="text-sky-400 hover:text-blue-300 text-sm">
                             📞 {booking.landlordContact.phone}
                           </a>
                         </div>
@@ -359,7 +359,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                             Method: <span className="font-bold text-yellow-400">{booking.paymentInstructions.method}</span>
                           </p>
                           <p className="text-white text-sm">
-                            Wallet: <span className="font-mono text-blue-400">{booking.paymentInstructions.walletNumber}</span>
+                            Wallet: <span className="font-mono text-sky-400">{booking.paymentInstructions.walletNumber}</span>
                           </p>
                           {booking.paymentInstructions.accountName && (
                             <p className="text-white text-sm">
@@ -401,7 +401,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                             ⭐ Write a Review
                           </Link>
                         ) : booking.reviewId ? (
-                          <p className="text-sm text-emerald-400">⭐ Review submitted ✓</p>
+                          <p className="text-sm text-sky-400">⭐ Review submitted ✓</p>
                         ) : null}
                       </div>
                     )}
@@ -409,9 +409,9 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
                   {/* Actions */}
                   <div className="md:col-span-1">
-                    <div className="bg-blue-600/10 border border-blue-600/30 rounded-lg p-4 mb-4">
+                    <div className="bg-sky-600/10 border border-sky-600/30 rounded-lg p-4 mb-4">
                       <p className="text-sm text-slate-400">Amount Due</p>
-                      <p className="text-2xl font-bold text-blue-400">
+                      <p className="text-2xl font-bold text-sky-400">
                         {booking.amountDue.toLocaleString()} {booking.currency}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">

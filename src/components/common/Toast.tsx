@@ -51,7 +51,7 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: (id: string) => 
     info: {
       bg: 'bg-blue-900/90 border-blue-600/50',
       icon: 'ℹ',
-      iconBg: 'bg-blue-600',
+      iconBg: 'bg-sky-500',
     },
   };
 

@@ -178,7 +178,7 @@ export default function UserDetailModal({
               <div className="space-y-6">
                 {/* User Info Card */}
                 <div className="flex items-start gap-6 pb-6 border-b border-slate-700">
-                  <div className="w-20 h-20 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-semibold">
+                  <div className="w-20 h-20 bg-sky-500 rounded-full flex items-center justify-center text-white text-3xl font-semibold">
                     {user.fullName.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1">
@@ -186,7 +186,7 @@ export default function UserDetailModal({
                     <p className="text-slate-400 text-sm">{user.email}</p>
                     <p className="text-slate-400 text-sm">{user.phone}</p>
                     <div className="flex gap-2 mt-3 flex-wrap">
-                      <span className={`${adminStyles.badge} ${user.role === 'Admin' ? 'bg-purple-900/50 border-purple-600 text-purple-200' : user.role === 'Landlord' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 'bg-blue-900/50 border-blue-600 text-blue-200'}`}>
+                      <span className={`${adminStyles.badge} ${user.role === 'Admin' ? 'bg-purple-900/50 border-purple-600 text-purple-200' : user.role === 'Landlord' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 'bg-sky-900/50 border-sky-600 text-sky-200'}`}>
                         {user.role}
                       </span>
                       <span className={`${adminStyles.badge} ${user.isActive ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 'bg-slate-700 border-slate-600 text-slate-300'}`}>
@@ -206,7 +206,7 @@ export default function UserDetailModal({
                       onClick={() => setActiveTab('info')}
                       className={`px-0 py-3 border-b-2 font-medium text-sm transition-colors ${
                         activeTab === 'info'
-                          ? 'border-blue-500 text-blue-400'
+                          ? 'border-sky-500 text-sky-400'
                           : 'border-transparent text-slate-400 hover:text-slate-300'
                       }`}
                     >
@@ -216,7 +216,7 @@ export default function UserDetailModal({
                       onClick={() => setActiveTab('documents')}
                       className={`px-0 py-3 border-b-2 font-medium text-sm transition-colors ${
                         activeTab === 'documents'
-                          ? 'border-blue-500 text-blue-400'
+                          ? 'border-sky-500 text-sky-400'
                           : 'border-transparent text-slate-400 hover:text-slate-300'
                       }`}
                     >
@@ -226,7 +226,7 @@ export default function UserDetailModal({
                       onClick={() => setActiveTab('bookings')}
                       className={`px-0 py-3 border-b-2 font-medium text-sm transition-colors ${
                         activeTab === 'bookings'
-                          ? 'border-blue-500 text-blue-400'
+                          ? 'border-sky-500 text-sky-400'
                           : 'border-transparent text-slate-400 hover:text-slate-300'
                       }`}
                     >
@@ -336,7 +336,7 @@ export default function UserDetailModal({
                               booking.status === 'PENDING_PAYMENT'
                                 ? 'bg-amber-900/50 border-amber-600 text-amber-200'
                                 : booking.status === 'CONFIRMED'
-                                ? 'bg-blue-900/50 border-blue-600 text-blue-200'
+                                ? 'bg-sky-900/50 border-sky-600 text-sky-200'
                                 : booking.status === 'COMPLETED'
                                 ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200'
                                 : 'bg-red-900/50 border-red-600 text-red-200'

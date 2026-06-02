@@ -91,7 +91,7 @@ export default function FraudAlertList({ initialAlerts, token }: FraudAlertListP
           )}
           {alert.status === 'RESOLVED' && (
             <div className="flex items-center gap-2">
-              <span className="text-emerald-400 text-sm font-medium">✅ Resolved ({alert.resolution})</span>
+              <span className="text-sky-400 text-sm font-medium">✅ Resolved ({alert.resolution})</span>
             </div>
           )}
         </div>

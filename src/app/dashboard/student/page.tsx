@@ -58,9 +58,9 @@ export default async function StudentDashboard() {
             </div>
             <div className="flex items-center gap-6">
               <span className="text-sm text-slate-300">
-                Welcome, <span className="font-semibold text-blue-400">{session.name}</span>
+                Welcome, <span className="font-semibold text-sky-400">{session.name}</span>
               </span>
-              <Link href="/profile" className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
+              <Link href="/profile" className="text-sky-400 hover:text-blue-300 text-sm font-medium transition-colors">
                 👤 Profile
               </Link>
             </div>
@@ -124,7 +124,7 @@ export default async function StudentDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">Total Bookings</p>
-                <p className="text-3xl font-bold text-green-400 mt-2">{bookingStats.total}</p>
+                <p className="text-3xl font-bold text-sky-400 mt-2">{bookingStats.total}</p>
                 <p className="text-xs text-slate-500 mt-1">{bookingStats.active} active, {bookingStats.completed} completed</p>
               </div>
               <div className="text-4xl opacity-10">📅</div>
@@ -150,10 +150,10 @@ export default async function StudentDashboard() {
           <div className={studentStyles.card}>
             <h3 className={studentStyles.sectionHeader}>📊 Your Bookings Summary</h3>
             <div className="space-y-3 text-sm text-slate-300">
-              <p>• <span className="font-semibold text-blue-400">{bookingStats.active}</span> active booking(s) - Check in dates upcoming</p>
-              <p>• <span className="font-semibold text-green-400">{bookingStats.completed}</span> completed booking(s) - Thanks for using Easy Sakan!</p>
+              <p>• <span className="font-semibold text-sky-400">{bookingStats.active}</span> active booking(s) - Check in dates upcoming</p>
+              <p>• <span className="font-semibold text-sky-400">{bookingStats.completed}</span> completed booking(s) - Thanks for using Easy Sakan!</p>
               <p className="mt-4">
-                <Link href="/dashboard/student/my-bookings" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                <Link href="/dashboard/student/my-bookings" className="text-sky-400 hover:text-blue-300 font-medium transition-colors">
                   View all bookings →
                 </Link>
               </p>

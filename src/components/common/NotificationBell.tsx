@@ -146,7 +146,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
       {/* Bell Icon */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-all duration-200"
+        className="relative p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-all duration-200"
         aria-label="Notifications"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +169,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                className="text-xs text-sky-400 hover:text-blue-300 transition-colors"
               >
                 Mark all as read
               </button>
@@ -199,7 +199,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
                     setShowDropdown(false);
                   }}
                   className={`block px-4 py-3 border-b border-slate-700/50 hover:bg-slate-700/50 transition-colors ${
-                    !n.isRead ? 'bg-blue-600/10' : ''
+                    !n.isRead ? 'bg-sky-500/10' : ''
                   }`}
                 >
                   <div className="flex gap-3">
@@ -224,7 +224,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
           <Link
             href="/profile?tab=notifications"
             onClick={() => setShowDropdown(false)}
-            className="block px-4 py-3 text-center text-sm text-blue-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors border-t border-slate-700"
+            className="block px-4 py-3 text-center text-sm text-sky-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors border-t border-slate-700"
           >
             View all notifications →
           </Link>

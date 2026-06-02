@@ -43,9 +43,9 @@ export default function ErrorDisplay({
       border: 'border-blue-200',
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
-      titleColor: 'text-blue-800',
-      messageColor: 'text-blue-700',
-      buttonBg: 'bg-blue-600 hover:bg-blue-700',
+      titleColor: 'text-sky-800',
+      messageColor: 'text-sky-700',
+      buttonBg: 'bg-sky-500 hover:bg-sky-600',
     },
   };
 

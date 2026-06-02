@@ -7,7 +7,7 @@ import { Property } from '@/lib/types';
 import { useParams } from 'next/navigation';
 import BookingModal from '@/components/common/BookingModal';
 import { getImageUrl } from '@/lib/utils';
-import { layout, header, card, alert as alertStyle, loading, badge } from '@/styles/designTokens';
+import { layout, header, card, alert as alertStyle, loading as loadingStyle, badge } from '@/styles/designTokens';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -44,7 +44,7 @@ export default function PropertyDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className={loading.spinner}></div>
+        <div className={loadingStyle.spinner}></div>
       </div>
     );
   }

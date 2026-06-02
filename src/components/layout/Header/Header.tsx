@@ -41,7 +41,7 @@ export default function Header({ isAuthenticated = false, userRole, token }: Hea
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
-                className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-all duration-200"
+                className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-all duration-200"
                 aria-label="Toggle menu"
               >
                 <svg

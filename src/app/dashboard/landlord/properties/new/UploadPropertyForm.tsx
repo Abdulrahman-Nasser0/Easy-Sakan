@@ -265,7 +265,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
       {/* Header */}
       <div className="bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-2xl mx-auto px-4 py-6">
-          <Link href="/dashboard/landlord" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium mb-3 inline-block">
+          <Link href="/dashboard/landlord" className="text-sky-400 hover:text-sky-300 text-sm font-medium mb-3 inline-block">
             ← Back to Dashboard
           </Link>
           <h1 className="text-3xl font-bold text-white">🏠 Upload New Property</h1>
@@ -378,7 +378,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
                     }
                   }}
                   disabled={predictingPrice || !form.city || !form.areaSqm}
-                  className="mt-2 text-xs bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
+                  className="mt-2 text-xs bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
                 >
                   {predictingPrice ? '⏳ Analyzing...' : '🧠 Predict Fair Price'}
                 </button>
@@ -597,7 +597,7 @@ export default function UploadProperty({ token }: UploadPropertyProps) {
               {images.length > 0 && (
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-emerald-400 font-medium">✅ {images.length} image(s) selected</p>
+                    <p className="text-sky-400 font-medium">✅ {images.length} image(s) selected</p>
                     {uploadProgress > 0 && uploadProgress < 100 && (
                       <div className="text-xs text-slate-400">
                         Uploading: {uploadProgress}%

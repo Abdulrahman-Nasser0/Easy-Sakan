@@ -64,7 +64,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           🔥 Recommended For You
         </h2>
-        <Link href="/properties" className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
+        <Link href="/properties" className="text-sky-400 hover:text-blue-300 text-sm font-medium transition-colors">
           View All →
         </Link>
       </div>
@@ -72,7 +72,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {properties.map(property => (
           <Link key={property.id} href={`/properties/${property.id}`}>
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/10 cursor-pointer group">
+            <div className="bg-slate-800/50 border border-slate-700 rounded-lg overflow-hidden hover:border-sky-500/50 transition-all cursor-pointer group">
               {/* Image */}
               <div className="relative h-44 bg-slate-700 overflow-hidden">
                 {property.images && property.images.length > 0 ? (
@@ -97,7 +97,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
                 <p className="text-xs text-slate-400 mb-2 truncate">📍 {property.location.address}</p>
                 
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-lg font-bold text-blue-400">{property.price.toLocaleString()} <span className="text-xs text-slate-400 font-normal">EGP</span></p>
+                  <p className="text-lg font-bold text-sky-400">{property.price.toLocaleString()} <span className="text-xs text-slate-400 font-normal">EGP</span></p>
                   <span className="text-xs text-slate-400">
                     {property.availability?.availableSlots || 0} slots left
                   </span>
@@ -117,7 +117,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
 
                 {/* Landlord */}
                 <div className="flex items-center gap-2 pt-2 border-t border-slate-700">
-                  <div className="w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center text-white text-[10px] font-bold">
+                  <div className="w-5 h-5 rounded-full bg-sky-500 flex items-center justify-center text-white text-[10px] font-bold">
                     {property.landlord.fullName.charAt(0)}
                   </div>
                   <span className="text-xs text-slate-400">{property.landlord.fullName}</span>

@@ -344,7 +344,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
 
                   {/* Price and Details */}
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-emerald-400">
+                    <span className="text-2xl font-bold text-sky-400">
                       {property.currency} {property.price.toLocaleString()}
                     </span>
                     <span className={`${adminStyles.badge} ${adminStyles.badgeInfo}`}>

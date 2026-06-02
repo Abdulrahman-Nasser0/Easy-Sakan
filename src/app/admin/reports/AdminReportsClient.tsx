@@ -315,7 +315,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Submitted By</p>
                   <p className="text-white font-medium">{selectedReport.userName || 'Anonymous'}</p>
-                  {selectedReport.userEmail && <p className="text-sm text-blue-400">{selectedReport.userEmail}</p>}
+                  {selectedReport.userEmail && <p className="text-sm text-sky-400">{selectedReport.userEmail}</p>}
                 </div>
                 <div className="bg-slate-700/50 rounded-lg p-4">
                   <p className="text-xs text-slate-400 mb-1">Date Submitted</p>

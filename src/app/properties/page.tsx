@@ -295,7 +295,7 @@ export default function PropertiesPage() {
                     name="includeSoldOut"
                     checked={filters.includeSoldOut}
                     onChange={handleFilterChange}
-                    className="w-4 h-4 rounded bg-slate-700 border-slate-600 text-blue-600 focus:ring-blue-500"
+                    className="w-4 h-4 rounded bg-slate-700 border-slate-600 text-sky-500 focus:ring-sky-500"
                   />
                   <label className="text-sm text-slate-300">Show Sold Out</label>
                 </div>

@@ -89,7 +89,7 @@ export default function UsersTable({ users, token }: UsersTableProps) {
                   <span className={`${adminStyles.badge} ${
                     user.role === 'Admin' ? 'bg-purple-900/50 border-purple-600 text-purple-200' :
                     user.role === 'Landlord' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' :
-                    'bg-blue-900/50 border-blue-600 text-blue-200'
+                    "bg-sky-900/50 border-sky-600 text-sky-200"
                   }`}>
                     {user.role}
                   </span>

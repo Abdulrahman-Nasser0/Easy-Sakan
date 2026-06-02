@@ -172,7 +172,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
     const colors: Record<string, string> = {
       PENDING_PAYMENT: 'bg-yellow-900/50 border-yellow-600 text-yellow-200',
       CONFIRMED: 'bg-emerald-900/50 border-emerald-600 text-emerald-200',
-      COMPLETED: 'bg-blue-900/50 border-blue-600 text-blue-200',
+      COMPLETED: 'bg-sky-900/50 border-sky-600 text-sky-200',
       CANCELLED: 'bg-red-900/50 border-red-600 text-red-200',
       EXPIRED: 'bg-slate-700 border-slate-600 text-slate-300',
       DISPUTED: 'bg-orange-900/50 border-orange-600 text-orange-200',
@@ -311,9 +311,9 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
                     {/* Trust Period - for CONFIRMED bookings */}
                     {booking.status === 'CONFIRMED' && booking.trustPeriodEndsAt && (
-                      <div className="bg-blue-900/20 border border-blue-600/30 rounded-lg p-3 mb-4">
+                      <div className="bg-sky-900/20 border border-sky-600/30 rounded-lg p-3 mb-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-blue-300 text-sm font-medium">🛡️ Trust Period ends:</span>
+                          <span className="text-sky-300 text-sm font-medium">🛡️ Trust Period ends:</span>
                           <CountdownTimer expiresAt={booking.trustPeriodEndsAt} />
                         </div>
                         <p className="text-sky-400/60 text-xs mt-1">
@@ -343,7 +343,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                         <p className="text-sm text-slate-400 mb-2">👤 Landlord Contact</p>
                         <div className="bg-slate-800/50 rounded-lg p-3">
                           <p className="text-white font-medium">{booking.landlordContact.name}</p>
-                          <a href={`tel:${booking.landlordContact.phone}`} className="text-sky-400 hover:text-blue-300 text-sm">
+                          <a href={`tel:${booking.landlordContact.phone}`} className="text-sky-400 hover:text-sky-300 text-sm">
                             📞 {booking.landlordContact.phone}
                           </a>
                         </div>
@@ -381,7 +381,7 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                               href={booking.whatsappLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors"
+                              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg transition-colors"
                             >
                               💬 Send via WhatsApp
                             </a>

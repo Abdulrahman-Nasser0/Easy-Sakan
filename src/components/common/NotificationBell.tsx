@@ -169,7 +169,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-sky-400 hover:text-blue-300 transition-colors"
+                className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
               >
                 Mark all as read
               </button>
@@ -212,7 +212,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
                       <p className="text-xs text-slate-500 mt-1">{formatTime(n.createdAt)}</p>
                     </div>
                     {!n.isRead && (
-                      <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-2"></div>
+                      <div className="w-2 h-2 rounded-full bg-sky-500 shrink-0 mt-2"></div>
                     )}
                   </div>
                 </Link>
@@ -224,7 +224,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
           <Link
             href="/profile?tab=notifications"
             onClick={() => setShowDropdown(false)}
-            className="block px-4 py-3 text-center text-sm text-sky-400 hover:text-blue-300 hover:bg-slate-700/50 transition-colors border-t border-slate-700"
+            className="block px-4 py-3 text-center text-sm text-sky-400 hover:text-sky-300 hover:bg-slate-700/50 transition-colors border-t border-slate-700"
           >
             View all notifications →
           </Link>

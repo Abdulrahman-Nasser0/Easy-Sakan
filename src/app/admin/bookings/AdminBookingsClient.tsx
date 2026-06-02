@@ -121,7 +121,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
     const styles: Record<string, string> = {
       PENDING_PAYMENT: 'bg-yellow-900/50 border-yellow-600 text-yellow-200',
       CONFIRMED: 'bg-emerald-900/50 border-emerald-600 text-emerald-200',
-      COMPLETED: 'bg-blue-900/50 border-blue-600 text-blue-200',
+      COMPLETED: 'bg-sky-900/50 border-sky-600 text-sky-200',
       CANCELLED: 'bg-red-900/50 border-red-600 text-red-200',
       EXPIRED: 'bg-slate-700 border-slate-600 text-slate-300',
       DISPUTED: 'bg-orange-900/50 border-orange-600 text-orange-200',
@@ -293,7 +293,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               placeholder="Search by student, property..."
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30"
             />
           </div>
           <div>
@@ -301,7 +301,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"
             >
               <option value="">All Status</option>
               <option value="PENDING_PAYMENT">Pending Payment</option>
@@ -318,7 +318,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
             <select
               value={sortBy}
               onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"
             >
               <option value="createdAt">Created Date</option>
               <option value="moveInDate">Move-in Date</option>
@@ -330,7 +330,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
             <select
               value={sortOrder}
               onChange={(e) => { setSortOrder(e.target.value); setPage(1); }}
-              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500"
             >
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
@@ -449,7 +449,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0">
+            <div className="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0">
               <h2 className="text-lg font-bold text-white">Booking #{selectedBooking.id}</h2>
               <button onClick={() => setShowDetailModal(false)} className="text-slate-400 hover:text-white text-xl">&times;</button>
             </div>
@@ -535,7 +535,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                       () => handleConfirmPayment(selectedBooking.id)
                     )}
                     disabled={actionLoading}
-                    className="bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
                   >
                     {actionLoading ? '⏳...' : '✅ Confirm Payment'}
                   </button>
@@ -559,13 +559,13 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                   <>
                     <button
                       onClick={() => { setShowDisputeModal(true); }}
-                      className="bg-linear-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
                     >
                       ⚠️ Flag Dispute
                     </button>
                     <button
                       onClick={() => { setShowCancelModal(true); }}
-                      className="bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
                     >
                       ✕ Cancel Booking
                     </button>
@@ -576,7 +576,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                   <>
                     <button
                       onClick={() => { setShowRefundModal(true); }}
-                      className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
                     >
                       ↩ Process Refund
                     </button>
@@ -626,7 +626,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               <button
                 onClick={handleCancelBooking}
                 disabled={actionLoading || !cancelReason}
-                className="bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 {actionLoading ? '⏳...' : 'Confirm Cancel'}
               </button>
@@ -655,7 +655,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               <button
                 onClick={handleOpenDispute}
                 disabled={actionLoading || !disputeResolution}
-                className="bg-linear-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 {actionLoading ? '⏳...' : 'Flag Dispute'}
               </button>
@@ -697,7 +697,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               <button
                 onClick={handleRefund}
                 disabled={actionLoading || !refundAmount}
-                className="bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 {actionLoading ? '⏳...' : 'Process Refund'}
               </button>
@@ -727,7 +727,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                   }
                 }}
                 disabled={actionLoading}
-                className="bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50"
               >
                 {actionLoading ? '⏳ Processing...' : 'Confirm'}
               </button>

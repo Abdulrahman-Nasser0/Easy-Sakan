@@ -24,7 +24,7 @@ export default async function ReviewPage({
   const bookingId = bookingIdStr ? parseInt(bookingIdStr) : undefined;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-slate-950 text-white">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <ReviewForm
           token={session.token}

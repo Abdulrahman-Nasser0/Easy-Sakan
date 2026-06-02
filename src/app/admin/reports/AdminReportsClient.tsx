@@ -25,7 +25,7 @@ interface AdminReportsClientProps {
 
 const STATUS_STYLES: Record<string, string> = {
   OPEN: 'bg-yellow-900/50 border-yellow-600 text-yellow-200',
-  IN_PROGRESS: 'bg-blue-900/50 border-blue-600 text-blue-200',
+  IN_PROGRESS: 'bg-sky-900/50 border-sky-600 text-sky-200',
   RESOLVED: 'bg-emerald-900/50 border-emerald-600 text-emerald-200',
   CLOSED: 'bg-slate-700 border-slate-600 text-slate-300',
 };
@@ -233,7 +233,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
                           setSelectedReport(report);
                           setShowDetailModal(true);
                         }}
-                        className="bg-linear-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-3 py-1 text-xs rounded font-medium transition-all"
+                        className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 text-xs rounded font-medium transition-all"
                       >
                         View
                       </button>
@@ -274,7 +274,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
           <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0">
+            <div className="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 {TYPE_LABELS[selectedReport.type] || selectedReport.type} Report #{selectedReport.id}
               </h2>
@@ -353,7 +353,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
                   setNewStatus(selectedReport.status);
                   setShowStatusModal(true);
                 }}
-                className="bg-linear-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
               >
                 📝 Update Status
               </button>
@@ -414,7 +414,7 @@ export default function AdminReportsClient({ token }: AdminReportsClientProps) {
               <button
                 onClick={handleUpdateStatus}
                 disabled={actionLoading || !newStatus}
-                className="bg-linear-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionLoading ? '⏳ Updating...' : '💾 Save'}
               </button>

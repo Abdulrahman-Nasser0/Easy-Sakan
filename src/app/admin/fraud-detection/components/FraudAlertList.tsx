@@ -36,7 +36,7 @@ export default function FraudAlertList({ initialAlerts, token }: FraudAlertListP
       case 'CRITICAL': return 'bg-red-900/50 border-red-600 text-red-200';
       case 'HIGH': return 'bg-orange-900/50 border-orange-600 text-orange-200';
       case 'MEDIUM': return 'bg-yellow-900/50 border-yellow-600 text-yellow-200';
-      default: return 'bg-blue-900/50 border-blue-600 text-blue-200';
+      default: return 'bg-sky-900/50 border-sky-600 text-sky-200';
     }
   };
 

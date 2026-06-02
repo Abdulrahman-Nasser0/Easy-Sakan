@@ -60,7 +60,7 @@ export default async function StudentDashboard() {
               <span className="text-sm text-slate-300">
                 Welcome, <span className="font-semibold text-sky-400">{session.name}</span>
               </span>
-              <Link href="/profile" className="text-sky-400 hover:text-blue-300 text-sm font-medium transition-colors">
+              <Link href="/profile" className="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">
                 👤 Profile
               </Link>
             </div>
@@ -153,7 +153,7 @@ export default async function StudentDashboard() {
               <p>• <span className="font-semibold text-sky-400">{bookingStats.active}</span> active booking(s) - Check in dates upcoming</p>
               <p>• <span className="font-semibold text-sky-400">{bookingStats.completed}</span> completed booking(s) - Thanks for using Easy Sakan!</p>
               <p className="mt-4">
-                <Link href="/dashboard/student/my-bookings" className="text-sky-400 hover:text-blue-300 font-medium transition-colors">
+                <Link href="/dashboard/student/my-bookings" className="text-sky-400 hover:text-sky-300 font-medium transition-colors">
                   View all bookings →
                 </Link>
               </p>

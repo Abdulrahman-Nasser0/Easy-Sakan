@@ -285,7 +285,7 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
   return (
     <div className={landlordStyles.pageContainer}>
       {/* Header */}
-      <div className="bg-linear-to-r from-emerald-900 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-2xl mx-auto px-4 py-6">
           <Link href="/dashboard/landlord" className="text-sky-400 hover:text-sky-300 text-sm font-medium mb-3 inline-block">
             ← Back to Dashboard
@@ -570,13 +570,13 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                   {amenitiesList.map(amenity => (
                     <label
                       key={amenity}
-                      className="flex items-center gap-3 p-3 bg-slate-900/50 border border-slate-600/50 rounded-lg cursor-pointer hover:border-emerald-500/50 hover:bg-slate-800/60 transition-all"
+                      className="flex items-center gap-3 p-3 bg-slate-900/50 border border-slate-600/50 rounded-lg cursor-pointer hover:border-sky-500/50 hover:bg-slate-800/60 transition-all"
                     >
                       <input
                         type="checkbox"
                         checked={form.amenities.includes(amenity)}
                         onChange={() => toggleAmenity(amenity)}
-                        className="w-4 h-4 rounded border-slate-500 bg-slate-900 text-emerald-600 focus:ring-emerald-500/30 focus:ring-offset-0 cursor-pointer"
+                        className="w-4 h-4 rounded border-slate-500 bg-slate-900 text-sky-500 focus:ring-sky-500/30 focus:ring-offset-0 cursor-pointer"
                       />
                       <span className="text-sm text-slate-200 font-medium">{amenity}</span>
                     </label>
@@ -591,7 +591,7 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {existingImages.map((img, idx) => (
                       <div key={img.id} className="relative group">
-                        <div className="relative h-24 rounded-lg overflow-hidden border-2 border-emerald-600">
+                        <div className="relative h-24 rounded-lg overflow-hidden border-2 border-sky-500">
                           <img
                             src={img.url}
                             alt={`Image ${idx + 1}`}
@@ -627,8 +627,8 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                   onDrop={handleDrop}
                   className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
                     dragActive
-                      ? 'border-emerald-500 bg-emerald-900/20'
-                      : 'border-slate-600 bg-slate-800/30 hover:border-emerald-400'
+                      ? 'border-sky-500 bg-sky-900/20'
+                      : 'border-slate-600 bg-slate-800/30 hover:border-sky-400'
                   }`}
                 >
                   <input
@@ -663,7 +663,7 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                           <div className={`relative h-24 rounded-lg overflow-hidden border-2 transition-all ${
                             primaryImageIndex === idx
                               ? 'border-emerald-500'
-                              : 'border-slate-600 hover:border-emerald-400'
+                              : 'border-slate-600 hover:border-sky-400'
                           }`}>
                             <img
                               src={preview}
@@ -673,7 +673,7 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                             
                             {/* Primary badge */}
                             {primaryImageIndex === idx && (
-                              <div className="absolute top-1 left-1 bg-emerald-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                              <div className="absolute top-1 left-1 bg-sky-500 text-white text-xs px-2 py-1 rounded-full font-bold">
                                 Main
                               </div>
                             )}
@@ -686,7 +686,7 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
                                 type="button"
                                 onClick={() => setPrimaryImageIndex(idx)}
                                 title="Set as main image"
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-xs font-medium"
+                                className="bg-sky-500 hover:bg-sky-600 text-white px-2 py-1 rounded text-xs font-medium"
                               >
                                 ⭐ Main
                               </button>

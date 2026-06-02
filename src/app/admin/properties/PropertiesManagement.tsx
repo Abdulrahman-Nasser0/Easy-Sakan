@@ -439,7 +439,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
           <div className="bg-slate-800 border border-slate-700 rounded-lg max-w-md w-full">
-            <div className="bg-linear-to-r from-slate-800 to-slate-700 border-b border-slate-700 px-6 py-4">
+            <div className="bg-slate-800 border-b border-slate-700 px-6 py-4">
               <h3 className="text-lg font-semibold text-white">🗑️ Force Delete Property</h3>
             </div>
             <div className="px-6 py-6">
@@ -463,7 +463,7 @@ export default function PropertiesManagement({ token }: PropertiesManagementProp
                 <button
                   onClick={handleConfirmDelete}
                   disabled={deleteLoading || !deleteReason.trim()}
-                  className="bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {deleteLoading ? '⏳ Deleting...' : '🗑️ Force Delete'}
                 </button>

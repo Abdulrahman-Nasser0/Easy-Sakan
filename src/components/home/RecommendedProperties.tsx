@@ -64,7 +64,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           🔥 Recommended For You
         </h2>
-        <Link href="/properties" className="text-sky-400 hover:text-blue-300 text-sm font-medium transition-colors">
+        <Link href="/properties" className="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">
           View All →
         </Link>
       </div>
@@ -79,7 +79,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
                   <img
                     src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)}
                     alt={property.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover transition-transform duration-300"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-500">📸</div>

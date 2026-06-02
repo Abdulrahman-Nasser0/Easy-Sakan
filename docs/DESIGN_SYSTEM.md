@@ -293,45 +293,54 @@ gradient-stats: linear-gradient(to right, sky-600, blue-700)
 
 ## 5. Migration Plan
 
-### Phase 1: Create Core Files (This PR ✅)
+### Phase 1: Create Core Files ✅
 - [x] Create this design system document
 - [x] Update `globals.css` with proper CSS variables
 - [x] Update `Button.tsx` with new sky-blue palette (solid colors, no gradients)
 - [x] Create `src/styles/designTokens.ts` — Single source of truth for all style tokens
 
-### Phase 2: Migrate Style Files
-- [ ] Replace `adminStyles.ts` — Remove gradient backgrounds, use solid sky blue
-- [ ] Replace `landlordStyles.ts` — Switch from emerald to sky blue, remove gradient backgrounds
-- [ ] Replace `studentStyles.ts` — Already uses blue, switch to sky blue palette
-- [ ] Consolidate all three style files into a single `designTokens.ts` source of truth
+### Phase 2: Migrate Style Files ✅
+- [x] `adminStyles.ts` — Consolidated with sky blue palette, no gradient backgrounds
+- [x] `landlordStyles.ts` — Switched from emerald to sky blue, no gradient backgrounds
+- [x] `studentStyles.ts` — Switched to sky blue palette, simplified
+- [x] All three style files reference `designTokens.ts` as source of truth
 
-### Phase 3: Migrate Pages (One by one)
-- [ ] `app/page.tsx` — Homepage (remove gradient buttons, AI-looking elements, consolidate)
-- [ ] `app/login/page.tsx` — Login page
-- [ ] `app/signup/page.tsx` — Signup page
-- [ ] `app/properties/page.tsx` — Property listing
-- [ ] `app/properties/[id]/page.tsx` — Property detail
-- [ ] `app/dashboard/student/page.tsx` — Student dashboard
-- [ ] `app/dashboard/landlord/page.tsx` — Landlord dashboard
-- [ ] `app/dashboard/landlord/properties/new/page.tsx` — Upload property
-- [ ] `app/dashboard/landlord/properties/[id]/edit/page.tsx` — Edit property
-- [ ] `app/dashboard/landlord/my-listings/page.tsx` — My listings
-- [ ] `app/dashboard/student/my-bookings/page.tsx` — My bookings
-- [ ] `app/settings/page.tsx` — Settings
-- [ ] `app/profile/page.tsx` — Profile
-- [ ] `app/report-issue/page.tsx` — Report issue
-- [ ] `app/admin/dashboard/page.tsx` — Admin dashboard
-- [ ] `app/admin/users/page.tsx` — Admin users
-- [ ] `app/admin/properties/page.tsx` — Admin properties
-- [ ] `app/admin/bookings/page.tsx` — Admin bookings
-- [ ] `app/admin/reports/page.tsx` — Admin reports
-- [ ] `app/admin/fraud-detection/page.tsx` — Admin fraud
-- [ ] `app/admin/audit-log/page.tsx` — Admin audit log
+### Phase 3: Migrate Pages ✅ (Completed in two passes)
+- [x] `app/page.tsx` — Homepage
+- [x] `app/login/page.tsx` — Login page
+- [x] `app/signup/page.tsx` — Signup page
+- [x] `app/not-found.tsx` — Not found page
+- [x] `app/properties/page.tsx` — Property listing
+- [x] `app/properties/[id]/page.tsx` — Property detail
+- [x] `app/properties/[id]/review/page.tsx` — Review form
+- [x] `app/dashboard/student/page.tsx` — Student dashboard
+- [x] `app/dashboard/landlord/page.tsx` — Landlord dashboard
+- [x] `app/dashboard/landlord/properties/new/page.tsx` — Upload property
+- [x] `app/dashboard/landlord/properties/[id]/edit/page.tsx` — Edit property
+- [x] `app/dashboard/landlord/my-listings/page.tsx` — My listings
+- [x] `app/dashboard/student/my-bookings/page.tsx` — My bookings
+- [x] `app/settings/page.tsx` — Settings
+- [x] `app/profile/page.tsx` — Profile
+- [x] `app/report-issue/page.tsx` — Report issue
+- [x] `app/admin/dashboard/page.tsx` — Admin dashboard
+- [x] `app/admin/users/page.tsx` — Admin users
+- [x] `app/admin/properties/page.tsx` — Admin properties
+- [x] `app/admin/bookings/page.tsx` — Admin bookings
+- [x] `app/admin/reports/page.tsx` — Admin reports
+- [x] `app/admin/fraud-detection/page.tsx` — Admin fraud
+- [x] `app/admin/audit-log/page.tsx` — Admin audit log
 
-### Phase 4: Component Cleanup
-- [ ] Review `components/common/` — Ensure all use design tokens
-- [ ] Review `components/layout/` — Header, navigation, footer
-- [ ] Review `components/home/` — Homepage components
+### Phase 4: Component Cleanup ✅
+- [x] `components/common/Button.tsx` — Already uses design tokens
+- [x] `components/common/Toast.tsx` — Fixed
+- [x] `components/common/BookingModal.tsx` — Fixed
+- [x] `components/common/ErrorDisplay.tsx` — Fixed
+- [x] `components/common/NotificationBell.tsx` — Fixed
+- [x] `components/common/ReportIssueModal.tsx` — Fixed
+- [x] `components/layout/Header/Logo.tsx` — Fixed
+- [x] `components/layout/Header/PromotionalBanner.tsx` — Fixed
+- [x] `components/layout/Header/Header.tsx` — Fixed
+- [x] `components/home/RecommendedProperties.tsx` — Fixed
 
 ### Rules to Follow During Migration
 

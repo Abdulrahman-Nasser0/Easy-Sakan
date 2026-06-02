@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { changePasswordApi } from '@/lib/api';
+import { form, alert, card, badge } from '@/styles/designTokens';
 
 interface SettingsFormProps {
   token: string;
@@ -35,7 +36,6 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
     setPasswordError('');
     setPasswordSuccess('');
 
-    // Validation
     if (!currentPassword) {
       setPasswordError('Please enter your current password');
       return;
@@ -78,8 +78,6 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
 
     setNotificationsLoading(true);
     try {
-      // Simulated API call for notification preferences.
-      // Replace with actual API call when backend supports it.
       await new Promise(resolve => setTimeout(resolve, 500));
       setNotificationsSuccess('Notification preferences saved!');
     } catch (err) {
@@ -92,12 +90,9 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
   const tabClass = (tab: string) =>
     `px-6 py-3 font-medium text-sm transition-colors border-b-2 ${
       activeTab === tab
-        ? 'border-blue-500 text-blue-400'
+        ? 'border-sky-500 text-sky-400'
         : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600'
     }`;
-
-  const inputClass =
-    'w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-colors';
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -110,7 +105,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
           </div>
           <Link
             href={role === 'Landlord' ? '/dashboard/landlord' : '/dashboard/student'}
-            className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+            className="text-sky-400 hover:text-sky-300 font-medium transition-colors"
           >
             ← Back to Dashboard
           </Link>
@@ -119,15 +114,13 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
         {/* Profile Summary */}
         <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+            <div className="w-14 h-14 bg-sky-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
               {userName.charAt(0).toUpperCase()}
             </div>
             <div>
               <p className="text-white font-semibold text-lg">{userName}</p>
               <p className="text-slate-400 text-sm">{userEmail}</p>
-              <span className="inline-flex px-2 py-0.5 mt-1 text-xs font-medium rounded-full bg-blue-900/50 border border-blue-600 text-blue-200">
-                {role}
-              </span>
+              <span className={badge.info}>{role}</span>
             </div>
           </div>
         </div>
@@ -146,55 +139,47 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
 
         {/* Change Password Tab */}
         {activeTab === 'password' && (
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg">
-            <div className="px-6 py-4 border-b border-slate-700">
+          <div className={card.base}>
+            <div className="px-6 py-4 border-b border-slate-700 -mx-6 -mt-6 mb-0">
               <h2 className="text-xl font-semibold text-white">Change Password</h2>
             </div>
 
-            <form onSubmit={handleChangePassword} className="px-6 py-6 space-y-5">
-              {passwordError && (
-                <div className="p-4 bg-red-600/10 border border-red-600/30 rounded-lg text-red-400 text-sm">
-                  {passwordError}
-                </div>
-              )}
-              {passwordSuccess && (
-                <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg text-green-400 text-sm">
-                  {passwordSuccess}
-                </div>
-              )}
+            <form onSubmit={handleChangePassword} className="space-y-5 mt-6">
+              {passwordError && <div className={alert.error}>{passwordError}</div>}
+              {passwordSuccess && <div className={alert.success}>{passwordSuccess}</div>}
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Current Password</label>
+                <label className={form.label}>Current Password</label>
                 <input
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Enter your current password"
-                  className={inputClass}
+                  className={form.input}
                   disabled={passwordLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">New Password</label>
+                <label className={form.label}>New Password</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password (min 8 characters)"
-                  className={inputClass}
+                  className={form.input}
                   disabled={passwordLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Confirm New Password</label>
+                <label className={form.label}>Confirm New Password</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your new password"
-                  className={inputClass}
+                  className={form.input}
                   disabled={passwordLoading}
                 />
               </div>
@@ -202,7 +187,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
               <button
                 type="submit"
                 disabled={passwordLoading}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-500/50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
               >
                 {passwordLoading ? '⏳ Updating...' : '✓ Update Password'}
               </button>
@@ -212,22 +197,14 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
 
         {/* Notifications Tab */}
         {activeTab === 'notifications' && (
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg">
-            <div className="px-6 py-4 border-b border-slate-700">
+          <div className={card.base}>
+            <div className="px-6 py-4 border-b border-slate-700 -mx-6 -mt-6 mb-0">
               <h2 className="text-xl font-semibold text-white">Notification Preferences</h2>
             </div>
 
-            <form onSubmit={handleSaveNotifications} className="px-6 py-6 space-y-5">
-              {notificationsError && (
-                <div className="p-4 bg-red-600/10 border border-red-600/30 rounded-lg text-red-400 text-sm">
-                  {notificationsError}
-                </div>
-              )}
-              {notificationsSuccess && (
-                <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg text-green-400 text-sm">
-                  {notificationsSuccess}
-                </div>
-              )}
+            <form onSubmit={handleSaveNotifications} className="space-y-5 mt-6">
+              {notificationsError && <div className={alert.error}>{notificationsError}</div>}
+              {notificationsSuccess && <div className={alert.success}>{notificationsSuccess}</div>}
 
               <div className="space-y-4">
                 <label className="flex items-center justify-between p-4 bg-slate-900/30 border border-slate-700 rounded-lg cursor-pointer hover:border-slate-600 transition-colors">
@@ -239,7 +216,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
                     type="checkbox"
                     checked={emailNotifications}
                     onChange={(e) => setEmailNotifications(e.target.checked)}
-                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 accent-blue-600 cursor-pointer"
+                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-sky-500 focus:ring-sky-500 cursor-pointer"
                   />
                 </label>
 
@@ -252,7 +229,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
                     type="checkbox"
                     checked={bookingUpdates}
                     onChange={(e) => setBookingUpdates(e.target.checked)}
-                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 accent-blue-600 cursor-pointer"
+                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-sky-500 focus:ring-sky-500 cursor-pointer"
                   />
                 </label>
 
@@ -265,7 +242,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
                     type="checkbox"
                     checked={promotionalEmails}
                     onChange={(e) => setPromotionalEmails(e.target.checked)}
-                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 accent-blue-600 cursor-pointer"
+                    className="w-5 h-5 rounded border-slate-600 bg-slate-900 text-sky-500 focus:ring-sky-500 cursor-pointer"
                   />
                 </label>
               </div>
@@ -273,7 +250,7 @@ export default function SettingsForm({ token, role, userEmail, userName }: Setti
               <button
                 type="submit"
                 disabled={notificationsLoading}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-500/50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
               >
                 {notificationsLoading ? '⏳ Saving...' : '💾 Save Preferences'}
               </button>

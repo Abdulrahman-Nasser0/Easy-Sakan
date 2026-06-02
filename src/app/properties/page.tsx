@@ -123,7 +123,7 @@ export default function PropertiesPage() {
   return (
     <div className={studentStyles.pageContainer}>
       {/* Header */}
-      <div className="bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-white">🏠 Available Properties</h1>
           <p className="text-slate-400 mt-1">Browse and filter properties near you</p>
@@ -330,7 +330,7 @@ export default function PropertiesPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {properties.map(property => (
                     <Link key={property.id} href={`/properties/${property.id}`}>
-                      <div className={`${studentStyles.card} border border-slate-700 rounded-lg overflow-hidden hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/10 cursor-pointer`}>
+                      <div className={`${studentStyles.card} border border-slate-700 rounded-lg overflow-hidden hover:border-sky-500/50 transition-all cursor-pointer`}>
                         {/* Image */}
                         <div className="relative h-48 bg-slate-700">
                           {property.images && property.images.length > 0 ? (
@@ -350,7 +350,7 @@ export default function PropertiesPage() {
                             </div>
                           )}
                           {property.mlInsights?.dealRating && property.mlInsights.dealRating === 'Excellent' && (
-                            <div className="absolute top-2 left-2 bg-emerald-600/90 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <div className="absolute top-2 left-2 bg-sky-600/90 text-white px-3 py-1 rounded-full text-sm font-medium">
                               🔥 Best Deal
                             </div>
                           )}
@@ -361,12 +361,12 @@ export default function PropertiesPage() {
                           <h3 className="text-lg font-bold text-white truncate">{property.title}</h3>
                           <p className="text-sm text-slate-400 mb-2">{property.location.address}</p>
                           {property.location.nearestUniversity && (
-                            <p className="text-xs text-blue-400 mb-2">🎓 Near {property.location.nearestUniversity}</p>
+                            <p className="text-xs text-sky-400 mb-2">🎓 Near {property.location.nearestUniversity}</p>
                           )}
 
                           <div className="flex justify-between items-center mb-3">
                             <div>
-                              <p className="text-2xl font-bold text-blue-400">{property.price.toLocaleString()}</p>
+                              <p className="text-2xl font-bold text-sky-400">{property.price.toLocaleString()}</p>
                               <p className="text-sm text-slate-500">EGP/month</p>
                             </div>
                             <div className="text-right">
@@ -397,7 +397,7 @@ export default function PropertiesPage() {
                             <span>🚿 {property.bathrooms} bath</span>
                             <span>📐 {property.areaSqm}m²</span>
                             {property.listingMode && (
-                              <span className={property.listingMode === 'Bed' ? 'text-emerald-400' : 'text-blue-400'}>
+                              <span className={property.listingMode === 'Bed' ? 'text-sky-400' : 'text-sky-400'}>
                                 {property.listingMode === 'Bed' ? '🛌 Bed' : '🏠 Unit'}
                               </span>
                             )}
@@ -407,7 +407,7 @@ export default function PropertiesPage() {
                           {property.amenities && property.amenities.length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-3">
                               {property.amenities.slice(0, 3).map(amenity => (
-                                <span key={amenity} className="inline-block bg-blue-600/30 text-blue-300 text-xs px-2 py-1 rounded border border-blue-500/30">
+                                <span key={amenity} className="inline-block bg-sky-600/30 text-sky-300 text-xs px-2 py-1 rounded border border-sky-500/30">
                                   {amenity}
                                 </span>
                               ))}
@@ -422,7 +422,7 @@ export default function PropertiesPage() {
                             <div className="mb-3">
                               <span className={`text-xs font-medium px-2 py-1 rounded ${
                                 property.mlInsights.dealRating === 'Excellent' ? 'bg-emerald-600/30 text-emerald-300' :
-                                property.mlInsights.dealRating === 'Good' ? 'bg-blue-600/30 text-blue-300' :
+                                property.mlInsights.dealRating === 'Good' ? 'bg-sky-600/30 text-sky-300' :
                                 'bg-yellow-600/30 text-yellow-300'
                               }`}>
                                 💰 {property.mlInsights.dealRating} Deal: {property.mlInsights.priceDifferencePercentage > 0 ? '+' : ''}{property.mlInsights.priceDifferencePercentage}% vs market
@@ -432,7 +432,7 @@ export default function PropertiesPage() {
 
                           {/* Landlord */}
                           <div className="flex items-center gap-2 pt-3 border-t border-slate-700">
-                            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
+                            <div className="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white text-sm font-bold">
                               {property.landlord.fullName.charAt(0)}
                             </div>
                             <div>

@@ -6,8 +6,8 @@ import { getPropertyById } from '@/lib/api';
 import { Property } from '@/lib/types';
 import { useParams } from 'next/navigation';
 import BookingModal from '@/components/common/BookingModal';
-import { studentStyles } from '@/styles/studentStyles';
 import { getImageUrl } from '@/lib/utils';
+import { layout, header, card, alert as alertStyle, loading, badge } from '@/styles/designTokens';
 
 export default function PropertyDetail() {
   const params = useParams();
@@ -29,7 +29,6 @@ export default function PropertyDetail() {
 
     try {
       const response = await getPropertyById(propertyId);
-
       if (response.isSuccess && response.data) {
         setProperty(response.data);
       } else {
@@ -44,22 +43,20 @@ export default function PropertyDetail() {
 
   if (loading) {
     return (
-      <div className={`${studentStyles.pageContainer} flex items-center justify-center`}>
-        <div className={studentStyles.loadingSpinner}></div>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className={loading.spinner}></div>
       </div>
     );
   }
 
   if (error || !property) {
     return (
-      <div className={studentStyles.pageContainer}>
+      <div className="min-h-screen bg-slate-950">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Link href="/properties" className="text-blue-400 hover:text-blue-300 font-medium mb-4 inline-block">
+          <Link href="/properties" className="text-sky-400 hover:text-sky-300 font-medium mb-4 inline-block">
             ← Back to Properties
           </Link>
-          <div className={studentStyles.alertError}>
-            <p>{error || 'Property not found'}</p>
-          </div>
+          <div className={alertStyle.error}><p>{error || 'Property not found'}</p></div>
         </div>
       </div>
     );
@@ -68,11 +65,11 @@ export default function PropertyDetail() {
   const isSoldOut = property.availability?.isSoldOut || false;
 
   return (
-    <div className={studentStyles.pageContainer}>
+    <div className={layout.page}>
       {/* Header */}
-      <div className="bg-linear-to-r from-blue-900 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className={header.base}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/properties" className="text-blue-400 hover:text-blue-300 text-sm font-medium mb-3 inline-block">
+          <Link href="/properties" className="text-sky-400 hover:text-sky-300 text-sm font-medium mb-3 inline-block">
             ← Back to Properties
           </Link>
           <h1 className="text-3xl font-bold text-white">🏠 Property Details</h1>
@@ -82,11 +79,11 @@ export default function PropertyDetail() {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Images */}
+          {/* Images + Description */}
           <div className="lg:col-span-2">
-            <div className={`${studentStyles.card} border border-slate-700 rounded-lg overflow-hidden`}>
-              {/* Main Image */}
-              <div className="relative w-full h-96 bg-slate-700">
+            {/* Image Gallery */}
+            <div className={card.base}>
+              <div className="relative w-full h-96 bg-slate-700 rounded-lg overflow-hidden">
                 {property.images && property.images.length > 0 ? (
                   <>
                     <img
@@ -101,61 +98,55 @@ export default function PropertyDetail() {
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-slate-700 text-slate-500">
-                    📸 No image available
-                  </div>
+                  <div className="w-full h-full flex items-center justify-center text-slate-500">📸 No image available</div>
                 )}
               </div>
 
-              {/* Thumbnail Grid */}
               {property.images && property.images.length > 1 && (
-                <div className="p-4 bg-slate-800/50 border-t border-slate-700 grid grid-cols-6 gap-2">
+                <div className="p-4 border-t border-slate-700 grid grid-cols-6 gap-2">
                   {property.images.map((image, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImageIdx(idx)}
                       className={`relative h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImageIdx === idx ? 'border-blue-500' : 'border-slate-600'
+                        selectedImageIdx === idx ? 'border-sky-500' : 'border-slate-600'
                       }`}
                     >
-                      <img src={getImageUrl(typeof image === 'string' ? image : (image as any).url)} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
+                      <img src={getImageUrl(typeof image === 'string' ? image : (image as any).url)} alt="" className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Details Section */}
-            <div className={`${studentStyles.card} border border-slate-700 rounded-lg p-6 mt-6`}>
+            {/* Property Info */}
+            <div className={`${card.base} mt-6`}>
               <h1 className="text-3xl font-bold text-white mb-4">✨ {property.title}</h1>
 
-              {/* Key Details */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4">
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                   <p className="text-sm text-slate-400 mb-1">🛏️ Bedrooms</p>
-                  <p className="text-2xl font-bold text-blue-400">{property.bedrooms}</p>
+                  <p className="text-2xl font-bold text-white">{property.bedrooms}</p>
                 </div>
-                <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4">
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                   <p className="text-sm text-slate-400 mb-1">🚿 Bathrooms</p>
-                  <p className="text-2xl font-bold text-blue-400">{property.bathrooms}</p>
+                  <p className="text-2xl font-bold text-white">{property.bathrooms}</p>
                 </div>
-                <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4">
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                   <p className="text-sm text-slate-400 mb-1">📐 Area</p>
-                  <p className="text-2xl font-bold text-blue-400">{property.areaSqm}m²</p>
+                  <p className="text-2xl font-bold text-white">{property.areaSqm}m²</p>
                 </div>
-                <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4">
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                   <p className="text-sm text-slate-400 mb-1">🎯 Available</p>
-                  <p className="text-2xl font-bold text-green-400">{property.availability?.availableSlots || 0}</p>
+                  <p className="text-2xl font-bold text-sky-400">{property.availability?.availableSlots || 0}</p>
                 </div>
               </div>
 
-              {/* Description */}
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-white mb-3">📝 Description</h2>
                 <p className="text-slate-300 leading-relaxed">{property.description}</p>
               </div>
 
-              {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
                 <div className="mb-6">
                   <h2 className="text-xl font-bold text-white mb-3">✨ Amenities</h2>
@@ -170,18 +161,16 @@ export default function PropertyDetail() {
                 </div>
               )}
 
-              {/* Location */}
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-white mb-3">📍 Location</h2>
                 <p className="text-slate-300 mb-2">{property.location.address}</p>
                 {property.location.nearestUniversity && (
                   <p className="text-sm text-slate-400">
-                    🎓 Near: <strong className="text-blue-400">{property.location.nearestUniversity}</strong>
+                    🎓 Near: <strong className="text-sky-400">{property.location.nearestUniversity}</strong>
                   </p>
                 )}
               </div>
 
-              {/* Reviews */}
               {property.reviews && property.reviews.length > 0 && (
                 <div>
                   <h2 className="text-xl font-bold text-white mb-3">⭐ Reviews ({property.reviewCount})</h2>
@@ -192,12 +181,7 @@ export default function PropertyDetail() {
                           <p className="font-medium text-slate-300">{review.studentName}</p>
                           <div className="flex gap-1">
                             {[...Array(5)].map((_, i) => (
-                              <span
-                                key={i}
-                                className={i < review.rating ? 'text-yellow-400' : 'text-slate-600'}
-                              >
-                                ★
-                              </span>
+                              <span key={i} className={i < review.rating ? 'text-yellow-400' : 'text-slate-600'}>★</span>
                             ))}
                           </div>
                         </div>
@@ -213,40 +197,33 @@ export default function PropertyDetail() {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            {/* Price Card */}
-            <div className={`${studentStyles.card} border border-slate-700 rounded-lg p-6`}>
+            <div className={card.base}>
               <div className="mb-6">
                 <p className="text-slate-400 text-sm mb-1">💰 Monthly Price</p>
-                <p className="text-4xl font-bold text-blue-400">{property.price.toLocaleString()}</p>
+                <p className="text-4xl font-bold text-sky-400">{property.price.toLocaleString()}</p>
                 <p className="text-slate-500 text-sm">EGP per month</p>
               </div>
 
-              {/* Availability */}
-              <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-4 mb-6">
+              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6">
                 <p className="text-sm text-slate-400 mb-2">👥 Capacity</p>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-slate-300 font-medium">
                     {property.availability?.occupiedSlots || 0} / {property.availability?.totalCapacity}
                   </span>
-                  <span className="text-sm text-green-400 font-bold">
+                  <span className="text-sm text-sky-400 font-bold">
                     {property.availability?.availableSlots || 0} Available
                   </span>
                 </div>
                 <div className="w-full bg-slate-700 rounded-full h-2">
                   <div
-                    className={`h-2 rounded-full ${isSoldOut ? 'bg-red-600' : 'bg-blue-500'}`}
+                    className={`h-2 rounded-full ${isSoldOut ? 'bg-red-600' : 'bg-sky-500'}`}
                     style={{
-                      width: `${
-                        ((property.availability?.occupiedSlots || 0) /
-                          (property.availability?.totalCapacity || 1)) *
-                        100
-                      }%`,
+                      width: `${((property.availability?.occupiedSlots || 0) / (property.availability?.totalCapacity || 1)) * 100}%`,
                     }}
                   ></div>
                 </div>
               </div>
 
-              {/* Listing Mode & Gender */}
               <div className="grid grid-cols-2 gap-3 mb-6">
                 <div className="bg-slate-800/50 border border-slate-600 rounded-lg p-3">
                   <p className="text-xs text-slate-400 mb-1">📋 Type</p>
@@ -258,18 +235,12 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
-              {/* Rating */}
               {property.rating > 0 && (
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          className={i < Math.round(property.rating) ? 'text-yellow-400 text-lg' : 'text-slate-600 text-lg'}
-                        >
-                          ★
-                        </span>
+                        <span key={i} className={i < Math.round(property.rating) ? 'text-yellow-400 text-lg' : 'text-slate-600 text-lg'}>★</span>
                       ))}
                     </div>
                   </div>
@@ -279,57 +250,50 @@ export default function PropertyDetail() {
                 </div>
               )}
 
-              {/* Booking Button */}
               <button
                 onClick={() => setBookingModalOpen(true)}
                 disabled={isSoldOut || !property.canBook}
-                className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-all transform hover:scale-105 ${
+                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all ${
                   isSoldOut || !property.canBook
                     ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                    : 'bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-blue-500/50'
+                    : 'bg-sky-500 hover:bg-sky-600 active:scale-[0.98]'
                 }`}
               >
                 {isSoldOut ? '🚫 Sold Out' : !property.canBook ? '❌ Cannot Book' : '📅 Book Now'}
               </button>
 
-              {/* ML Insights */}
               {property.mlInsights && property.mlInsights.predictedFairPrice && property.mlInsights.priceDifferencePercentage !== undefined && (
                 <div className="mt-6 bg-amber-900/30 border border-amber-600/30 rounded-lg p-4">
                   <p className="text-sm font-bold text-amber-400 mb-2">💡 Deal Rating</p>
                   <p className="text-lg font-bold text-amber-300 mb-1">{property.mlInsights.dealRating}</p>
                   <p className="text-xs text-amber-200">
-                    Fair price: {property.mlInsights.predictedFairPrice.toLocaleString()} EGP
-                    <br />
-                    {property.mlInsights.priceDifferencePercentage > 0 ? '📈 Higher' : '📉 Lower'} than market by{' '}
-                    {Math.abs(property.mlInsights.priceDifferencePercentage).toFixed(1)}%
+                    Fair price: {property.mlInsights.predictedFairPrice.toLocaleString()} EGP<br />
+                    {property.mlInsights.priceDifferencePercentage > 0 ? '📈 Higher' : '📉 Lower'} than market by {Math.abs(property.mlInsights.priceDifferencePercentage).toFixed(1)}%
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Landlord Card */}
             {property.landlord && (
-              <div className={`${studentStyles.card} border border-slate-700 rounded-lg p-6 mt-6`}>
+              <div className={`${card.base} mt-6`}>
                 <h3 className="text-lg font-bold text-white mb-4">🏠 Landlord</h3>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-linear-to-r from-blue-600 to-blue-700 flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold text-lg">
                     {property.landlord.fullName.charAt(0)}
                   </div>
                   <div>
                     <p className="font-medium text-slate-300">{property.landlord.fullName}</p>
                     {property.landlord.isVerified && (
-                      <p className="text-xs text-green-400 font-medium">✓ Verified</p>
+                      <p className="text-xs text-emerald-400 font-medium">✓ Verified</p>
                     )}
                   </div>
                 </div>
                 <div className="space-y-2 text-sm text-slate-400 mb-4">
                   <p>📅 Member since: {new Date(property.landlord.memberSince).getFullYear()}</p>
                   {property.landlord.totalListings && <p>📋 Listings: {property.landlord.totalListings}</p>}
-                  {property.landlord.averageRating && (
-                    <p>⭐ Average rating: {property.landlord.averageRating.toFixed(1)}</p>
-                  )}
+                  {property.landlord.averageRating && <p>⭐ Average rating: {property.landlord.averageRating.toFixed(1)}</p>}
                 </div>
-                <button className={`${studentStyles.btnSecondary} w-full`}>
+                <button className="bg-slate-700 hover:bg-slate-600 text-white w-full py-2 rounded-lg font-medium transition-colors">
                   💬 Contact Landlord
                 </button>
               </div>
@@ -338,7 +302,6 @@ export default function PropertyDetail() {
         </div>
       </div>
 
-      {/* Booking Modal */}
       {property && (
         <BookingModal
           isOpen={bookingModalOpen}

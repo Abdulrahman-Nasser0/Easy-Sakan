@@ -1,368 +1,290 @@
 # 🎨 Easy Sakan Design System
 
-> **Inspired by Booking.com** — Clean, trustworthy, and user-friendly design with a sky blue primary palette.
+> **Inspired by Booking.com.** Light theme. Clean and trustworthy.
+> White backgrounds, not dark. Blue is the only accent color. Use it with restraint.
+> No gradients on interactive elements. No glow effects.
+> Every color choice must serve trust and clarity — not aesthetics.
 
 ---
 
-## 📋 Table of Contents
+## 1. Colors
 
-- [1. Color Palette](#1-color-palette)
-- [2. Typography](#2-typography)
-- [3. Spacing & Layout](#3-spacing--layout)
-- [4. Component Styles](#4-component-styles)
-- [5. Migration Plan](#5-migration-plan)
+### Backgrounds
+| Role | Hex | Tailwind |
+|------|-----|----------|
+| Page background | `#ffffff` | `bg-white` |
+| Section / alternate | `#f2f6fc` | `bg-[#f2f6fc]` |
+| Card background | `#ffffff` | `bg-white` |
+| Input background | `#ffffff` | `bg-white` |
 
----
+### Primary — Blue (the ONLY accent)
+| Role | Hex | Tailwind |
+|------|-----|----------|
+| Primary action / CTA | `#0071c2` | `bg-[#0071c2]` |
+| Primary hover | `#005999` | `hover:bg-[#005999]` |
+| Links | `#0071c2` | `text-[#0071c2]` |
+| Link hover | `#005999` | `hover:text-[#005999]` |
+| Focus ring | `#0071c2` | `ring-[#0071c2]` |
+| Light blue tint (bg, badges) | `#ebf3ff` | `bg-[#ebf3ff]` |
 
-## 1. Color Palette
+### Text
+| Role | Hex | Tailwind |
+|------|-----|----------|
+| Primary text | `#1a1a2e` | `text-[#1a1a2e]` |
+| Secondary / meta text | `#6b7280` | `text-gray-500` |
+| Placeholder text | `#9ca3af` | `placeholder-gray-400` |
+| Disabled text | `#d1d5db` | `text-gray-300` |
 
-### Primary — Sky Blue Family
+### Borders
+| Role | Hex | Tailwind |
+|------|-----|----------|
+| Default border | `#e5e7eb` | `border-gray-200` |
+| Focused border | `#0071c2` | `border-[#0071c2]` |
+| Dividers | `#f3f4f6` | `border-gray-100` |
 
-The primary palette is inspired by trust, clarity, and professionalism — similar to Booking.com's iconic blue.
-
-| Token | Hex | Tailwind Class | Usage |
-|-------|-----|---------------|-------|
-| **Primary-50** | `#f0f9ff` | `sky-50` | Very light backgrounds |
-| **Primary-100** | `#e0f2fe` | `sky-100` | Light hover states, badges |
-| **Primary-200** | `#bae6fd` | `sky-200` | Subtle borders |
-| **Primary-300** | `#7dd3fc` | `sky-300` | Active states, secondary accents |
-| **Primary-400** | `#38bdf8` | `sky-400` | Hover on primary buttons |
-| **Primary-500** | `#0ea5e9` | `sky-500` | **Primary buttons, CTAs, links** |
-| **Primary-600** | `#0284c7` | `sky-600` | Button hover, active links |
-| **Primary-700** | `#0369a1` | `sky-700` | Pressed states |
-| **Primary-800** | `#075985` | `sky-800` | Dark backgrounds |
-| **Primary-900** | `#0c4a6e` | `sky-900` | Deepest backgrounds |
-
-### Neutral — Slate Family (Dark theme backgrounds)
-
-| Token | Tailwind Class | Usage |
-|-------|---------------|-------|
-| **Surface-50** | `slate-50` | Page backgrounds (light mode) |
-| **Surface-100** | `slate-100` | Card backgrounds (light mode) |
-| **Surface-200** | `slate-200` | Borders (light mode) |
-| **Surface-700** | `slate-700` | Borders (dark mode) |
-| **Surface-800** | `slate-800` | Card backgrounds (dark mode) |
-| **Surface-900** | `slate-900` | Deep backgrounds (dark mode) |
-| **Surface-950** | `slate-950` | Page backgrounds (dark mode) |
-
-### Semantic Colors
-
-| Token | Tailwind Class | Usage |
-|-------|---------------|-------|
-| **Success** | `emerald-500` | Confirmed, completed, verified |
-| **Warning** | `amber-500` | Pending, awaiting action |
-| **Danger** | `red-500` | Cancelled, rejected, errors |
-| **Info** | `sky-400` | Informational alerts |
-| **Neutral** | `slate-400` | Disabled, secondary text |
-
-### Accent Gradients (use sparingly)
-
-```css
-/* Hero sections, header backgrounds */
-gradient-hero: linear-gradient(to right, sky-900, slate-800, slate-900)
-/* Buttons */
-gradient-primary: linear-gradient(to right, sky-500, sky-600)
-/* Stats section */
-gradient-stats: linear-gradient(to right, sky-600, blue-700)
-```
+### Semantic
+| Role | Hex | Tailwind |
+|------|-----|----------|
+| Success | `#008009` | `text-[#008009]` / `bg-[#ebf7eb]` |
+| Warning | `#b95000` | `text-[#b95000]` / `bg-[#fff3e0]` |
+| Danger | `#cc0000` | `text-[#cc0000]` / `bg-[#fff0f0]` |
+| Info | `#0071c2` | `text-[#0071c2]` / `bg-[#ebf3ff]` |
 
 ---
 
 ## 2. Typography
-
-### Font Family
-
-- **Primary:** `Inter` (already configured via `next/font`)
-- **Fallback:** `Arial, Helvetica, sans-serif`
-
-### Font Sizes
+**Font:** Inter, fallback `Arial, Helvetica, sans-serif`
 
 | Token | Size | Tailwind | Usage |
 |-------|------|----------|-------|
-| **xs** | 0.75rem | `text-xs` | Helper text, badges, timestamps |
-| **sm** | 0.875rem | `text-sm` | Secondary text, meta info |
-| **base** | 1rem | `text-base` | Body text |
-| **lg** | 1.125rem | `text-lg` | Section descriptions |
-| **xl** | 1.25rem | `text-xl` | Card titles |
-| **2xl** | 1.5rem | `text-2xl` | Section headers |
-| **3xl** | 1.875rem | `text-3xl` | Page titles |
-| **4xl** | 2.25rem | `text-4xl` | Hero headings |
+| xs | 0.75rem | `text-xs` | Labels, timestamps |
+| sm | 0.875rem | `text-sm` | Secondary text, table data |
+| base | 1rem | `text-base` | Body text |
+| lg | 1.125rem | `text-lg` | Card descriptions |
+| xl | 1.25rem | `text-xl` | Card titles |
+| 2xl | 1.5rem | `text-2xl` | Section headers |
+| 3xl | 1.875rem | `text-3xl` | Page titles |
 
-### Font Weights
-
-| Weight | Tailwind | Usage |
-|--------|----------|-------|
-| 400 | `font-normal` | Body text |
-| 500 | `font-medium` | Labels, emphasized text |
-| 600 | `font-semibold` | Subheadings |
-| 700 | `font-bold` | Headings, page titles |
-| 800 | `font-extrabold` | Hero titles (sparingly) |
-
-### Line Heights
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| **tight** | 1.25 | Headings |
-| **normal** | 1.5 | Body text |
-| **relaxed** | 1.625 | Long-form content |
+**Weights:** `font-normal` (body), `font-medium` (labels), `font-semibold` (subheadings), `font-bold` (headings).
 
 ---
 
-## 3. Spacing & Layout
+## 3. Component Patterns
 
-### Spacing Scale (Tailwind defaults)
-
-| Size | Rem | Common Usage |
-|------|-----|-------------|
-| 2 | 0.5rem | Inner padding for small elements |
-| 3 | 0.75rem | Gap between form elements |
-| 4 | 1rem | Standard padding, card padding |
-| 6 | 1.5rem | Section padding, card padding large |
-| 8 | 2rem | Page section spacing |
-| 12 | 3rem | Large section spacing |
-| 16 | 4rem | Page margins, hero padding |
-| 20 | 5rem | Extra large spacing |
-
-### Container Widths
-
-| Breakpoint | Max Width | Usage |
-|------------|-----------|-------|
-| **sm** | 640px | Small forms, modals |
-| **md** | 768px | Medium content |
-| **lg** | 1024px | Standard content |
-| **xl** | 1280px | Dashboard content |
-| **2xl** | 1536px | Full-width with margins |
-
-### Border Radius
-
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| **sm** | 0.25rem | `rounded-sm` | Badges, small labels |
-| **md** | 0.5rem | `rounded-lg` | Buttons, inputs, cards |
-| **lg** | 0.75rem | `rounded-xl` | Modals, large cards |
-| **xl** | 1rem | `rounded-2xl` | Hero sections, featured cards |
-| **full** | 9999px | `rounded-full` | Avatars, pills |
-
----
-
-## 4. Component Styles
-
-### 4.1 Buttons — use `<Button>` component only
-
-| Variant | Classes (applied automatically) |
-|---------|-------------------------------|
-| **primary** | `bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-lg px-6 py-3 transition-all active:scale-[0.98]` |
-| **secondary** | `bg-slate-700 hover:bg-slate-600 text-slate-100 font-medium rounded-lg px-6 py-3 transition-all` |
-| **outline** | `border border-slate-600 text-slate-300 hover:border-sky-500 hover:text-sky-400 font-medium rounded-lg px-6 py-3 transition-all` |
-| **danger** | `bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg px-6 py-3 transition-all` |
-| **ghost** | `text-slate-400 hover:text-sky-400 hover:bg-slate-800/50 font-medium rounded-lg px-4 py-2 transition-all` |
-| **success** | `bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg px-6 py-3 transition-all` |
-| **warning** | `bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg px-6 py-3 transition-all` |
-
-> **Rule:** All `bg-gradient-to-r` button styles are **deprecated**. Use solid `bg-sky-500` instead. Gradients on buttons look dated and "AI-generated".
-
-### 4.2 Cards
-
+### Buttons (solid colors only, no gradients, no shadows)
 ```tsx
-// Standard card (e.g., dashboard widgets)
-<div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+// Primary (blue CTA)
+<button className="bg-[#0071c2] hover:bg-[#005999] text-white font-semibold text-sm px-5 py-2.5 rounded-md transition-colors">Book now</button>
+
+// Secondary (outline)
+<button className="border border-[#0071c2] text-[#0071c2] hover:bg-[#ebf3ff] font-semibold text-sm px-5 py-2.5 rounded-md transition-colors bg-white">Learn more</button>
+
+// Danger
+<button className="bg-[#cc0000] hover:bg-[#aa0000] text-white font-semibold text-sm px-5 py-2.5 rounded-md transition-colors">Cancel</button>
+
+// Ghost
+<button className="text-[#0071c2] hover:underline font-medium text-sm">View details</button>
 ```
 
+### Cards
 ```tsx
-// Interactive card (hover effect)
-<div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 hover:border-sky-500/50 transition-all cursor-pointer">
+// Standard card
+<div className="bg-white border border-gray-200 rounded-lg p-6">...</div>
+
+// Interactive card
+<div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-[#0071c2] transition-all cursor-pointer">...</div>
 ```
 
+### Inputs
 ```tsx
-// Stat card (dashboard numbers)
-<div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-  <p className="text-slate-400 text-sm">Label</p>
-  <p className="text-3xl font-bold text-sky-400 mt-2">42</p>
-</div>
+<input className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm" />
 ```
 
-### 4.3 Inputs
-
-```tsx
-<input className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors" />
-```
-
-### 4.4 Tables
-
-```tsx
-<table className="w-full">
-  <thead>
-    <tr className="bg-slate-900/50 border-b border-slate-700">
-      <th className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">Header</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr className="border-b border-slate-700 hover:bg-slate-700/30 transition-colors">
-      <td className="px-6 py-4 text-sm text-slate-200">Data</td>
-    </tr>
-  </tbody>
-</table>
-```
-
-### 4.5 Badges
-
+### Badges
 ```tsx
 // Success
-<span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-900/50 border border-emerald-600 text-emerald-200">
-  Confirmed
-</span>
-
-// Warning / Pending
-<span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-amber-900/50 border border-amber-600 text-amber-200">
-  Pending
-</span>
-
-// Error / Rejected
-<span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-red-900/50 border border-red-600 text-red-200">
-  Rejected
-</span>
-
+<span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ebf7eb] text-[#008009]">Confirmed</span>
+// Warning
+<span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#fff3e0] text-[#b95000]">Pending</span>
+// Danger
+<span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#fff0f0] text-[#cc0000]">Rejected</span>
 // Info
-<span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-sky-900/50 border border-sky-600 text-sky-200">
-  Info
-</span>
+<span className="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ebf3ff] text-[#0071c2]">Info</span>
 ```
 
-### 4.6 Modals
-
+### Tables
 ```tsx
-<div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-  <div className="bg-slate-800 border border-slate-700 rounded-xl max-w-lg w-full">
-    <div className="px-6 py-4 border-b border-slate-700">
-      <h3 className="text-lg font-bold text-white">Title</h3>
+<div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+  <table className="w-full">
+    <thead><tr className="bg-[#f2f6fc] border-b border-gray-200">
+      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Header</th>
+    </tr></thead>
+    <tbody className="divide-y divide-gray-100">
+      <tr className="hover:bg-[#f2f6fc] transition-colors">
+        <td className="px-6 py-4 text-sm text-[#1a1a2e]">Data</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+### Alerts
+```tsx
+<div className="bg-[#ebf7eb] border border-[#c3e6c3] text-[#008009] rounded-md p-4 text-sm">Success</div>
+<div className="bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-md p-4 text-sm">Error</div>
+<div className="bg-[#fff3e0] border border-[#f5d6a3] text-[#b95000] rounded-md p-4 text-sm">Warning</div>
+<div className="bg-[#ebf3ff] border border-[#b3d4f5] text-[#0071c2] rounded-md p-4 text-sm">Info</div>
+```
+
+### Modals
+```tsx
+<div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+  <div className="bg-white border border-gray-200 rounded-lg max-w-lg w-full shadow-xl">
+    <div className="px-6 py-4 border-b border-gray-100">
+      <h3 className="text-lg font-semibold text-[#1a1a2e]">Title</h3>
     </div>
-    <div className="px-6 py-6 space-y-4">
-      {/* Content */}
-    </div>
-    <div className="px-6 py-4 border-t border-slate-700 flex justify-end gap-3">
-      <button className="px-4 py-2 text-sm bg-slate-700 hover:bg-slate-600 text-white rounded-lg">Cancel</button>
-      <button className="px-4 py-2 text-sm bg-sky-500 hover:bg-sky-600 text-white rounded-lg">Confirm</button>
+    <div className="px-6 py-6 space-y-4">{/* Content */}</div>
+    <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+      <button className="px-4 py-2 text-sm border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md transition-colors">Cancel</button>
+      <button className="px-4 py-2 text-sm bg-[#0071c2] hover:bg-[#005999] text-white rounded-md transition-colors">Confirm</button>
     </div>
   </div>
 </div>
 ```
 
-### 4.7 Page Layout
-
+### Page Layout
 ```tsx
-<div className="min-h-screen bg-slate-950">
-  {/* Optional page header */}
-  <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700">
+<div className="min-h-screen bg-white">
+  <div className="bg-white border-b border-gray-200">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 className="text-3xl font-bold text-white">Page Title</h1>
+      <h1 className="text-2xl font-bold text-[#1a1a2e]">Page Title</h1>
     </div>
   </div>
-  
-  {/* Page content */}
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {/* Content */}
   </div>
 </div>
 ```
 
-### 4.8 Alerts & Notifications
+---
 
-```tsx
-// Success toast
-<div className="bg-emerald-900/30 border border-emerald-600/30 text-emerald-200 rounded-lg p-4">
-  ✅ Booking confirmed successfully!
-</div>
+## 4. Rules — What NOT to Do
 
-// Error toast
-<div className="bg-red-900/30 border border-red-600/30 text-red-200 rounded-lg p-4">
-  ❌ Failed to process your booking.
-</div>
-
-// Warning toast
-<div className="bg-amber-900/30 border border-amber-600/30 text-amber-200 rounded-lg p-4">
-  ⚠️ Payment pending. 48 hours remaining.
-</div>
-
-// Info toast
-<div className="bg-sky-900/30 border border-sky-600/30 text-sky-200 rounded-lg p-4">
-  ℹ️ Your booking is being reviewed.
-</div>
-```
+| ❌ Avoid | ✅ Use instead |
+|----------|---------------|
+| Dark backgrounds (slate-800, slate-900) | White or `#f2f6fc` |
+| Gradient buttons | Solid `bg-[#0071c2]` |
+| Glow / ring effects on hover | Simple border + `focus:ring-2` |
+| Multiple accent colors | Blue only (`#0071c2`) |
+| `rounded-2xl` or `rounded-3xl` on cards | `rounded-lg` max |
+| Heavy shadows (`shadow-2xl`) | `shadow-md` or none |
+| Fancy animations | `transition-colors` only |
+| Colored section backgrounds | White or `#f2f6fc` only |
+| Bright neon text (`text-sky-400`) | `text-[#0071c2]` medium blue |
+| `text-white` on dark bg | `text-[#1a1a2e]` on light bg |
+| Status colors with borders | Semantic bg + text color only |
 
 ---
 
 ## 5. Migration Plan
 
-### Phase 1: Create Core Files ✅
-- [x] Create this design system document
-- [x] Update `globals.css` with proper CSS variables
-- [x] Update `Button.tsx` with new sky-blue palette (solid colors, no gradients)
-- [x] Create `src/styles/designTokens.ts` — Single source of truth for all style tokens
+### Phase 0 — Foundation (Core Config)
+- [ ] `globals.css` — Light theme CSS variables
+- [ ] `designTokens.ts` — Replace all dark theme tokens with light
+- [ ] `Button.tsx` — Solid `#0071c2` blue, no gradients
+- [ ] `adminStyles.ts` — Backward-compat light theme aliases
+- [ ] `landlordStyles.ts` — Backward-compat light theme aliases  
+- [ ] `studentStyles.ts` — Backward-compat light theme aliases
 
-### Phase 2: Migrate Style Files ✅
-- [x] `adminStyles.ts` — Consolidated with sky blue palette, no gradient backgrounds
-- [x] `landlordStyles.ts` — Switched from emerald to sky blue, no gradient backgrounds
-- [x] `studentStyles.ts` — Switched to sky blue palette, simplified
-- [x] All three style files reference `designTokens.ts` as source of truth
+**Key changes per file:**
+- `globals.css`: `--background: #ffffff`, `--foreground: #1a1a2e`, `--primary: #0071c2`
+- `designTokens.ts`: All `slate-*` → `white`/`gray-*`, `sky-*` → `[#0071c2]`, `text-white` → `text-[#1a1a2e]`
+- `Button.tsx`: Remove gradient + scale animations, use `rounded-md`, `text-sm`
 
-### Phase 3: Migrate Pages ✅ (Completed in two passes)
-- [x] `app/page.tsx` — Homepage
-- [x] `app/login/page.tsx` — Login page
-- [x] `app/signup/page.tsx` — Signup page
-- [x] `app/not-found.tsx` — Not found page
-- [x] `app/properties/page.tsx` — Property listing
-- [x] `app/properties/[id]/page.tsx` — Property detail
-- [x] `app/properties/[id]/review/page.tsx` — Review form
-- [x] `app/dashboard/student/page.tsx` — Student dashboard
-- [x] `app/dashboard/landlord/page.tsx` — Landlord dashboard
-- [x] `app/dashboard/landlord/properties/new/page.tsx` — Upload property
-- [x] `app/dashboard/landlord/properties/[id]/edit/page.tsx` — Edit property
-- [x] `app/dashboard/landlord/my-listings/page.tsx` — My listings
-- [x] `app/dashboard/student/my-bookings/page.tsx` — My bookings
-- [x] `app/settings/page.tsx` — Settings
-- [x] `app/profile/page.tsx` — Profile
-- [x] `app/report-issue/page.tsx` — Report issue
-- [x] `app/admin/dashboard/page.tsx` — Admin dashboard
-- [x] `app/admin/users/page.tsx` — Admin users
-- [x] `app/admin/properties/page.tsx` — Admin properties
-- [x] `app/admin/bookings/page.tsx` — Admin bookings
-- [x] `app/admin/reports/page.tsx` — Admin reports
-- [x] `app/admin/fraud-detection/page.tsx` — Admin fraud
-- [x] `app/admin/audit-log/page.tsx` — Admin audit log
+### Phase 1 — Common Components
+- [ ] `Toast.tsx` — Light semantic colors
+- [ ] `BookingModal.tsx` — White bg, gray border
+- [ ] `ReportIssueModal.tsx` — White bg, gray border
+- [ ] `ErrorDisplay.tsx` — White bg, light error banner
+- [ ] `EmptyState.tsx` — White bg, gray text
+- [ ] `LoadingSpinner.tsx` — Gray border, blue spinner
+- [ ] `NotificationBell.tsx` — White dropdown, dark text
 
-### Phase 4: Component Cleanup ✅
-- [x] `components/common/Button.tsx` — Already uses design tokens
-- [x] `components/common/Toast.tsx` — Fixed
-- [x] `components/common/BookingModal.tsx` — Fixed
-- [x] `components/common/ErrorDisplay.tsx` — Fixed
-- [x] `components/common/NotificationBell.tsx` — Fixed
-- [x] `components/common/ReportIssueModal.tsx` — Fixed
-- [x] `components/layout/Header/Logo.tsx` — Fixed
-- [x] `components/layout/Header/PromotionalBanner.tsx` — Fixed
-- [x] `components/layout/Header/Header.tsx` — Fixed
-- [x] `components/home/RecommendedProperties.tsx` — Fixed
+### Phase 2 — Header & Navigation
+- [ ] `Header.tsx` — White bg, `border-b border-gray-200`
+- [ ] `Logo.tsx` — Dark text, no gradient
+- [ ] `DesktopNavigation.tsx` — Dark text, blue hover
+- [ ] `MobileMenu.tsx` — White bg, dark text
+- [ ] `SearchBar.tsx` — White input, gray border
+- [ ] `AccountDropdown.tsx` — White dropdown, dark text
+- [ ] `Dropdown.tsx` — White dropdown, dark text
+- [ ] `UserActions.tsx` — Dark text, blue accent
 
-### Rules to Follow During Migration
+### Phase 3 — Auth Pages
+- [ ] `login/page.tsx` — `bg-white`, blue CTA
+- [ ] `signup/page.tsx` — `bg-white`, blue CTA
+- [ ] `forgot-password/page.tsx` — `bg-white`, blue CTA
+- [ ] `verify-email/page.tsx` — `bg-white`, blue CTA
 
-1. **NO gradient backgrounds on buttons** — Use solid `bg-sky-500`, `bg-slate-700`, etc.
-2. **NO gradient text** — No `bg-clip-text text-transparent` patterns (looks AI-generated)
-3. **NO floating blob animations** — Remove `animate-blob`, `mix-blend-multiply` patterns
-4. **NO animated grid backgrounds** — Remove the grid overlay patterns
-5. **Use sky blue** (`sky-*`) — Not `blue-*` for primary actions, links, headers
-6. **Rounded corners** — Standard `rounded-lg` (8px) for most elements
-7. **Consistent borders** — Always use `border-slate-700` for dark theme
-8. **Hover states** — Simple opacity or border color changes, no `scale-105`
-9. **No `hover:shadow-*-500/50`** — Use subtle shadows or none
-10. **No `mix-blend-multiply`** — Removes AI-generated look
+### Phase 4 — Public Pages
+- [ ] `page.tsx` (Homepage) — White bg, light hero
+- [ ] `not-found.tsx` — White bg
+- [ ] `properties/page.tsx` — White bg, light filter panel
+- [ ] `properties/[id]/page.tsx` — White bg, white cards
+- [ ] `properties/[id]/review/page.tsx` — White bg, white form
 
-### Quick Reference: Before vs After
+### Phase 5 — Dashboard Pages
+- [ ] `dashboard/page.tsx` — White bg
+- [ ] `dashboard/student/page.tsx` — White bg, stat cards
+- [ ] `dashboard/student/my-bookings/page.tsx` + `MyBookingsClient.tsx`
+- [ ] `dashboard/landlord/page.tsx` — White bg
+- [ ] `dashboard/landlord/my-listings/page.tsx` + `MyListingsForm.tsx`
+- [ ] `dashboard/landlord/properties/new/page.tsx` + `UploadPropertyForm.tsx`
+- [ ] `dashboard/landlord/properties/[id]/edit/page.tsx` + `EditPropertyForm.tsx`
 
-| Element | Before (❌ Deprecated) | After (✅ Correct) |
-|---------|----------------------|-------------------|
-| Primary Button | `bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-xl hover:shadow-blue-500/50` | `bg-sky-500 hover:bg-sky-600` |
-| Secondary Button | `border-2 border-slate-600 bg-slate-800/50` | `bg-slate-700 hover:bg-slate-600 text-slate-100` |
-| Card | `hover:shadow-lg hover:shadow-emerald-500/20` | `hover:border-sky-500/50` |
-| Header | `bg-gradient-to-r from-blue-900 via-slate-800 to-slate-900` | `bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900` |
-| Page Title | `bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent` | `text-2xl font-bold text-white` |
-| Stat Number | `text-emerald-400` | `text-sky-400` |
-| Focus Ring | `focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30` | `focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30` |
+### Phase 6 — Admin Pages
+- [ ] `admin/dashboard/page.tsx`
+- [ ] `admin/users/page.tsx` + `UsersManagement.tsx` + `UsersTable.tsx`
+- [ ] `admin/properties/page.tsx` + `PropertiesManagement.tsx`
+- [ ] `admin/bookings/page.tsx` + `AdminBookingsClient.tsx` + `BookingsTable.tsx`
+- [ ] `admin/reports/page.tsx` + `AdminReportsClient.tsx`
+- [ ] `admin/fraud-detection/page.tsx` + `FraudAlertList.tsx`
+- [ ] `admin/audit-log/page.tsx`
+
+### Phase 7 — Other Pages
+- [ ] `profile/page.tsx` + `ProfileContent.tsx`
+- [ ] `settings/page.tsx` + `SettingsForm.tsx`
+- [ ] `report-issue/page.tsx` + `ReportIssuePageClient.tsx`
+- [ ] `RecommendedProperties.tsx`
+
+---
+
+## 6. Key Pattern Replacements
+
+| Dark (❌ Before) | Light (✅ After) |
+|-----------------|------------------|
+| `bg-slate-950` | `bg-white` |
+| `bg-slate-800/50` | `bg-white` |
+| `border-slate-700` | `border-gray-200` |
+| `bg-sky-500` | `bg-[#0071c2]` |
+| `hover:bg-sky-600` | `hover:bg-[#005999]` |
+| `text-white` (body) | `text-[#1a1a2e]` |
+| `text-slate-400` | `text-gray-500` |
+| `text-sky-400` (stat) | `text-[#0071c2]` |
+| `text-sky-200` (badge) | `text-[#0071c2]` |
+| `bg-sky-900/50` (badge) | `bg-[#ebf3ff]` |
+| `border-sky-600` (badge) | no border on badges |
+| `bg-emerald-900/50` | `bg-[#ebf7eb]` |
+| `text-emerald-200` | `text-[#008009]` |
+| `bg-amber-900/50` | `bg-[#fff3e0]` |
+| `text-amber-200` | `text-[#b95000]` |
+| `bg-red-900/50` | `bg-[#fff0f0]` |
+| `text-red-200` | `text-[#cc0000]` |
+| `rounded-lg` (button) | `rounded-md` |
+| `rounded-xl` (modal) | `rounded-lg` |
+| `active:scale-[0.98]` | remove |
+| `placeholder-slate-500` | `placeholder-gray-400` |
+| `bg-slate-700` (hover) | `hover:bg-gray-50` |
+| `border-slate-600` (input) | `border-gray-200` |
+| `focus:ring-1 focus:ring-sky-500/30` | `focus:ring-2 focus:ring-[#0071c2]/20` |
+| `bg-black/70` (overlay) | `bg-black/40` |

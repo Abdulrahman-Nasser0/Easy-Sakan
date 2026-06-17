@@ -21,6 +21,7 @@ export type SignUpState = {
 export interface UserActionsProps {
   isAuthenticated?: boolean;
   userRole?: UserRole;
+  userName?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

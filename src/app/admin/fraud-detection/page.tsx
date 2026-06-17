@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { getSession } from '@/lib/session';
+import { adminGetFraudDetection } from '@/lib/api';
 import FraudAlertList from './components/FraudAlertList';
 
 export default async function AdminFraudDetection() {
@@ -13,6 +14,9 @@ export default async function AdminFraudDetection() {
       </div>
     );
   }
+
+  const response = await adminGetFraudDetection(session.token);
+  const initialAlerts = response.isSuccess ? (response.data?.alerts || response.data || []) : [];
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -30,7 +34,7 @@ export default async function AdminFraudDetection() {
         </div>
       </div>
       <div className="px-6 py-8">
-        <FraudAlertList token={session.token} />
+        <FraudAlertList token={session.token} initialAlerts={initialAlerts} />
       </div>
     </div>
   );

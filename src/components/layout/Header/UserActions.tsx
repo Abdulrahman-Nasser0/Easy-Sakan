@@ -3,16 +3,23 @@ import AccountDropdown from "./AccountDropdown";
 import { UserActionsProps } from "@/lib/types";
 import { Button } from "@/components/common/Button";
 
+export default function UserActions({ isAuthenticated = false, userRole, userName }: UserActionsProps) {
+  const handleLogout = async () => {
+    try {
+      const { logout } = await import('@/lib/actions');
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      window.location.href = '/login';
+    }
+  };
 
-export default function UserActions({ isAuthenticated = false, userRole }: UserActionsProps) {
   return (
     <div className="flex items-center">
       <div className="flex items-center">
-        {/* Account Dropdown */}
-        <AccountDropdown isAuthenticated={isAuthenticated} />
+        <AccountDropdown isAuthenticated={isAuthenticated} userName={userName} onLogout={handleLogout} />
       </div>
       
-      {/* Only show Sign In/Sign Up when NOT authenticated */}
       {!isAuthenticated && (
         <div className="hidden md:flex items-center space-x-2">
           <Link href="/login">
@@ -28,7 +35,6 @@ export default function UserActions({ isAuthenticated = false, userRole }: UserA
         </div>
       )}
       
-      {/* Show dashboard link for authenticated users */}
       {isAuthenticated && userRole !== 'Admin' && (
         <Link href={userRole === 'Landlord' ? "/dashboard/landlord" : "/dashboard/student"} className="hidden md:inline-block">
           <Button variant="ghost" size="sm">
@@ -37,7 +43,6 @@ export default function UserActions({ isAuthenticated = false, userRole }: UserA
         </Link>
       )}
       
-      {/* Show admin dashboard link for admin users */}
       {isAuthenticated && userRole === 'Admin' && (
         <Link href="/admin/dashboard" className="hidden md:inline-block">
           <Button variant="ghost" size="sm">

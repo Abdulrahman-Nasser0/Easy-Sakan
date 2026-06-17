@@ -40,9 +40,9 @@ export default function ErrorDisplay({
     },
     info: {
       bg: 'bg-sky-50',
-      border: .border-sky-200.,
+      border: 'border-sky-200',
       iconBg: 'bg-sky-100',
-      iconColor: .text-sky-600.,
+      iconColor: 'text-sky-600',
       titleColor: 'text-sky-800',
       messageColor: 'text-sky-700',
       buttonBg: 'bg-sky-500 hover:bg-sky-600',

@@ -1,97 +1,76 @@
 /**
- * Admin Panel Styling Constants
- * Unified styling for all admin components using sky blue design system.
- * For new components, prefer importing from '@/styles/designTokens'.
+ * DEPRECATED: Prefer importing from '@/styles/designTokens' instead.
+ * Backward-compatible aliases to the new light theme design tokens.
  */
+export * from './designTokens';
 
 export const adminStyles = {
-  // Containers
-  container: "min-h-screen bg-slate-950",
-  pageContainer: "max-w-7xl mx-auto px-6 py-8",
-  cardContainer: "bg-slate-800 border border-slate-700 rounded-lg",
-
-  // Headers & Section Headers
-  sectionHeader: "text-2xl font-bold text-white mb-6 flex items-center gap-3",
-  sectionSubtitle: "text-slate-400 text-sm",
-
-  // Cards & Panels
-  card: "bg-slate-800 border border-slate-700 rounded-lg p-6 hover:border-slate-600 transition-colors",
-  cardWithHover: "bg-slate-800 border border-slate-700 rounded-lg p-6 hover:border-sky-600 hover:shadow-lg hover:shadow-sky-500/10 transition-all",
-
-  // Tables
-  table: "w-full",
-  tableHeader: "bg-slate-800/50 border-b border-slate-700",
-  tableHeaderCell: "px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider",
-  tableRow: "border-b border-slate-700 hover:bg-slate-700/30 transition-colors",
-  tableCell: "px-6 py-4 text-sm text-slate-300",
-  tableCellIcon: "flex items-center gap-2",
-
-  // Buttons
-  btnPrimary: "bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg font-medium transition-all",
-  btnSuccess: "bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-all",
-  btnDanger: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all",
-  btnWarning: "bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-all",
-  btnSecondary: "bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors",
-  btnSmall: "px-3 py-1 text-xs rounded font-medium transition-all",
-
-  // Input Fields
-  input: "w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-colors",
-  inputLabel: "block text-sm font-medium text-slate-300 mb-2",
-  formGroup: "mb-4",
-
-  // Select & Dropdown
-  select: "w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-colors",
-
-  // Badges & Status
-  badge: "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium",
-  badgeSuccess: "bg-emerald-900/50 text-emerald-200 border border-emerald-600/30",
-  badgeWarning: "bg-amber-900/50 text-amber-200 border border-amber-600/30",
-  badgeDanger: "bg-red-900/50 text-red-200 border border-red-600/30",
-  badgeInfo: "bg-sky-900/50 text-sky-200 border border-sky-600/30",
-  badgePending: "bg-orange-900/50 text-orange-200 border border-orange-600/30",
-
-  // Modals & Dialogs
-  modal: "fixed inset-0 bg-black/70 flex items-center justify-center z-50",
-  modalContent: "bg-slate-800 border border-slate-700 rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto",
-  modalHeader: "bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0",
-  modalBody: "px-6 py-6",
-  modalFooter: "border-t border-slate-700 px-6 py-4 flex justify-end gap-3",
-
-  // Alerts
-  alertSuccess: "bg-emerald-900/30 border border-emerald-600/30 text-emerald-200 rounded-lg p-4 mb-4",
-  alertError: "bg-red-900/30 border border-red-600/30 text-red-200 rounded-lg p-4 mb-4",
-  alertWarning: "bg-amber-900/30 border border-amber-600/30 text-amber-200 rounded-lg p-4 mb-4",
-  alertInfo: "bg-sky-900/30 border border-sky-600/30 text-sky-200 rounded-lg p-4 mb-4",
-
-  // Filters & Search
-  filterContainer: "bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6",
-  filterGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4",
-
-  // Empty State
-  emptyState: "text-center py-12",
-  emptyStateIcon: "text-5xl mb-4 opacity-50",
-  emptyStateText: "text-slate-400",
-
-  // Loading
-  loadingSpinner: "text-center py-12",
-  skeleton: "bg-slate-700 rounded-lg animate-pulse",
-
-  // Pagination
-  pagination: "flex justify-center items-center gap-2 mt-8",
-  paginationBtn: "px-3 py-2 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-  paginationActive: "bg-sky-600 border-sky-600 text-white",
+  container: 'min-h-screen bg-white',
+  pageContainer: 'max-w-7xl mx-auto px-6 py-8',
+  cardContainer: 'bg-white border border-gray-200 rounded-lg',
+  sectionHeader: 'text-2xl font-bold text-[#1a1a2e] mb-6 flex items-center gap-3',
+  sectionSubtitle: 'text-gray-500 text-sm',
+  card: 'bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 transition-colors',
+  cardWithHover: 'bg-white border border-gray-200 rounded-lg p-6 hover:border-[#0071c2] hover:shadow-md transition-all',
+  table: 'w-full',
+  tableHeader: 'bg-[#f2f6fc] border-b border-gray-200',
+  tableHeaderCell: 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
+  tableRow: 'border-b border-gray-100 hover:bg-[#f2f6fc] transition-colors',
+  tableCell: 'px-6 py-4 text-sm text-[#1a1a2e]',
+  tableCellIcon: 'flex items-center gap-2',
+  btnPrimary: 'bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-md font-medium transition-all',
+  btnDanger: 'bg-[#cc0000] hover:bg-[#aa0000] text-white px-4 py-2 rounded-md font-medium transition-all',
+  btnSecondary: 'border border-[#0071c2] text-[#0071c2] hover:bg-[#ebf3ff] px-4 py-2 rounded-md font-medium transition-all bg-white',
+  btnSuccess: 'bg-[#008009] hover:bg-[#006600] text-white px-4 py-2 rounded-md font-medium transition-all',
+  btnWarning: 'bg-[#b95000] hover:bg-[#9a4000] text-white px-4 py-2 rounded-md font-medium transition-all',
+  btnSmall: 'px-2.5 py-1.5 text-xs',
+  btnCancel: 'border border-gray-200 text-gray-600 hover:border-gray-300 px-4 py-2 rounded-md font-medium transition-all bg-white',
+  filterContainer: 'bg-white border border-gray-200 rounded-lg p-6',
+  filterGrid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4',
+  badgeSuccess: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ebf7eb] text-[#008009]',
+  badgeWarning: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#fff3e0] text-[#b95000]',
+  badgeDanger: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#fff0f0] text-[#cc0000]',
+  badgeInfo: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#ebf3ff] text-[#0071c2]',
+  badgeNeutral: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600',
+  badge: 'inline-flex px-2.5 py-1 rounded-full text-xs font-semibold',
+  modal: 'fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4',
+  modalContent: 'bg-white border border-gray-200 rounded-lg max-w-lg w-full shadow-xl',
+  modalHeader: 'px-6 py-4 border-b border-gray-100',
+  modalTitle: 'text-lg font-semibold text-[#1a1a2e]',
+  modalBody: 'px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto',
+  modalFooter: 'px-6 py-4 border-t border-gray-100 flex justify-end gap-3',
+  input: 'w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm',
+  inputLabel: 'block text-sm font-medium text-gray-600 mb-1.5',
+  label: 'block text-sm font-medium text-gray-600 mb-1.5',
+  select: 'w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm appearance-none cursor-pointer',
+  loadingSpinner: 'inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-[#0071c2]',
+  alertError: 'bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-md p-4 text-sm',
+  alertSuccess: 'bg-[#ebf7eb] border border-[#c3e6c3] text-[#008009] rounded-md p-4 text-sm',
+  emptyState: 'text-center py-12 px-6 bg-white rounded-lg border border-gray-200',
+  emptyStateIcon: 'text-5xl mb-4 opacity-40',
+  emptyStateText: 'text-gray-500',
+  formGroup: 'space-y-2',
+  paginationBtn: 'px-3 py-2 rounded-md border border-gray-200 hover:border-[#0071c2] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm text-gray-600',
 };
 
-// Color scheme for different status types
-export const statusColors = {
-  PENDING: { bg: "bg-amber-900/50", border: "border-amber-600/30", text: "text-amber-200" },
-  APPROVED: { bg: "bg-emerald-900/50", border: "border-emerald-600/30", text: "text-emerald-200" },
-  REJECTED: { bg: "bg-red-900/50", border: "border-red-600/30", text: "text-red-200" },
-  ACTIVE: { bg: "bg-emerald-900/50", border: "border-emerald-600/30", text: "text-emerald-200" },
-  INACTIVE: { bg: "bg-slate-700", border: "border-slate-600", text: "text-slate-300" },
-  COMPLETED: { bg: "bg-emerald-900/50", border: "border-emerald-600/30", text: "text-emerald-200" },
-  CANCELLED: { bg: "bg-red-900/50", border: "border-red-600/30", text: "text-red-200" },
-  DISPUTED: { bg: "bg-red-900/50", border: "border-red-600/30", text: "text-red-200" },
-  VERIFIED: { bg: "bg-emerald-900/50", border: "border-emerald-600/30", text: "text-emerald-200" },
-  UNVERIFIED: { bg: "bg-slate-700", border: "border-slate-600", text: "text-slate-300" },
+export const statusColors: Record<string, { bg: string; border: string; text: string }> = {
+  PENDING: { bg: 'bg-[#fff3e0]', border: 'border-[#f5d6a3]', text: 'text-[#b95000]' },
+  PENDING_REVIEW: { bg: 'bg-[#fff3e0]', border: 'border-[#f5d6a3]', text: 'text-[#b95000]' },
+  APPROVED: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  ACTIVE: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  REJECTED: { bg: 'bg-[#fff0f0]', border: 'border-[#f5c6c6]', text: 'text-[#cc0000]' },
+  DEACTIVATED: { bg: 'bg-[#fff0f0]', border: 'border-[#f5c6c6]', text: 'text-[#cc0000]' },
+  INACTIVE: { bg: 'bg-gray-100', border: 'border-gray-200', text: 'text-gray-500' },
+  COMPLETED: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  CANCELLED: { bg: 'bg-[#fff0f0]', border: 'border-[#f5c6c6]', text: 'text-[#cc0000]' },
+  DISPUTED: { bg: 'bg-[#fff3e0]', border: 'border-[#f5d6a3]', text: 'text-[#b95000]' },
+  VERIFIED: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  UNVERIFIED: { bg: 'bg-gray-100', border: 'border-gray-200', text: 'text-gray-500' },
+  CONFIRMED: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  EXPIRED: { bg: 'bg-gray-100', border: 'border-gray-200', text: 'text-gray-500' },
+  REFUNDED: { bg: 'bg-[#ebf3ff]', border: 'border-[#b3d4f5]', text: 'text-[#0071c2]' },
+  RESOLVED: { bg: 'bg-[#ebf7eb]', border: 'border-[#c3e6c3]', text: 'text-[#008009]' },
+  IN_PROGRESS: { bg: 'bg-[#fff3e0]', border: 'border-[#f5d6a3]', text: 'text-[#b95000]' },
+  OPEN: { bg: 'bg-[#ebf3ff]', border: 'border-[#b3d4f5]', text: 'text-[#0071c2]' },
+  DISMISSED: { bg: 'bg-gray-100', border: 'border-gray-200', text: 'text-gray-500' },
 };

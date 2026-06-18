@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #e2e8f0;
-  --primary: #0ea5e9;
-  --primary-hover: #0284c7;
-  --surface: #1e293b;
-  --surface-hover: #334155;
-  --border: #334155;
-  --text-muted: #94a3b8;
+  --background: #ffffff;
+  --foreground: #1a1a2e;
+  --primary: #0071c2;
+  --primary-hover: #005999;
+  --surface: #f2f6fc;
+  --surface-hover: #ebf3ff;
+  --border: #e5e7eb;
+  --text-muted: #6b7280;
 }
 
 body {
@@ -17,16 +17,9 @@ body {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
 
-/* Custom Animations */
 @keyframes slide-up {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes fade-in {
@@ -34,10 +27,5 @@ body {
   100% { opacity: 1; }
 }
 
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.2s ease-out;
-}
+.animate-slide-up { animation: slide-up 0.3s ease-out; }
+.animate-fade-in { animation: fade-in 0.2s ease-out; }

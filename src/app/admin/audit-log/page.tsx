@@ -20,20 +20,20 @@ export default async function AdminAuditLog() {
   const entries = response.isSuccess ? response.data?.entries || [] : [];
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700">
+    <div className="min-h-screen bg-white">
+      <div className="bg-gradient-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-sky-500/20 rounded-lg">
+              <div className="p-2 bg-[#ebf3ff] rounded-lg">
                 <span className="text-lg">📋</span>
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">Audit Log</h1>
-                <p className="text-slate-400 mt-1 text-sm">Track all admin actions and changes</p>
+                <p className="text-gray-100 mt-1 text-sm">Track all admin actions and changes</p>
               </div>
             </div>
-            <Link href="/admin/dashboard" className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <Link href="/admin/dashboard" className="bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
               ← Back to Dashboard
             </Link>
           </div>
@@ -42,31 +42,31 @@ export default async function AdminAuditLog() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {entries.length === 0 ? (
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-12 text-center">
-            <p className="text-slate-400">No audit log entries found</p>
+          <div className="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
+            <p className="text-gray-600">No audit log entries found</p>
           </div>
         ) : (
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <table className="w-full">
               <thead>
-                <tr className="bg-slate-900/50 border-b border-slate-700">
+                <tr className="bg-gray-50 border-b border-gray-200">
                   {['Admin', 'Action', 'Target', 'Details', 'Timestamp'].map(h => (
-                    <th key={h} className="px-6 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="px-6 py-3 text-left text-xs font-semibold text-[#1a1a2e] uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700">
+              <tbody className="divide-y divide-gray-200">
                 {entries.map((entry: any) => (
-                  <tr key={entry.id} className="hover:bg-slate-700/30 transition-colors">
-                    <td className="px-6 py-4 text-sm text-slate-200">{entry.adminName}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-white">{entry.action}</td>
+                  <tr key={entry.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 text-sm text-[#1a1a2e]">{entry.adminName}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-[#1a1a2e]">{entry.action}</td>
                     <td className="px-6 py-4 text-sm">
-                      <span className="inline-flex px-2 py-1 rounded text-xs bg-slate-700 text-slate-300">
+                      <span className="inline-flex px-2 py-1 rounded text-xs bg-gray-200 text-[#1a1a2e]">
                         {entry.targetType}#{entry.targetId}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-400">{entry.details}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500">
+                    <td className="px-6 py-4 text-sm text-gray-600">{entry.details}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
                       {new Date(entry.timestamp).toLocaleString()}
                     </td>
                   </tr>

@@ -19,16 +19,16 @@ export default async function AdminFraudDetection() {
   const initialAlerts = response.isSuccess ? (response.data?.alerts || response.data || []) : [];
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700 px-6 py-8">
+    <div className="min-h-screen bg-white">
+      <div className="bg-gradient-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200 px-6 py-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-sky-500/20 rounded-lg">
+            <div className="p-2 bg-[#ebf3ff] rounded-lg">
               <span className="text-lg">🔍</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Fraud Detection</h1>
-              <p className="text-slate-400 mt-1 text-sm">ML-powered fraud analysis and alerts</p>
+              <p className="text-gray-100 mt-1 text-sm">ML-powered fraud analysis and alerts</p>
             </div>
           </div>
         </div>

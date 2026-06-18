@@ -188,74 +188,74 @@
 
 ## 5. Migration Plan
 
-### Phase 0 — Foundation (Core Config)
-- [ ] `globals.css` — Light theme CSS variables
-- [ ] `designTokens.ts` — Replace all dark theme tokens with light
-- [ ] `Button.tsx` — Solid `#0071c2` blue, no gradients
-- [ ] `adminStyles.ts` — Backward-compat light theme aliases
-- [ ] `landlordStyles.ts` — Backward-compat light theme aliases  
-- [ ] `studentStyles.ts` — Backward-compat light theme aliases
+### Phase 0 — Foundation (Core Config) ✅
+- [x] `globals.css` — Light theme CSS variables
+- [x] `designTokens.ts` — Replace all dark theme tokens with light
+- [x] `Button.tsx` — Solid `#0071c2` blue, no gradients
+- [x] `adminStyles.ts` — Backward-compat light theme aliases
+- [x] `landlordStyles.ts` — Backward-compat light theme aliases  
+- [x] `studentStyles.ts` — Backward-compat light theme aliases
 
 **Key changes per file:**
 - `globals.css`: `--background: #ffffff`, `--foreground: #1a1a2e`, `--primary: #0071c2`
 - `designTokens.ts`: All `slate-*` → `white`/`gray-*`, `sky-*` → `[#0071c2]`, `text-white` → `text-[#1a1a2e]`
 - `Button.tsx`: Remove gradient + scale animations, use `rounded-md`, `text-sm`
 
-### Phase 1 — Common Components
-- [ ] `Toast.tsx` — Light semantic colors
-- [ ] `BookingModal.tsx` — White bg, gray border
-- [ ] `ReportIssueModal.tsx` — White bg, gray border
-- [ ] `ErrorDisplay.tsx` — White bg, light error banner
-- [ ] `EmptyState.tsx` — White bg, gray text
-- [ ] `LoadingSpinner.tsx` — Gray border, blue spinner
-- [ ] `NotificationBell.tsx` — White dropdown, dark text
+### Phase 1 — Common Components ✅
+- [x] `Toast.tsx` — Light semantic colors
+- [x] `BookingModal.tsx` — White bg, gray border
+- [x] `ReportIssueModal.tsx` — White bg, gray border
+- [x] `ErrorDisplay.tsx` — White bg, light error banner
+- [x] `EmptyState.tsx` — White bg, gray text
+- [x] `LoadingSpinner.tsx` — Gray border, blue spinner
+- [x] `NotificationBell.tsx` — White dropdown, dark text
 
-### Phase 2 — Header & Navigation
-- [ ] `Header.tsx` — White bg, `border-b border-gray-200`
-- [ ] `Logo.tsx` — Dark text, no gradient
-- [ ] `DesktopNavigation.tsx` — Dark text, blue hover
-- [ ] `MobileMenu.tsx` — White bg, dark text
-- [ ] `SearchBar.tsx` — White input, gray border
-- [ ] `AccountDropdown.tsx` — White dropdown, dark text
-- [ ] `Dropdown.tsx` — White dropdown, dark text
-- [ ] `UserActions.tsx` — Dark text, blue accent
+### Phase 2 — Header & Navigation ✅
+- [x] `Header.tsx` — White bg, `border-b border-gray-200`
+- [x] `Logo.tsx` — Dark text, no gradient
+- [x] `DesktopNavigation.tsx` — Dark text, blue hover
+- [x] `MobileMenu.tsx` — White bg, dark text
+- [x] `SearchBar.tsx` — White input, gray border
+- [x] `AccountDropdown.tsx` — White dropdown, dark text
+- [x] `Dropdown.tsx` — White dropdown, dark text
+- [x] `UserActions.tsx` — Dark text, blue accent
 
-### Phase 3 — Auth Pages
-- [ ] `login/page.tsx` — `bg-white`, blue CTA
-- [ ] `signup/page.tsx` — `bg-white`, blue CTA
-- [ ] `forgot-password/page.tsx` — `bg-white`, blue CTA
-- [ ] `verify-email/page.tsx` — `bg-white`, blue CTA
+### Phase 3 — Auth Pages ✅
+- [x] `login/page.tsx` — `bg-white`, blue CTA
+- [x] `signup/page.tsx` — `bg-white`, blue CTA
+- [x] `forgot-password/page.tsx` — `bg-white`, blue CTA
+- [x] `verify-email/page.tsx` — `bg-white`, blue CTA
 
-### Phase 4 — Public Pages
-- [ ] `page.tsx` (Homepage) — White bg, light hero
-- [ ] `not-found.tsx` — White bg
-- [ ] `properties/page.tsx` — White bg, light filter panel
-- [ ] `properties/[id]/page.tsx` — White bg, white cards
-- [ ] `properties/[id]/review/page.tsx` — White bg, white form
+### Phase 4 — Public Pages ✅
+- [x] `page.tsx` (Homepage) — White bg, light hero
+- [x] `not-found.tsx` — White bg
+- [x] `properties/page.tsx` — White bg, light filter panel
+- [x] `properties/[id]/page.tsx` — White bg, white cards
+- [x] `properties/[id]/review/page.tsx` — White bg, white form
 
-### Phase 5 — Dashboard Pages
-- [ ] `dashboard/page.tsx` — White bg
-- [ ] `dashboard/student/page.tsx` — White bg, stat cards
-- [ ] `dashboard/student/my-bookings/page.tsx` + `MyBookingsClient.tsx`
-- [ ] `dashboard/landlord/page.tsx` — White bg
-- [ ] `dashboard/landlord/my-listings/page.tsx` + `MyListingsForm.tsx`
-- [ ] `dashboard/landlord/properties/new/page.tsx` + `UploadPropertyForm.tsx`
-- [ ] `dashboard/landlord/properties/[id]/edit/page.tsx` + `EditPropertyForm.tsx`
+### Phase 5 — Dashboard Pages ✅
+- [x] `dashboard/page.tsx` — White bg
+- [x] `dashboard/student/page.tsx` — White bg, stat cards
+- [x] `dashboard/student/my-bookings/page.tsx` + `MyBookingsClient.tsx`
+- [x] `dashboard/landlord/page.tsx` — White bg
+- [x] `dashboard/landlord/my-listings/page.tsx` + `MyListingsForm.tsx`
+- [x] `dashboard/landlord/properties/new/page.tsx` + `UploadPropertyForm.tsx`
+- [x] `dashboard/landlord/properties/[id]/edit/page.tsx` + `EditPropertyForm.tsx`
 
-### Phase 6 — Admin Pages
-- [ ] `admin/dashboard/page.tsx`
-- [ ] `admin/users/page.tsx` + `UsersManagement.tsx` + `UsersTable.tsx`
-- [ ] `admin/properties/page.tsx` + `PropertiesManagement.tsx`
-- [ ] `admin/bookings/page.tsx` + `AdminBookingsClient.tsx` + `BookingsTable.tsx`
-- [ ] `admin/reports/page.tsx` + `AdminReportsClient.tsx`
-- [ ] `admin/fraud-detection/page.tsx` + `FraudAlertList.tsx`
-- [ ] `admin/audit-log/page.tsx`
+### Phase 6 — Admin Pages ✅
+- [x] `admin/dashboard/page.tsx`
+- [x] `admin/users/page.tsx` + `UsersManagement.tsx` + `UsersTable.tsx`
+- [x] `admin/properties/page.tsx` + `PropertiesManagement.tsx`
+- [x] `admin/bookings/page.tsx` + `AdminBookingsClient.tsx` + `BookingsTable.tsx`
+- [x] `admin/reports/page.tsx` + `AdminReportsClient.tsx`
+- [x] `admin/fraud-detection/page.tsx` + `FraudAlertList.tsx`
+- [x] `admin/audit-log/page.tsx`
 
-### Phase 7 — Other Pages
-- [ ] `profile/page.tsx` + `ProfileContent.tsx`
-- [ ] `settings/page.tsx` + `SettingsForm.tsx`
-- [ ] `report-issue/page.tsx` + `ReportIssuePageClient.tsx`
-- [ ] `RecommendedProperties.tsx`
+### Phase 7 — Other Pages ✅
+- [x] `profile/page.tsx` + `ProfileContent.tsx`
+- [x] `settings/page.tsx` + `SettingsForm.tsx`
+- [x] `report-issue/page.tsx` + `ReportIssuePageClient.tsx`
+- [x] `RecommendedProperties.tsx`
 
 ---
 

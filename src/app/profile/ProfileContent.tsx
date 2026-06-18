@@ -18,20 +18,20 @@ interface ProfileContentProps {
 
 export default function ProfileContent({ session }: ProfileContentProps) {
   const inputClass =
-    'w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors';
+    'w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors';
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">👤 My Profile</h1>
-            <p className="text-slate-400 mt-1">Your account details and status</p>
+            <h1 className="text-3xl font-bold text-[#1a1a2e]">👤 My Profile</h1>
+            <p className="text-gray-600 mt-1">Your account details and status</p>
           </div>
           <Link
             href={session.role === 'Landlord' ? '/dashboard/landlord' : '/dashboard/student'}
-            className="text-sky-400 hover:text-sky-300 font-medium transition-colors"
+            className="text-[#0071c2] hover:text-[#005999] font-medium transition-colors"
           >
             ← Back to Dashboard
           </Link>
@@ -39,27 +39,27 @@ export default function ProfileContent({ session }: ProfileContentProps) {
 
         {/* Email Verification Banner */}
         {!session.isVerified && (
-          <div className="mb-8 bg-amber-900/30 border border-amber-600/30 rounded-lg p-4">
+          <div className="mb-8 bg-[#fff3e0] border border-[#b95000]/30 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <span className="text-amber-400 text-lg">⚠️</span>
+              <span className="text-[#b95000] text-lg">⚠️</span>
               <div>
-                <h3 className="text-sm font-semibold text-amber-200">Email Verification Pending</h3>
-                <p className="text-sm text-amber-300/80 mt-1">Your account is pending email verification. An admin will review and approve your account.</p>
+                <h3 className="text-sm font-semibold text-[#b95000]">Email Verification Pending</h3>
+                <p className="text-sm text-[#b95000]/80 mt-1">Your account is pending email verification. An admin will review and approve your account.</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Personal Information */}
-        <div className="bg-slate-800/50 border border-slate-700 rounded-lg mb-8">
-          <div className="px-6 py-4 border-b border-slate-700">
-            <h2 className="text-xl font-semibold text-white">Personal Information</h2>
+        <div className="bg-white border border-gray-200 rounded-lg mb-8 shadow-sm">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-[#1a1a2e]">Personal Information</h2>
           </div>
 
           <div className="px-6 py-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">User ID</label>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">User ID</label>
                 <input
                   type="text"
                   value={session.userId}
@@ -69,7 +69,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Full Name</label>
                 <input
                   type="text"
                   value={session.name || 'Not set'}
@@ -79,7 +79,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Email</label>
                 <input
                   type="text"
                   value={session.email}
@@ -89,7 +89,7 @@ export default function ProfileContent({ session }: ProfileContentProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Role</label>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Role</label>
                 <input
                   type="text"
                   value={session.role}
@@ -99,12 +99,12 @@ export default function ProfileContent({ session }: ProfileContentProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Verification Status</label>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Verification Status</label>
                 <p className="mt-1">
                   <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                     session.isVerified 
-                      ? 'bg-emerald-900/50 border border-emerald-600 text-emerald-200' 
-                      : 'bg-amber-900/50 border border-amber-600 text-amber-200'
+                      ? 'bg-[#ebf7eb] border border-[#008009] text-[#008009]' 
+                      : 'bg-[#fff3e0] border border-[#b95000] text-[#b95000]'
                   }`}>
                     {session.isVerified ? '✓ Verified' : 'Pending Verification'}
                   </span>
@@ -113,8 +113,8 @@ export default function ProfileContent({ session }: ProfileContentProps) {
 
               {session.profileImage && (
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Profile Image</label>
-                  <div className="mt-2 w-20 h-20 rounded-lg overflow-hidden bg-slate-700 border border-slate-600">
+                  <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Profile Image</label>
+                  <div className="mt-2 w-20 h-20 rounded-lg overflow-hidden bg-gray-200 border border-gray-200">
                     <img 
                       src={session.profileImage} 
                       alt="Profile" 
@@ -128,24 +128,24 @@ export default function ProfileContent({ session }: ProfileContentProps) {
         </div>
 
         {/* Account Status */}
-        <div className="bg-slate-800/50 border border-slate-700 rounded-lg">
-          <div className="px-6 py-4 border-b border-slate-700">
-            <h2 className="text-xl font-semibold text-white">Account Status</h2>
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-[#1a1a2e]">Account Status</h2>
           </div>
 
           <div className="px-6 py-6 space-y-4">
-            <div className="flex items-center p-4 bg-slate-900/30 border border-slate-700 rounded-lg">
+            <div className="flex items-center p-4 bg-gray-50 border border-gray-200 rounded-lg">
               <div className={`w-3 h-3 rounded-full mr-3 ${
-                session.isVerified ? 'bg-emerald-500' : 'bg-amber-500'
+                session.isVerified ? 'bg-[#008009]' : 'bg-[#b95000]'
               }`}></div>
-              <span className="text-sm text-slate-200">
+              <span className="text-sm text-[#1a1a2e]">
                 {session.isVerified ? '✓ Account Verified' : '⚠ Account Pending Verification'}
               </span>
             </div>
             
-            <div className="flex items-center p-4 bg-slate-900/30 border border-slate-700 rounded-lg">
-              <div className="w-3 h-3 rounded-full mr-3 bg-emerald-500"></div>
-              <span className="text-sm text-slate-200">✓ Logged In</span>
+            <div className="flex items-center p-4 bg-gray-50 border border-gray-200 rounded-lg">
+              <div className="w-3 h-3 rounded-full mr-3 bg-[#008009]"></div>
+              <span className="text-sm text-[#1a1a2e]">✓ Logged In</span>
             </div>
           </div>
         </div>

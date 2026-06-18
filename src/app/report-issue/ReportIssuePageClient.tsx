@@ -86,31 +86,31 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
   };
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/profile" className="text-sky-400 hover:text-sky-300 text-sm font-medium mb-4 inline-block">
+          <Link href="/profile" className="text-[#0071c2] hover:text-[#005999] text-sm font-medium mb-4 inline-block">
             ← Back to Profile
           </Link>
-          <h1 className="text-3xl font-bold text-white">🚨 Report a Problem</h1>
-          <p className="text-slate-400 mt-2">
+          <h1 className="text-3xl font-bold text-[#1a1a2e]">🚨 Report a Problem</h1>
+          <p className="text-gray-600 mt-2">
             Found a bug or having an issue? Let us know and we&apos;ll look into it right away.
           </p>
         </div>
 
         {step === 'done' ? (
           /* Success State */
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-12 text-center">
+          <div className="bg-white border border-gray-200 rounded-lg p-12 text-center shadow-sm">
             <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-2xl font-bold text-white mb-3">Report Submitted!</h2>
-            <p className="text-slate-400 mb-8 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold text-[#1a1a2e] mb-3">Report Submitted!</h2>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
               Thank you for your report. Our support team will review it and get back to you if needed. We appreciate your help making Easy Sakan better!
             </p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={handleBackToDashboard}
-                className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#0071c2] hover:bg-[#005999] text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 ← Back to Profile
               </button>
@@ -121,7 +121,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                   setSubject('');
                   setDescription('');
                 }}
-                className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-gray-200 hover:bg-gray-300 text-[#1a1a2e] px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 📝 Report Another Issue
               </button>
@@ -130,23 +130,23 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
         ) : (
           /* Form */
           <form onSubmit={handleSubmit}>
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 space-y-6">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-6 shadow-sm">
               {/* User Info (read-only) */}
-              <div className="bg-slate-700/30 rounded-lg p-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold">
+              <div className="bg-gray-50 rounded-lg p-4 flex items-center gap-3 border border-gray-200">
+                <div className="w-10 h-10 bg-[#0071c2] rounded-full flex items-center justify-center text-white font-bold">
                   {userName.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-white font-medium text-sm">{userName}</p>
-                  <p className="text-slate-400 text-xs">{userEmail}</p>
+                  <p className="text-[#1a1a2e] font-medium text-sm">{userName}</p>
+                  <p className="text-gray-600 text-xs">{userEmail}</p>
                 </div>
-                <span className="ml-auto text-xs text-slate-500">Reporting as you</span>
+                <span className="ml-auto text-xs text-gray-500">Reporting as you</span>
               </div>
 
               {/* Issue Type */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-3">
-                  What type of issue are you experiencing? <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-3">
+                  What type of issue are you experiencing? <span className="text-[#cc0000]">*</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {ISSUE_TYPES.map(type => (
@@ -156,14 +156,14 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                       onClick={() => setIssueType(type.value)}
                       className={`p-4 rounded-lg border text-left transition-all ${
                         issueType === type.value
-                          ? 'bg-sky-600/20 border-sky-500 ring-2 ring-sky-500/30'
-                          : 'bg-slate-700/50 border-slate-600 hover:border-slate-500'
+                          ? 'bg-[#ebf3ff] border-[#0071c2] ring-2 ring-[#0071c2]/30'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <p className={`font-medium ${issueType === type.value ? 'text-sky-300' : 'text-slate-200'}`}>
+                      <p className={`font-medium ${issueType === type.value ? 'text-[#0071c2]' : 'text-[#1a1a2e]'}`}>
                         {type.label}
                       </p>
-                      <p className="text-xs text-slate-400 mt-0.5">{type.desc}</p>
+                      <p className="text-xs text-gray-600 mt-0.5">{type.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -171,39 +171,39 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
 
               {/* Subject */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Subject <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">
+                  Subject <span className="text-[#cc0000]">*</span>
                 </label>
                 <input
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Brief summary of the issue"
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors"
                   maxLength={200}
                 />
-                <p className="text-xs text-slate-500 mt-1 text-right">{subject.length}/200</p>
+                <p className="text-xs text-gray-500 mt-1 text-right">{subject.length}/200</p>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Description <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-[#1a1a2e] mb-2">
+                  Description <span className="text-[#cc0000]">*</span>
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the issue in detail (minimum 20 characters). What were you doing when it happened? What did you expect to happen? Any error messages?"
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors min-h-[150px]"
+                  className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors min-h-[150px]"
                   maxLength={1000}
                   rows={5}
                 />
-                <p className="text-xs text-slate-500 mt-1 text-right">{description.length}/1000</p>
+                <p className="text-xs text-gray-500 mt-1 text-right">{description.length}/1000</p>
               </div>
 
               {/* Error */}
               {error && (
-                <div className="p-4 bg-red-900/30 border border-red-600/30 rounded-lg text-sm text-red-300">
+                <div className="p-4 bg-[#ffebee] border border-[#cc0000] rounded-lg text-sm text-[#cc0000]">
                   {error}
                 </div>
               )}
@@ -213,7 +213,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                 <button
                   type="submit"
                   disabled={step === 'submitting'}
-                  className="flex-1 bg-sky-500 hover:bg-sky-600 disabled:bg-sky-500/50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#0071c2] hover:bg-[#005999] disabled:bg-[#0071c2]/50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
                 >
                   {step === 'submitting' ? (
                     <>
@@ -225,7 +225,7 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
                   )}
                 </button>
                 <Link href="/profile" className="flex-1">
-                  <button type="button" className="w-full bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                  <button type="button" className="w-full bg-gray-200 hover:bg-gray-300 text-[#1a1a2e] px-6 py-3 rounded-lg font-medium transition-colors">
                     Cancel
                   </button>
                 </Link>
@@ -236,10 +236,10 @@ export default function ReportIssuePageClient({ token, userName, userEmail }: Re
 
         {/* Help Text */}
         {step === 'form' && (
-          <div className="mt-8 bg-slate-800/30 border border-slate-700 rounded-lg p-6">
-            <h3 className="text-white font-semibold mb-3">💡 Before you submit</h3>
-            <ul className="space-y-2 text-sm text-slate-400">
-              <li>• Check our <Link href="/" className="text-sky-400 hover:text-sky-300">Help Center</Link> for common solutions</li>
+          <div className="mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <h3 className="text-[#1a1a2e] font-semibold mb-3">💡 Before you submit</h3>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li>• Check our <Link href="/" className="text-[#0071c2] hover:text-[#005999]">Help Center</Link> for common solutions</li>
               <li>• Include steps to reproduce the issue if it&apos;s a bug</li>
               <li>• For urgent booking issues, contact your landlord directly</li>
               <li>• We typically respond within 24 hours during business days</li>

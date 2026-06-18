@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import Image from 'next/image';
-import { studentStyles } from '@/styles/studentStyles';
 import { getImageUrl } from '@/lib/utils';
 
 const COMMON_AMENITIES = [
@@ -121,12 +120,12 @@ export default function PropertiesPage() {
   };
 
   return (
-    <div className={studentStyles.pageContainer}>
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-sky-900/50 via-slate-800 to-slate-900 border-b border-slate-700">
+      <div className="bg-gradient-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-white">🏠 Available Properties</h1>
-          <p className="text-slate-400 mt-1">Browse and filter properties near you</p>
+          <p className="text-white/80 mt-1">Browse and filter properties near you</p>
         </div>
       </div>
 
@@ -134,41 +133,41 @@ export default function PropertiesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters */}
           <div className="lg:col-span-1">
-            <div className={`${studentStyles.card} rounded-lg border border-slate-700 sticky top-24`}>
-              <h2 className="text-lg font-bold text-white mb-4">🔍 Filters</h2>
+            <div className="bg-white rounded-lg border border-gray-200 sticky top-24 shadow-sm">
+              <h2 className="text-lg font-bold text-[#1a1a2e] mb-4 p-6 border-b border-gray-200">🔍 Filters</h2>
 
-              <div className="space-y-4">
+              <div className="space-y-4 p-6">
                 <div>
-                  <label className={studentStyles.inputLabel}>Search</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Search</label>
                   <input
                     type="text"
                     name="search"
                     value={filters.search}
                     onChange={handleFilterChange}
                     placeholder="Search properties..."
-                    className={studentStyles.input}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Location</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Location</label>
                   <input
                     type="text"
                     name="location"
                     value={filters.location}
                     onChange={handleFilterChange}
                     placeholder="e.g., New Cairo"
-                    className={studentStyles.input}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Nearby University</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Nearby University</label>
                   <select
                     name="university"
                     value={filters.university}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="">Any University</option>
                     {UNIVERSITIES.map(u => (
@@ -179,36 +178,36 @@ export default function PropertiesPage() {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className={studentStyles.inputLabel}>Min Price</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Min Price</label>
                     <input
                       type="number"
                       name="minPrice"
                       value={filters.minPrice}
                       onChange={handleFilterChange}
                       placeholder="Min"
-                      className={studentStyles.input}
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                     />
                   </div>
                   <div>
-                    <label className={studentStyles.inputLabel}>Max Price</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Max Price</label>
                     <input
                       type="number"
                       name="maxPrice"
                       value={filters.maxPrice}
                       onChange={handleFilterChange}
                       placeholder="Max"
-                      className={studentStyles.input}
+                      className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Gender</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Gender</label>
                   <select
                     name="gender"
                     value={filters.gender}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="Any">Any</option>
                     <option value="Male">Male</option>
@@ -217,12 +216,12 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Rental Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Rental Type</label>
                   <select
                     name="rentalType"
                     value={filters.rentalType}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="">All Types</option>
                     <option value="Bed">Bed (Shared Room)</option>
@@ -231,12 +230,12 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Min Rating</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Min Rating</label>
                   <select
                     name="minRating"
                     value={filters.minRating}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="">Any Rating</option>
                     <option value="1">1+ Stars</option>
@@ -248,12 +247,12 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Amenities</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Amenities</label>
                   <select
                     name="amenities"
                     value={filters.amenities}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="">Any Amenities</option>
                     {COMMON_AMENITIES.map(a => (
@@ -263,12 +262,12 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Sort By</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Sort By</label>
                   <select
                     name="sortBy"
                     value={filters.sortBy}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="createdAt">Latest</option>
                     <option value="price">Price</option>
@@ -277,12 +276,12 @@ export default function PropertiesPage() {
                 </div>
 
                 <div>
-                  <label className={studentStyles.inputLabel}>Sort Order</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Sort Order</label>
                   <select
                     name="sortOrder"
                     value={filters.sortOrder}
                     onChange={handleFilterChange}
-                    className={studentStyles.select}
+                    className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
                   >
                     <option value="desc">High to Low</option>
                     <option value="asc">Low to High</option>
@@ -295,14 +294,14 @@ export default function PropertiesPage() {
                     name="includeSoldOut"
                     checked={filters.includeSoldOut}
                     onChange={handleFilterChange}
-                    className="w-4 h-4 rounded bg-slate-700 border-slate-600 text-sky-500 focus:ring-sky-500"
+                    className="w-4 h-4 rounded bg-white border-gray-300 text-[#0071c2] focus:ring-[#0071c2]"
                   />
-                  <label className="text-sm text-slate-300">Show Sold Out</label>
+                  <label className="text-sm text-gray-600">Show Sold Out</label>
                 </div>
 
                 <button
                   onClick={resetFilters}
-                  className={studentStyles.btnSecondary}
+                  className="w-full px-4 py-2.5 bg-white border border-[#0071c2] text-[#0071c2] rounded-md hover:bg-[#ebf3ff] font-medium transition-colors text-sm"
                 >
                   Reset Filters
                 </button>
@@ -314,25 +313,25 @@ export default function PropertiesPage() {
           <div className="lg:col-span-3">
             {loading ? (
               <div className="flex justify-center items-center h-64">
-                <div className={studentStyles.loadingSpinner}></div>
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-[#0071c2] rounded-full animate-spin"></div>
               </div>
             ) : error ? (
-              <div className={studentStyles.alertError}>
+              <div className="bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-lg p-4">
                 <p>{error}</p>
               </div>
             ) : properties.length === 0 ? (
-              <div className={studentStyles.emptyState}>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
                 <div className="text-4xl mb-4">🔍</div>
-                <p className="text-slate-300 text-lg">No properties found matching your filters.</p>
+                <p className="text-gray-600 text-lg">No properties found matching your filters.</p>
               </div>
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {properties.map(property => (
                     <Link key={property.id} href={`/properties/${property.id}`}>
-                      <div className={`${studentStyles.card} border border-slate-700 rounded-lg overflow-hidden hover:border-sky-500/50 transition-all cursor-pointer`}>
+                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#0071c2]/50 transition-all cursor-pointer shadow-sm">
                         {/* Image */}
-                        <div className="relative h-48 bg-slate-700">
+                        <div className="relative h-48 bg-gray-200">
                           {property.images && property.images.length > 0 ? (
                             <img
                               src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)}
@@ -340,17 +339,17 @@ export default function PropertiesPage() {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-700 text-slate-500">
+                            <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                               📸 No image
                             </div>
                           )}
                           {property.availability?.isSoldOut && (
-                            <div className="absolute top-2 right-2 bg-red-600/90 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <div className="absolute top-2 right-2 bg-[#cc0000]/90 text-white px-3 py-1 rounded-full text-sm font-medium">
                               Sold Out
                             </div>
                           )}
                           {property.mlInsights?.dealRating && property.mlInsights.dealRating === 'Excellent' && (
-                            <div className="absolute top-2 left-2 bg-sky-600/90 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <div className="absolute top-2 left-2 bg-[#0071c2]/90 text-white px-3 py-1 rounded-full text-sm font-medium">
                               🔥 Best Deal
                             </div>
                           )}
@@ -358,22 +357,22 @@ export default function PropertiesPage() {
 
                         {/* Content */}
                         <div className="p-4">
-                          <h3 className="text-lg font-bold text-white truncate">{property.title}</h3>
-                          <p className="text-sm text-slate-400 mb-2">{property.location.address}</p>
+                          <h3 className="text-lg font-bold text-[#1a1a2e] truncate">{property.title}</h3>
+                          <p className="text-sm text-gray-600 mb-2">{property.location.address}</p>
                           {property.location.nearestUniversity && (
-                            <p className="text-xs text-sky-400 mb-2">🎓 Near {property.location.nearestUniversity}</p>
+                            <p className="text-xs text-[#0071c2] mb-2">🎓 Near {property.location.nearestUniversity}</p>
                           )}
 
                           <div className="flex justify-between items-center mb-3">
                             <div>
-                              <p className="text-2xl font-bold text-sky-400">{property.price.toLocaleString()}</p>
-                              <p className="text-sm text-slate-500">EGP/month</p>
+                              <p className="text-2xl font-bold text-[#0071c2]">{property.price.toLocaleString()}</p>
+                              <p className="text-sm text-gray-500">EGP/month</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-medium text-slate-300">
+                              <p className="text-sm font-medium text-gray-700">
                                 {property.availability?.availableSlots || 0} slots
                               </p>
-                              <p className="text-xs text-slate-500">Available</p>
+                              <p className="text-xs text-gray-500">Available</p>
                             </div>
                           </div>
 
@@ -382,22 +381,22 @@ export default function PropertiesPage() {
                             <div className="flex items-center gap-2 mb-3">
                               <div className="flex">
                                 {[...Array(5)].map((_, i) => (
-                                  <span key={i} className={i < Math.round(property.rating) ? 'text-yellow-400' : 'text-slate-600'}>
+                                  <span key={i} className={i < Math.round(property.rating) ? 'text-yellow-400' : 'text-gray-300'}>
                                     ★
                                   </span>
                                 ))}
                               </div>
-                              <span className="text-sm text-slate-400">({property.reviewCount})</span>
+                              <span className="text-sm text-gray-600">({property.reviewCount})</span>
                             </div>
                           )}
 
                           {/* Details */}
-                          <div className="flex gap-4 text-sm text-slate-400 mb-3">
+                          <div className="flex gap-4 text-sm text-gray-600 mb-3">
                             <span>🛏️ {property.bedrooms} bed</span>
                             <span>🚿 {property.bathrooms} bath</span>
                             <span>📐 {property.areaSqm}m²</span>
                             {property.listingMode && (
-                              <span className={property.listingMode === 'Bed' ? 'text-sky-400' : 'text-sky-400'}>
+                              <span className="text-[#0071c2]">
                                 {property.listingMode === 'Bed' ? '🛌 Bed' : '🏠 Unit'}
                               </span>
                             )}
@@ -407,12 +406,12 @@ export default function PropertiesPage() {
                           {property.amenities && property.amenities.length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-3">
                               {property.amenities.slice(0, 3).map(amenity => (
-                                <span key={amenity} className="inline-block bg-sky-600/30 text-sky-300 text-xs px-2 py-1 rounded border border-sky-500/30">
+                                <span key={amenity} className="inline-block bg-[#ebf3ff] text-[#0071c2] text-xs px-2 py-1 rounded border border-[#0071c2]/20">
                                   {amenity}
                                 </span>
                               ))}
                               {property.amenities.length > 3 && (
-                                <span className="inline-block text-xs text-slate-500">+{property.amenities.length - 3}</span>
+                                <span className="inline-block text-xs text-gray-500">+{property.amenities.length - 3}</span>
                               )}
                             </div>
                           )}
@@ -421,9 +420,9 @@ export default function PropertiesPage() {
                           {property.mlInsights && (
                             <div className="mb-3">
                               <span className={`text-xs font-medium px-2 py-1 rounded ${
-                                property.mlInsights.dealRating === 'Excellent' ? 'bg-emerald-600/30 text-emerald-300' :
-                                property.mlInsights.dealRating === 'Good' ? 'bg-sky-600/30 text-sky-300' :
-                                'bg-yellow-600/30 text-yellow-300'
+                                property.mlInsights.dealRating === 'Excellent' ? 'bg-[#ebf7eb] text-[#008009]' :
+                                property.mlInsights.dealRating === 'Good' ? 'bg-[#ebf3ff] text-[#0071c2]' :
+                                'bg-[#fff3e0] text-[#b95000]'
                               }`}>
                                 💰 {property.mlInsights.dealRating} Deal: {property.mlInsights.priceDifferencePercentage > 0 ? '+' : ''}{property.mlInsights.priceDifferencePercentage}% vs market
                               </span>
@@ -431,13 +430,13 @@ export default function PropertiesPage() {
                           )}
 
                           {/* Landlord */}
-                          <div className="flex items-center gap-2 pt-3 border-t border-slate-700">
-                            <div className="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white text-sm font-bold">
+                          <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
+                            <div className="w-8 h-8 rounded-full bg-[#0071c2] flex items-center justify-center text-white text-sm font-bold">
                               {property.landlord.fullName.charAt(0)}
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-slate-300">{property.landlord.fullName}</p>
-                              <p className="text-xs text-slate-500">Member since {new Date(property.landlord.memberSince).getFullYear()}</p>
+                              <p className="text-sm font-medium text-[#1a1a2e]">{property.landlord.fullName}</p>
+                              <p className="text-xs text-gray-500">Member since {new Date(property.landlord.memberSince).getFullYear()}</p>
                             </div>
                           </div>
                         </div>
@@ -454,8 +453,8 @@ export default function PropertiesPage() {
                       disabled={page === 1}
                       className={`px-4 py-2 rounded-lg transition-colors ${
                         page === 1
-                          ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                       }`}
                     >
                       ← Previous
@@ -467,8 +466,8 @@ export default function PropertiesPage() {
                           onClick={() => setPage(i + 1)}
                           className={`px-3 py-2 rounded-lg transition-colors ${
                             page === i + 1
-                              ? studentStyles.btnPrimary
-                              : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
+                              ? 'bg-[#0071c2] text-white hover:bg-[#005999]'
+                              : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
                           }`}
                         >
                           {i + 1}
@@ -480,8 +479,8 @@ export default function PropertiesPage() {
                       disabled={page === totalPages}
                       className={`px-4 py-2 rounded-lg transition-colors ${
                         page === totalPages
-                          ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                       }`}
                     >
                       Next →

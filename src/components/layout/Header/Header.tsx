@@ -21,7 +21,7 @@ export default function Header({ isAuthenticated = false, userRole, token, userN
 
   return (
     <>
-      <nav className="bg-slate-900/95 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Left: Logo */}
@@ -42,7 +42,7 @@ export default function Header({ isAuthenticated = false, userRole, token, userN
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
-                className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-all duration-200"
+                className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-[#0071c2] hover:bg-[#f2f6fc] transition-all duration-200"
                 aria-label="Toggle menu"
               >
                 <svg

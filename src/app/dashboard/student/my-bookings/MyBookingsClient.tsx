@@ -49,7 +49,6 @@ interface MyBookingsClientProps {
   token: string;
 }
 
-// Countdown timer helper component
 function CountdownTimer({ expiresAt }: { expiresAt: string }) {
   const [timeLeft, setTimeLeft] = useState('');
   const [expired, setExpired] = useState(false);
@@ -59,17 +58,10 @@ function CountdownTimer({ expiresAt }: { expiresAt: string }) {
       const now = new Date().getTime();
       const deadline = new Date(expiresAt).getTime();
       const diff = deadline - now;
-
-      if (diff <= 0) {
-        setExpired(true);
-        setTimeLeft('EXPIRED');
-        return;
-      }
-
+      if (diff <= 0) { setExpired(true); setTimeLeft('EXPIRED'); return; }
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
       if (hours > 24) {
         const days = Math.floor(hours / 24);
         setTimeLeft(`${days}d ${hours % 24}h`);
@@ -77,18 +69,14 @@ function CountdownTimer({ expiresAt }: { expiresAt: string }) {
         setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
       }
     };
-
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
   }, [expiresAt]);
 
-  if (expired) {
-    return <span className="text-red-400 font-mono font-bold">Expired</span>;
-  }
-
+  if (expired) return <span className="text-[#cc0000] font-mono font-bold">Expired</span>;
   return (
-    <span className={`font-mono font-bold ${timeLeft.startsWith('0') ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`}>
+    <span className={`font-mono font-bold ${timeLeft.startsWith('0') ? 'text-[#cc0000] animate-pulse' : 'text-[#b95000]'}`}>
       {timeLeft}
     </span>
   );
@@ -107,29 +95,22 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
   const [cancelReason, setCancelReason] = useState('');
   const [cancelLoading, setCancelLoading] = useState(false);
 
-  useEffect(() => {
-    fetchBookings();
-  }, [page, statusFilter, token]);
+  useEffect(() => { fetchBookings(); }, [page, statusFilter, token]);
 
   const fetchBookings = async () => {
     setLoading(true);
     setError('');
-
     try {
       const response = await getMyBookings(token, page, 10, statusFilter || undefined);
-
       if (!response.isSuccess) {
         setError(response.message || 'Failed to load bookings');
         setLoading(false);
         return;
       }
-
       if (response.data?.items && Array.isArray(response.data.items)) {
         setBookings(response.data.items);
         setTotalPages(response.data.totalPages || 1);
-        if (response.data.summary) {
-          setSummary(response.data.summary);
-        }
+        if (response.data.summary) setSummary(response.data.summary);
       } else {
         setBookings([]);
       }
@@ -149,13 +130,10 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
   const handleConfirmCancel = async () => {
     if (!selectedBookingId) return;
     setCancelLoading(true);
-
     try {
       const response = await cancelBookingRequest(token, selectedBookingId, cancelReason || undefined);
       if (response.isSuccess) {
-        setBookings(bookings.map(b =>
-          b.id === selectedBookingId ? { ...b, status: 'CANCELLED' } : b
-        ));
+        setBookings(bookings.map(b => b.id === selectedBookingId ? { ...b, status: 'CANCELLED' } : b));
         setCancelDialogOpen(false);
         setSelectedBookingId(null);
       } else {
@@ -170,50 +148,54 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
   const getStatusColor = (status: ApiBookingStatus) => {
     const colors: Record<string, string> = {
-      PENDING_PAYMENT: 'bg-yellow-900/50 border-yellow-600 text-yellow-200',
-      CONFIRMED: 'bg-emerald-900/50 border-emerald-600 text-emerald-200',
-      COMPLETED: 'bg-sky-900/50 border-sky-600 text-sky-200',
-      CANCELLED: 'bg-red-900/50 border-red-600 text-red-200',
-      EXPIRED: 'bg-slate-700 border-slate-600 text-slate-300',
-      DISPUTED: 'bg-orange-900/50 border-orange-600 text-orange-200',
-      REFUNDED: 'bg-purple-900/50 border-purple-600 text-purple-200',
+      PENDING_PAYMENT: 'bg-[#fff3e0] text-[#b95000]',
+      CONFIRMED: 'bg-[#ebf7eb] text-[#008009]',
+      COMPLETED: 'bg-[#ebf3ff] text-[#0071c2]',
+      CANCELLED: 'bg-[#fff0f0] text-[#cc0000]',
+      EXPIRED: 'bg-gray-100 text-gray-500',
+      DISPUTED: 'bg-[#fff3e0] text-[#b95000]',
+      REFUNDED: 'bg-[#ebf3ff] text-[#0071c2]',
     };
     return colors[status] || colors.PENDING_PAYMENT;
   };
 
   const formatStatus = (status: ApiBookingStatus) => {
     const labels: Record<string, string> = {
-      PENDING_PAYMENT: '⏳ Pending Payment',
-      CONFIRMED: '✅ Confirmed',
-      COMPLETED: '✓ Completed',
-      CANCELLED: '✕ Cancelled',
-      EXPIRED: '⌛ Expired',
-      DISPUTED: '⚠️ Disputed',
-      REFUNDED: '↩ Refunded',
+      PENDING_PAYMENT: 'Pending Payment',
+      CONFIRMED: 'Confirmed',
+      COMPLETED: 'Completed',
+      CANCELLED: 'Cancelled',
+      EXPIRED: 'Expired',
+      DISPUTED: 'Disputed',
+      REFUNDED: 'Refunded',
     };
     return labels[status] || status;
   };
 
-  return (
-    <div className={studentStyles.pageContainer}>
-      <div className={studentStyles.mainContent}>
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className={studentStyles.pageTitle}>📅 My Bookings</h1>
-          <p className={studentStyles.pageSubtitle}>View and manage your property bookings</p>
-        </div>
+  const activeBtn = 'bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm';
+  const inactiveBtn = 'bg-white text-gray-600 border border-gray-200 hover:border-[#0071c2] hover:text-[#0071c2] px-4 py-2 rounded-md font-medium transition-colors text-sm';
 
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-2xl font-bold text-[#1a1a2e]">My Bookings</h1>
+          <p className="text-gray-500 text-sm mt-1">View and manage your property bookings</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Summary Cards */}
         {summary && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
             {[
-              { label: 'Pending', count: summary.pending, color: 'bg-yellow-600/20 border-yellow-600/30 text-yellow-300' },
-              { label: 'Confirmed', count: summary.confirmed, color: 'bg-emerald-600/20 border-emerald-600/30 text-emerald-300' },
-              { label: 'Completed', count: summary.completed, color: 'bg-sky-600/20 border-sky-600/30 text-sky-300' },
-              { label: 'Cancelled', count: summary.cancelled, color: 'bg-red-600/20 border-red-600/30 text-red-300' },
-              { label: 'Expired', count: summary.expired, color: 'bg-slate-600/20 border-slate-600/30 text-slate-300' },
+              { label: 'Pending', count: summary.pending, color: 'bg-[#fff3e0] text-[#b95000]' },
+              { label: 'Confirmed', count: summary.confirmed, color: 'bg-[#ebf7eb] text-[#008009]' },
+              { label: 'Completed', count: summary.completed, color: 'bg-[#ebf3ff] text-[#0071c2]' },
+              { label: 'Cancelled', count: summary.cancelled, color: 'bg-[#fff0f0] text-[#cc0000]' },
+              { label: 'Expired', count: summary.expired, color: 'bg-gray-100 text-gray-500' },
             ].map(item => (
-              <div key={item.label} className={`${item.color} border rounded-lg p-3 text-center`}>
+              <div key={item.label} className={`${item.color} border border-gray-200 rounded-lg p-3 text-center`}>
                 <p className="text-2xl font-bold">{item.count}</p>
                 <p className="text-xs mt-1 opacity-80">{item.label}</p>
               </div>
@@ -223,100 +205,81 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
         {/* Status Filter */}
         <div className="flex gap-2 mb-8 flex-wrap">
-          <button
-            onClick={() => { setStatusFilter(''); setPage(1); }}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              statusFilter === '' 
-                ? studentStyles.btnPrimary
-                : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
-            }`}
-          >
-            All
-          </button>
+          <button onClick={() => { setStatusFilter(''); setPage(1); }} className={statusFilter === '' ? activeBtn : inactiveBtn}>All</button>
           {(['PENDING_PAYMENT', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'EXPIRED'] as ApiBookingStatus[]).map(status => (
-            <button
-              key={status}
-              onClick={() => { setStatusFilter(status); setPage(1); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                statusFilter === status 
-                  ? studentStyles.btnPrimary
-                  : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
-              }`}
-            >
+            <button key={status} onClick={() => { setStatusFilter(status); setPage(1); }} className={statusFilter === status ? activeBtn : inactiveBtn}>
               {formatStatus(status)}
             </button>
           ))}
         </div>
 
-        {/* Error Message */}
+        {/* Error */}
         {error && (
-          <div className={`${studentStyles.alertError} mb-6`}>
-            {error}
-          </div>
+          <div className="bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-md p-4 text-sm mb-6">{error}</div>
         )}
 
         {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <div className={studentStyles.loadingSpinner}></div>
-              <p className="text-slate-300 mt-4">Loading bookings...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-[#0071c2]"></div>
+              <p className="text-gray-500 mt-4 text-sm">Loading bookings...</p>
             </div>
           </div>
         )}
 
-        {/* Bookings List */}
+        {/* Empty */}
         {!loading && bookings.length === 0 ? (
-          <div className={`${studentStyles.emptyState} mb-8`}>
-            <div className="text-4xl mb-4">📭</div>
-            <p className="text-slate-300 text-lg mb-6">No bookings found</p>
-            <Link href="/properties" className={studentStyles.btnPrimary}>
+          <div className="text-center py-12 px-6 bg-white rounded-lg border border-gray-200 mb-8">
+            <div className="text-4xl mb-4 opacity-40">📭</div>
+            <p className="text-[#1a1a2e] text-lg mb-6">No bookings found</p>
+            <Link href="/properties" className={activeBtn}>
               Browse Properties →
             </Link>
           </div>
         ) : (
           <div className="grid gap-6 mb-8">
             {bookings.map(booking => (
-              <div key={booking.id} className={studentStyles.card}>
+              <div key={booking.id} className="bg-white border border-gray-200 rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Booking Info */}
+                  {/* Info */}
                   <div className="md:col-span-2">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-lg font-bold text-white">{booking.propertyTitle}</h3>
-                        <p className="text-sm text-slate-400">Booking ID: #{booking.id}</p>
+                        <h3 className="text-lg font-bold text-[#1a1a2e]">{booking.propertyTitle}</h3>
+                        <p className="text-sm text-gray-500">Booking ID: #{booking.id}</p>
                         {booking.propertyLocation && (
-                          <p className="text-sm text-slate-500">📍 {booking.propertyLocation}</p>
+                          <p className="text-sm text-gray-500">📍 {booking.propertyLocation}</p>
                         )}
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(booking.status)}`}>
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusColor(booking.status)}`}>
                         {formatStatus(booking.status)}
                       </span>
                     </div>
 
-                    {/* Payment Timer - for PENDING_PAYMENT bookings */}
+                    {/* Payment Timer */}
                     {booking.status === 'PENDING_PAYMENT' && booking.paymentDeadline && (
-                      <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 mb-4">
+                      <div className="bg-[#fff3e0] border border-[#f5d6a3] rounded-md p-3 mb-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-yellow-300 text-sm font-medium">⏳ Payment Deadline:</span>
+                          <span className="text-[#b95000] text-sm font-medium">Payment Deadline:</span>
                           <CountdownTimer expiresAt={booking.paymentDeadline} />
                         </div>
                         {booking.timeLeftSeconds && (
-                          <p className="text-yellow-400/60 text-xs mt-1">
+                          <p className="text-[#b95000]/60 text-xs mt-1">
                             Complete payment within 48 hours to secure your booking
                           </p>
                         )}
                       </div>
                     )}
 
-                    {/* Trust Period - for CONFIRMED bookings */}
+                    {/* Trust Period */}
                     {booking.status === 'CONFIRMED' && booking.trustPeriodEndsAt && (
-                      <div className="bg-sky-900/20 border border-sky-600/30 rounded-lg p-3 mb-4">
+                      <div className="bg-[#ebf3ff] border border-[#b3d4f5] rounded-md p-3 mb-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-sky-300 text-sm font-medium">🛡️ Trust Period ends:</span>
+                          <span className="text-[#0071c2] text-sm font-medium">Trust Period ends:</span>
                           <CountdownTimer expiresAt={booking.trustPeriodEndsAt} />
                         </div>
-                        <p className="text-sky-400/60 text-xs mt-1">
+                        <p className="text-[#0071c2]/60 text-xs mt-1">
                           You can report issues within the 72-hour trust period
                         </p>
                       </div>
@@ -324,26 +287,22 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-400">Move-in Date</p>
-                        <p className="font-medium text-white">
-                          {new Date(booking.moveInDate).toLocaleDateString()}
-                        </p>
+                        <p className="text-sm text-gray-500">Move-in Date</p>
+                        <p className="font-medium text-[#1a1a2e]">{new Date(booking.moveInDate).toLocaleDateString()}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-400">Amount Due</p>
-                        <p className="font-medium text-sky-400">
-                          {booking.amountDue.toLocaleString()} {booking.currency}
-                        </p>
+                        <p className="text-sm text-gray-500">Amount Due</p>
+                        <p className="font-medium text-[#0071c2]">{booking.amountDue.toLocaleString()} {booking.currency}</p>
                       </div>
                     </div>
 
-                    {/* Landlord Contact (after CONFIRMED) */}
+                    {/* Landlord Contact */}
                     {booking.landlordContact && (
-                      <div className="mt-4 pt-4 border-t border-slate-700">
-                        <p className="text-sm text-slate-400 mb-2">👤 Landlord Contact</p>
-                        <div className="bg-slate-800/50 rounded-lg p-3">
-                          <p className="text-white font-medium">{booking.landlordContact.name}</p>
-                          <a href={`tel:${booking.landlordContact.phone}`} className="text-sky-400 hover:text-sky-300 text-sm">
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <p className="text-sm text-gray-500 mb-2">👤 Landlord Contact</p>
+                        <div className="bg-white border border-gray-200 rounded-md p-3">
+                          <p className="text-[#1a1a2e] font-medium">{booking.landlordContact.name}</p>
+                          <a href={`tel:${booking.landlordContact.phone}`} className="text-[#0071c2] hover:text-[#005999] text-sm">
                             📞 {booking.landlordContact.phone}
                           </a>
                         </div>
@@ -352,24 +311,24 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
 
                     {/* Payment Instructions */}
                     {booking.paymentInstructions && (
-                      <div className="mt-4 pt-4 border-t border-slate-700">
-                        <p className="text-sm text-slate-400 mb-2">💳 Payment Instructions</p>
-                        <div className="bg-slate-800/50 rounded-lg p-3 space-y-2">
-                          <p className="text-white text-sm">
-                            Method: <span className="font-bold text-yellow-400">{booking.paymentInstructions.method}</span>
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <p className="text-sm text-gray-500 mb-2">💳 Payment Instructions</p>
+                        <div className="bg-white border border-gray-200 rounded-md p-3 space-y-2">
+                          <p className="text-[#1a1a2e] text-sm">
+                            Method: <span className="font-bold text-[#b95000]">{booking.paymentInstructions.method}</span>
                           </p>
-                          <p className="text-white text-sm">
-                            Wallet: <span className="font-mono text-sky-400">{booking.paymentInstructions.walletNumber}</span>
+                          <p className="text-[#1a1a2e] text-sm">
+                            Wallet: <span className="font-mono text-[#0071c2]">{booking.paymentInstructions.walletNumber}</span>
                           </p>
                           {booking.paymentInstructions.accountName && (
-                            <p className="text-white text-sm">
+                            <p className="text-[#1a1a2e] text-sm">
                               Account: <span className="font-medium">{booking.paymentInstructions.accountName}</span>
                             </p>
                           )}
                           {booking.paymentInstructions.steps.length > 0 && (
                             <div>
-                              <p className="text-xs text-slate-400 mt-2 mb-1">Steps:</p>
-                              <ol className="list-decimal list-inside text-xs text-slate-300 space-y-1">
+                              <p className="text-xs text-gray-500 mt-2 mb-1">Steps:</p>
+                              <ol className="list-decimal list-inside text-xs text-gray-600 space-y-1">
                                 {booking.paymentInstructions.steps.map((step, i) => (
                                   <li key={i}>{step}</li>
                                 ))}
@@ -377,12 +336,8 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                             </div>
                           )}
                           {booking.whatsappLink && (
-                            <a
-                              href={booking.whatsappLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm rounded-lg transition-colors"
-                            >
+                            <a href={booking.whatsappLink} target="_blank" rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-[#008009] hover:bg-[#006600] text-white text-sm rounded-md transition-colors">
                               💬 Send via WhatsApp
                             </a>
                           )}
@@ -390,50 +345,40 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                       </div>
                     )}
 
-                    {/* Review Section for COMPLETED bookings */}
+                    {/* Review */}
                     {booking.status === 'COMPLETED' && (
-                      <div className="mt-4 pt-4 border-t border-slate-700">
+                      <div className="mt-4 pt-4 border-t border-gray-100">
                         {booking.canReview ? (
-                          <Link
-                            href={`/properties/${booking.propertyId}/review?bookingId=${booking.id}`}
-                            className={`${studentStyles.btnPrimary} inline-flex items-center gap-2 text-sm`}
-                          >
+                          <Link href={`/properties/${booking.propertyId}/review?bookingId=${booking.id}`}
+                            className={`${activeBtn} inline-flex items-center gap-2`}>
                             ⭐ Write a Review
                           </Link>
                         ) : booking.reviewId ? (
-                          <p className="text-sm text-sky-400">⭐ Review submitted ✓</p>
+                          <p className="text-sm text-[#0071c2]">⭐ Review submitted ✓</p>
                         ) : null}
                       </div>
                     )}
                   </div>
 
-                  {/* Actions */}
+                  {/* Amount + Actions */}
                   <div className="md:col-span-1">
-                    <div className="bg-sky-600/10 border border-sky-600/30 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-slate-400">Amount Due</p>
-                      <p className="text-2xl font-bold text-sky-400">
-                        {booking.amountDue.toLocaleString()} {booking.currency}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1">
+                    <div className="bg-white border border-gray-200 rounded-md p-4 mb-4">
+                      <p className="text-sm text-gray-500">Amount Due</p>
+                      <p className="text-2xl font-bold text-[#0071c2]">{booking.amountDue.toLocaleString()} {booking.currency}</p>
+                      <p className="text-xs text-gray-500 mt-1">
                         {booking.status === 'PENDING_PAYMENT' ? 'Payment required to confirm' :
                          booking.status === 'CONFIRMED' ? 'Payment confirmed ✓' :
-                         booking.status === 'COMPLETED' ? 'Transaction completed ✓' :
-                         booking.status}
+                         booking.status === 'COMPLETED' ? 'Transaction completed ✓' : booking.status}
                       </p>
                     </div>
-
                     <div className="flex flex-col gap-2">
-                      <Link
-                        href={`/properties/${booking.propertyId}`}
-                        className={`${studentStyles.btnSecondary} text-center text-sm`}
-                      >
+                      <Link href={`/properties/${booking.propertyId}`}
+                        className="border border-[#0071c2] text-[#0071c2] hover:bg-[#ebf3ff] px-4 py-2 rounded-md font-medium transition-colors bg-white text-sm text-center">
                         View Property
                       </Link>
                       {booking.canCancel && booking.status === 'PENDING_PAYMENT' && (
-                        <button
-                          onClick={() => handleCancelClick(booking.id)}
-                          className={`${studentStyles.btnDanger} text-sm`}
-                        >
+                        <button onClick={() => handleCancelClick(booking.id)}
+                          className="bg-[#cc0000] hover:bg-[#aa0000] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">
                           Cancel Booking
                         </button>
                       )}
@@ -448,85 +393,51 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
         {/* Pagination */}
         {!loading && totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-8">
-            <button
-              onClick={() => setPage(Math.max(1, page - 1))}
-              disabled={page === 1}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                page === 1
-                  ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
-              }`}
-            >
+            <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}
+              className={`px-4 py-2 rounded-md font-medium transition-colors text-sm ${page === 1 ? 'bg-white text-gray-300 border border-gray-200 cursor-not-allowed' : 'bg-white text-gray-600 border border-gray-200 hover:border-[#0071c2] hover:text-[#0071c2]'}`}>
               ← Previous
             </button>
             <div className="flex items-center gap-2">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={`px-3 py-2 rounded-lg font-medium transition-colors ${
-                    p === page
-                      ? studentStyles.btnPrimary
-                      : 'bg-slate-800/50 text-slate-300 border border-slate-600 hover:bg-slate-800'
-                  }`}
-                >
+                <button key={p} onClick={() => setPage(p)}
+                  className={`px-3 py-2 rounded-md font-medium transition-colors text-sm ${p === page ? activeBtn : 'bg-white text-gray-600 border border-gray-200 hover:border-[#0071c2] hover:text-[#0071c2]'}`}>
                   {p}
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => setPage(Math.min(totalPages, page + 1))}
-              disabled={page === totalPages}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                page === totalPages
-                  ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
-              }`}
-            >
+            <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages}
+              className={`px-4 py-2 rounded-md font-medium transition-colors text-sm ${page === totalPages ? 'bg-white text-gray-300 border border-gray-200 cursor-not-allowed' : 'bg-white text-gray-600 border border-gray-200 hover:border-[#0071c2] hover:text-[#0071c2]'}`}>
               Next →
             </button>
           </div>
         )}
       </div>
 
-      {/* Cancel Booking Dialog */}
+      {/* Cancel Dialog */}
       {cancelDialogOpen && (
-        <div className={studentStyles.modalBackdrop}>
-          <div className={studentStyles.modal}>
-            <div className={studentStyles.modalHeader}>
-              <h2 className="text-lg font-bold text-white">⚠️ Cancel Booking</h2>
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-lg max-w-lg w-full shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h2 className="text-lg font-semibold text-[#1a1a2e]">Cancel Booking</h2>
             </div>
-
-            <div className={studentStyles.modalBody}>
-              <p className="text-slate-300 mb-4">
+            <div className="px-6 py-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              <p className="text-gray-600 mb-4 text-sm">
                 Are you sure you want to cancel this booking? Your reserved slot will be released.
               </p>
-
-              <textarea
-                value={cancelReason}
-                onChange={(e) => setCancelReason(e.target.value)}
+              <textarea value={cancelReason} onChange={(e) => setCancelReason(e.target.value)}
                 placeholder="Optional: Tell us why you're canceling (max 200 characters)"
                 maxLength={200}
-                className={`${studentStyles.textarea} mb-4`}
-                rows={3}
-                disabled={cancelLoading}
-              />
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none mb-4"
+                rows={3} disabled={cancelLoading} />
             </div>
-
-            <div className={studentStyles.modalFooter}>
-              <button
-                onClick={() => setCancelDialogOpen(false)}
-                disabled={cancelLoading}
-                className={`${studentStyles.btnSecondary} disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
+            <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+              <button onClick={() => setCancelDialogOpen(false)} disabled={cancelLoading}
+                className="border border-gray-200 text-gray-600 hover:border-gray-300 px-4 py-2 rounded-md font-medium transition-all bg-white text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                 Keep Booking
               </button>
-              <button
-                onClick={handleConfirmCancel}
-                disabled={cancelLoading}
-                className={`${studentStyles.btnDanger} disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {cancelLoading ? '⏳ Canceling...' : 'Confirm Cancel'}
+              <button onClick={handleConfirmCancel} disabled={cancelLoading}
+                className="bg-[#cc0000] hover:bg-[#aa0000] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                {cancelLoading ? 'Canceling...' : 'Confirm Cancel'}
               </button>
             </div>
           </div>

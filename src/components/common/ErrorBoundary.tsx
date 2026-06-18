@@ -60,11 +60,11 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
 
       // Default fallback UI
       return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-white flex items-center justify-center p-4">
           <div className="max-w-md w-full text-center">
             {/* Error Icon */}
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-red-900/30 rounded-full mb-6">
-              <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-[#fff0f0] rounded-full mb-6">
+              <svg className="w-10 h-10 text-[#cc0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -75,18 +75,18 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
             </div>
 
             {/* Error Message */}
-            <h2 className="text-2xl font-bold text-white mb-3">Oops! Something went wrong</h2>
-            <p className="text-slate-400 mb-6">
+            <h2 className="text-2xl font-bold text-[#1a1a2e] mb-3">Oops! Something went wrong</h2>
+            <p className="text-gray-500 mb-6">
               An unexpected error occurred. Don&apos;t worry, you can try again.
             </p>
 
             {/* Error Details (collapsible) */}
             {this.state.error && process.env.NODE_ENV === 'development' && (
-              <details className="mb-6 text-left bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-                <summary className="text-sm text-slate-400 cursor-pointer hover:text-slate-300 font-medium">
+              <details className="mb-6 text-left bg-white rounded-lg p-4 border border-gray-200">
+                <summary className="text-sm text-gray-500 cursor-pointer hover:text-[#1a1a2e] font-medium">
                   Error Details (Dev Only)
                 </summary>
-                <pre className="mt-3 text-xs text-red-300 overflow-auto max-h-40 whitespace-pre-wrap">
+                <pre className="mt-3 text-xs text-[#cc0000] overflow-auto max-h-40 whitespace-pre-wrap">
                   {this.state.error.message}
                   {'\n\n'}
                   {this.state.error.stack}
@@ -97,10 +97,10 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
             {/* Action Buttons */}
             <div className="flex gap-3 justify-center">
               <Button variant="primary" onClick={this.handleReset}>
-                🔄 Try Again
+                Try Again
               </Button>
               <Button variant="outline" onClick={this.handleGoHome}>
-                🏠 Go Home
+                Go Home
               </Button>
             </div>
           </div>
@@ -111,3 +111,4 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     return this.props.children;
   }
 }
+

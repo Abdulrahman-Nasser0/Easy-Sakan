@@ -34,24 +34,28 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: (id: string) => 
 
   const colors = {
     success: {
-      bg: 'bg-emerald-900/90 border-emerald-600/50',
+      bg: 'bg-[#ebf7eb] border-[#c3e6c3]',
       icon: '✓',
-      iconBg: 'bg-emerald-600',
+      iconBg: 'bg-[#008009]',
+      text: 'text-[#008009]',
     },
     error: {
-      bg: 'bg-red-900/90 border-red-600/50',
+      bg: 'bg-[#fff0f0] border-[#f5c6c6]',
       icon: '✕',
-      iconBg: 'bg-red-600',
+      iconBg: 'bg-[#cc0000]',
+      text: 'text-[#cc0000]',
     },
     warning: {
-      bg: 'bg-yellow-900/90 border-yellow-600/50',
+      bg: 'bg-[#fff3e0] border-[#f5d6a3]',
       icon: '⚠',
-      iconBg: 'bg-yellow-600',
+      iconBg: 'bg-[#b95000]',
+      text: 'text-[#b95000]',
     },
     info: {
-      bg: 'bg-sky-900/90 border-sky-600/50',
+      bg: 'bg-[#ebf3ff] border-[#b3d4f5]',
       icon: 'ℹ',
-      iconBg: 'bg-sky-500',
+      iconBg: 'bg-[#0071c2]',
+      text: 'text-[#0071c2]',
     },
   };
 
@@ -59,16 +63,16 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: (id: string) => 
 
   return (
     <div
-      className={`${style.bg} border backdrop-blur-md rounded-lg shadow-2xl px-4 py-3 flex items-center gap-3 min-w-[300px] max-w-md animate-slide-up transition-all`}
+      className={`${style.bg} border rounded-lg shadow-md px-4 py-3 flex items-center gap-3 min-w-[300px] max-w-md animate-slide-up transition-all`}
       role="alert"
     >
       <div className={`${style.iconBg} rounded-full w-6 h-6 flex items-center justify-center text-white text-xs font-bold shrink-0`}>
         {style.icon}
       </div>
-      <p className="text-white text-sm flex-1">{toast.message}</p>
+      <p className={`${style.text} text-sm flex-1`}>{toast.message}</p>
       <button
         onClick={() => onClose(toast.id)}
-        className="text-slate-400 hover:text-white transition-colors text-lg leading-none shrink-0"
+        className={`${style.text} opacity-60 hover:opacity-100 transition-opacity text-lg leading-none shrink-0`}
         aria-label="Close"
       >
         &times;

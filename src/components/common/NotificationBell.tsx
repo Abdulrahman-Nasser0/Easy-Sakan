@@ -146,7 +146,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
       {/* Bell Icon */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-slate-800 transition-all duration-200"
+        className="relative p-2 rounded-lg text-gray-600 hover:text-[#0071c2] hover:bg-[#f2f6fc] transition-all duration-200"
         aria-label="Notifications"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 animate-pulse">
+          <span className="absolute -top-1 -right-1 bg-[#cc0000] text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 animate-pulse">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -162,14 +162,14 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
 
       {/* Dropdown */}
       {showDropdown && (
-        <div className="absolute right-0 mt-3 w-80 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl overflow-hidden z-50">
+        <div className="absolute right-0 mt-3 w-80 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-slate-700 flex justify-between items-center">
-            <h3 className="text-white font-semibold text-sm">Notifications</h3>
+          <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+            <h3 className="text-[#1a1a2e] font-semibold text-sm">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
+                className="text-xs text-[#0071c2] hover:text-[#005999] transition-colors"
               >
                 Mark all as read
               </button>
@@ -180,14 +180,14 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
           <div className="max-h-80 overflow-y-auto">
             {loading ? (
               <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-6 w-6 border border-slate-600 border-t-blue-400"></div>
-                <p className="text-xs text-slate-400 mt-2">Loading...</p>
+                <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-200 border-t-[#0071c2]"></div>
+                <p className="text-xs text-gray-500 mt-2">Loading...</p>
               </div>
             ) : notifications.length === 0 ? (
               <div className="text-center py-8">
                 <div className="text-3xl mb-2">🔔</div>
-                <p className="text-slate-400 text-sm">No notifications yet</p>
-                <p className="text-xs text-slate-500 mt-1">We&apos;ll notify you when something arrives</p>
+                <p className="text-gray-600 text-sm">No notifications yet</p>
+                <p className="text-xs text-gray-500 mt-1">We&apos;ll notify you when something arrives</p>
               </div>
             ) : (
               notifications.map(n => (
@@ -198,21 +198,21 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
                     if (!n.isRead) handleMarkAsRead(n.id);
                     setShowDropdown(false);
                   }}
-                  className={`block px-4 py-3 border-b border-slate-700/50 hover:bg-slate-700/50 transition-colors ${
-                    !n.isRead ? 'bg-sky-500/10' : ''
+                  className={`block px-4 py-3 border-b border-gray-100 hover:bg-[#f2f6fc] transition-colors ${
+                    !n.isRead ? 'bg-[#ebf3ff]' : ''
                   }`}
                 >
                   <div className="flex gap-3">
                     <span className="text-lg shrink-0 mt-0.5">{getNotificationIcon(n.type)}</span>
                     <div className="min-w-0">
-                      <p className={`text-sm truncate ${!n.isRead ? 'text-white font-semibold' : 'text-slate-300'}`}>
+                      <p className={`text-sm truncate ${!n.isRead ? 'text-[#1a1a2e] font-semibold' : 'text-gray-700'}`}>
                         {n.title}
                       </p>
-                      <p className="text-xs text-slate-400 truncate mt-0.5">{n.message}</p>
-                      <p className="text-xs text-slate-500 mt-1">{formatTime(n.createdAt)}</p>
+                      <p className="text-xs text-gray-600 truncate mt-0.5">{n.message}</p>
+                      <p className="text-xs text-gray-500 mt-1">{formatTime(n.createdAt)}</p>
                     </div>
                     {!n.isRead && (
-                      <div className="w-2 h-2 rounded-full bg-sky-500 shrink-0 mt-2"></div>
+                      <div className="w-2 h-2 rounded-full bg-[#0071c2] shrink-0 mt-2"></div>
                     )}
                   </div>
                 </Link>
@@ -224,7 +224,7 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
           <Link
             href="/profile?tab=notifications"
             onClick={() => setShowDropdown(false)}
-            className="block px-4 py-3 text-center text-sm text-sky-400 hover:text-sky-300 hover:bg-slate-700/50 transition-colors border-t border-slate-700"
+            className="block px-4 py-3 text-center text-sm text-[#0071c2] hover:text-[#005999] hover:bg-[#f2f6fc] transition-colors border-t border-gray-100"
           >
             View all notifications →
           </Link>

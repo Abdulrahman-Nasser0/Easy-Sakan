@@ -36,14 +36,14 @@ export default function EmptyState({
   };
 
   return (
-    <div className="text-center py-12 px-4">
-      <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+    <div className="text-center py-12 px-4 bg-white rounded-lg border border-gray-200">
+      <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-4">
         {icons[icon]}
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+      <h3 className="text-xl font-semibold text-[#1a1a2e] mb-2">
         {title}
       </h3>
-      <p className="text-gray-600 max-w-md mx-auto mb-6">
+      <p className="text-gray-500 max-w-md mx-auto mb-6">
         {message}
       </p>
       {actionButton && (

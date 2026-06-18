@@ -10,10 +10,10 @@ const LoginForm = () => {
     const [state, loginAction] = useActionState(login, undefined);
 
     return (
-        <div className="bg-slate-800/50 border border-slate-700 rounded-lg px-6 py-8">
+        <div className="bg-white border border-gray-200 rounded-lg px-6 py-8">
             <form action={loginAction} className="space-y-6">
                 <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
                         Email Address
                     </label>
                     <input 
@@ -21,11 +21,11 @@ const LoginForm = () => {
                         name="email"
                         id="email"
                         placeholder="Enter your email address" 
-                        className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors"
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors"
                         required
                     />
                     {state?.errors?.email && (
-                        <p className="text-red-400 text-sm mt-2 flex items-center">
+                        <p className="text-[#cc0000] text-sm mt-2 flex items-center">
                             <span className="mr-1">⚠️</span>
                             {state.errors.email[0]}
                         </p>
@@ -33,7 +33,7 @@ const LoginForm = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-semibold text-slate-300 mb-2">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
                         Password
                     </label>
                     <input 
@@ -41,11 +41,11 @@ const LoginForm = () => {
                         name="password"
                         id="password"
                         placeholder="Enter your password" 
-                        className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors"
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors"
                         required
                     />
                     {state?.errors?.password && (
-                        <p className="text-red-400 text-sm mt-2 flex items-center">
+                        <p className="text-[#cc0000] text-sm mt-2 flex items-center">
                             <span className="mr-1">⚠️</span>
                             {state.errors.password[0]}
                         </p>
@@ -53,17 +53,17 @@ const LoginForm = () => {
                 </div>
 
                 <div className="text-right">
-                    <Link href="/forgot-password" className="text-sm text-sky-400 hover:text-sky-300 font-medium">
+                    <Link href="/forgot-password" className="text-sm text-[#0071c2] hover:text-[#005999] font-medium">
                         Forgot your password?
                     </Link>
                 </div>
 
                 <SubmitButton />
 
-                <div className="text-center pt-4 border-t border-slate-700">
-                    <p className="text-slate-400 text-sm">
+                <div className="text-center pt-4 border-t border-gray-200">
+                    <p className="text-gray-600 text-sm">
                         Don&apos;t have an account?{' '}
-                        <Link href="/signup" className="text-sky-400 hover:text-sky-300 font-semibold transition-colors">
+                        <Link href="/signup" className="text-[#0071c2] hover:text-[#005999] font-semibold transition-colors">
                             Sign up now
                         </Link>
                     </p>

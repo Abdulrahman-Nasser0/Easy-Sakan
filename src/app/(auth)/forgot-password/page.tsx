@@ -39,28 +39,28 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-white">
+          <h2 className="mt-6 text-3xl font-extrabold text-[#1a1a2e]">
             Forgot Password
           </h2>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm text-gray-600">
             Enter your email and we&apos;ll send you a reset link
           </p>
         </div>
 
-        <div className={card.base}>
+        <div className="bg-white border border-gray-200 rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {message && (
-              <div className={alertStyle.success}>{message}</div>
+              <div className="bg-[#ebf7eb] border border-[#c3e6c3] text-[#008009] rounded-md p-4 text-sm">{message}</div>
             )}
             {error && (
-              <div className={alertStyle.error}>{error}</div>
+              <div className="bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-md p-4 text-sm">{error}</div>
             )}
 
             <div>
-              <label htmlFor="email" className={form.label}>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1.5">
                 Email Address
               </label>
               <input
@@ -70,7 +70,7 @@ const ForgotPasswordPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className={form.input}
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm"
               />
             </div>
 
@@ -83,8 +83,8 @@ const ForgotPasswordPage = () => {
               {loading ? 'Sending...' : 'Send Reset Link'}
             </Button>
 
-            <div className="text-center pt-4 border-t border-slate-700">
-              <Link href="/login" className="text-sm text-sky-400 hover:text-sky-300 font-medium">
+            <div className="text-center pt-4 border-t border-gray-200">
+              <Link href="/login" className="text-sm text-[#0071c2] hover:text-[#005999] font-medium">
                 ← Back to Login
               </Link>
             </div>

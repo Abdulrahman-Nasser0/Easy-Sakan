@@ -20,14 +20,14 @@ export default async function AdminFraudDetection() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="bg-gradient-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200 px-6 py-8">
+      <div className="bg-white border-b border-gray-200 px-6 py-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#ebf3ff] rounded-lg">
               <span className="text-lg">🔍</span>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Fraud Detection</h1>
+              <h1 className="text-2xl font-bold text-[#1a1a2e]">Fraud Detection</h1>
               <p className="text-gray-100 mt-1 text-sm">ML-powered fraud analysis and alerts</p>
             </div>
           </div>

@@ -17,6 +17,10 @@ body {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 @keyframes slide-up {
   0% { opacity: 0; transform: translateY(20px) scale(0.95); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -29,3 +33,4 @@ body {
 
 .animate-slide-up { animation: slide-up 0.3s ease-out; }
 .animate-fade-in { animation: fade-in 0.2s ease-out; }
+

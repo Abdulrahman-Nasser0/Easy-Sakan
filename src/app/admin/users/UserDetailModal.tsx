@@ -8,21 +8,25 @@ import {
   adminDeactivateUser,
   adminReactivateUser,
 } from '@/lib/api';
-import { modal, form, alert as alertStyle, badge, card } from '@/styles/designTokens';
 
-interface UserDetailModalProps {
+interface Props {
   token: string;
   userId: number;
   onClose: () => void;
   onUserUpdated: () => void;
 }
 
-export default function UserDetailModal({
-  token,
-  userId,
-  onClose,
-  onUserUpdated,
-}: UserDetailModalProps) {
+const roleColors: Record<string, string> = {
+  Admin: 'bg-[#f3e5f5] text-[#7b1fa2]',
+  Landlord: 'bg-[#ebf7eb] text-[#008009]',
+  Student: 'bg-[#ebf3ff] text-[#0071c2]',
+};
+
+const statusBadge = (active: boolean) => active
+  ? 'bg-[#ebf7eb] text-[#008009]'
+  : 'bg-gray-100 text-gray-500';
+
+export default function UserDetailModal({ token, userId, onClose, onUserUpdated }: Props) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -34,124 +38,74 @@ export default function UserDetailModal({
   const [rejectReason, setRejectReason] = useState('');
   const [deactivateReason, setDeactivateReason] = useState('');
 
-  useEffect(() => {
-    fetchUserDetails();
-  }, [userId]);
+  useEffect(() => { fetchUserDetails(); }, [userId]);
 
   const fetchUserDetails = async () => {
     setLoading(true);
     try {
       const response = await adminGetUserDetails(token, userId);
-      if (response.isSuccess) {
-        setUser(response.data);
-        setError('');
-      } else {
-        setError(response.message || 'Failed to fetch user details');
-      }
-    } catch (err) {
-      setError('Error fetching user details');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      if (response.isSuccess) { setUser(response.data); setError(''); }
+      else { setError(response.message || 'Failed to fetch user details'); }
+    } catch { setError('Error fetching user details'); }
+    finally { setLoading(false); }
   };
 
   const handleApprove = async () => {
     setActionLoading(true);
     try {
       const response = await adminApproveUser(token, userId);
-      if (response.isSuccess) {
-        setShowApproveModal(false);
-        onUserUpdated();
-      } else {
-        setError(response.message || 'Failed to approve user');
-      }
-    } catch (err) {
-      setError('Error approving user');
-      console.error(err);
-    } finally {
-      setActionLoading(false);
-    }
+      if (response.isSuccess) { setShowApproveModal(false); onUserUpdated(); }
+      else { setError(response.message || 'Failed to approve user'); }
+    } catch { setError('Error approving user'); }
+    finally { setActionLoading(false); }
   };
 
   const handleReject = async () => {
-    if (!rejectReason.trim()) {
-      setError('Rejection reason is required');
-      return;
-    }
+    if (!rejectReason.trim()) { setError('Rejection reason is required'); return; }
     setActionLoading(true);
     try {
       const response = await adminRejectUser(token, userId, rejectReason);
-      if (response.isSuccess) {
-        setShowRejectModal(false);
-        setRejectReason('');
-        onUserUpdated();
-      } else {
-        setError(response.message || 'Failed to reject user');
-      }
-    } catch (err) {
-      setError('Error rejecting user');
-      console.error(err);
-    } finally {
-      setActionLoading(false);
-    }
+      if (response.isSuccess) { setShowRejectModal(false); setRejectReason(''); onUserUpdated(); }
+      else { setError(response.message || 'Failed to reject user'); }
+    } catch { setError('Error rejecting user'); }
+    finally { setActionLoading(false); }
   };
 
   const handleDeactivate = async () => {
-    if (!deactivateReason.trim()) {
-      setError('Deactivation reason is required');
-      return;
-    }
+    if (!deactivateReason.trim()) { setError('Deactivation reason is required'); return; }
     setActionLoading(true);
     try {
       const response = await adminDeactivateUser(token, userId, deactivateReason);
-      if (response.isSuccess) {
-        setShowDeactivateModal(false);
-        setDeactivateReason('');
-        onUserUpdated();
-      } else {
-        setError(response.message || 'Failed to deactivate user');
-      }
-    } catch (err) {
-      setError('Error deactivating user');
-      console.error(err);
-    } finally {
-      setActionLoading(false);
-    }
+      if (response.isSuccess) { setShowDeactivateModal(false); setDeactivateReason(''); onUserUpdated(); }
+      else { setError(response.message || 'Failed to deactivate user'); }
+    } catch { setError('Error deactivating user'); }
+    finally { setActionLoading(false); }
   };
 
   const handleReactivate = async () => {
     setActionLoading(true);
     try {
       const response = await adminReactivateUser(token, userId);
-      if (response.isSuccess) {
-        onUserUpdated();
-      } else {
-        setError(response.message || 'Failed to reactivate user');
-      }
-    } catch (err) {
-      setError('Error reactivating user');
-      console.error(err);
-    } finally {
-      setActionLoading(false);
-    }
+      if (response.isSuccess) { onUserUpdated(); }
+      else { setError(response.message || 'Failed to reactivate user'); }
+    } catch { setError('Error reactivating user'); }
+    finally { setActionLoading(false); }
   };
+
+  const inputClass = 'w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none';
 
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/70 z-40" onClick={onClose}></div>
+      <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose}></div>
 
       {/* Main Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-slate-800 border border-slate-700 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="bg-white border border-gray-200 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
           {/* Header */}
-          <div className="px-6 py-4 border-b border-slate-700 flex justify-between items-center sticky top-0 bg-slate-800">
-            <h2 className="text-xl font-semibold text-white">👤 User Details</h2>
-            <button
-              onClick={onClose}
-              className="text-slate-400 hover:text-slate-300 transition-colors"
-            >
+          <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white">
+            <h2 className="text-lg font-semibold text-[#1a1a2e]">User Details</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-[#1a1a2e] transition-colors">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -162,200 +116,151 @@ export default function UserDetailModal({
           <div className="px-6 py-6 space-y-6">
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-slate-600 border-t-sky-400"></div>
-                <p className="mt-4 text-slate-400">Loading user details...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-[#0071c2]"></div>
+                <p className="mt-4 text-gray-500 text-sm">Loading user details...</p>
               </div>
             ) : error ? (
-              <div className={alertStyle.error}>{error}</div>
+              <div className="bg-[#fff0f0] border border-[#f5c6c6] text-[#cc0000] rounded-md p-4 text-sm">{error}</div>
             ) : user ? (
               <>
                 {/* User Info */}
-                <div className="flex items-start gap-6 pb-6 border-b border-slate-700">
-                  <div className="w-20 h-20 bg-sky-500 rounded-full flex items-center justify-center text-white text-3xl font-semibold shrink-0">
-                    {user.fullName.charAt(0).toUpperCase()}
+                <div className="flex items-start gap-6 pb-6 border-b border-gray-100">
+                  <div className="w-16 h-16 bg-[#0071c2] rounded-full flex items-center justify-center text-white text-2xl font-semibold shrink-0">
+                    {user.fullName?.charAt(0).toUpperCase() || '?'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-semibold text-white">{user.fullName}</h3>
-                    <p className="text-slate-400 text-sm">{user.email}</p>
-                    <p className="text-slate-400 text-sm">{user.phone}</p>
+                    <h3 className="text-lg font-semibold text-[#1a1a2e]">{user.fullName}</h3>
+                    <p className="text-gray-500 text-sm">{user.email}</p>
+                    <p className="text-gray-500 text-sm">{user.phone}</p>
                     <div className="flex gap-2 mt-3 flex-wrap">
-                      <span className={`
-                        inline-flex px-3 py-1 rounded-full text-xs font-semibold border
-                        ${user.role === 'Admin' ? 'bg-purple-900/50 border-purple-600 text-purple-200' : 
-                          user.role === 'Landlord' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 
-                          'bg-sky-900/50 border-sky-600 text-sky-200'}
-                      `}>
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${roleColors[user.role] || roleColors.Student}`}>
                         {user.role}
                       </span>
-                      <span className={
-                        user.isActive 
-                          ? badge.success 
-                          : 'inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-slate-700 border border-slate-600 text-slate-300'
-                      }>
-                        {user.isActive ? '✓ Active' : '✕ Inactive'}
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${statusBadge(user.isActive)}`}>
+                        {user.isActive ? 'Active' : 'Inactive'}
                       </span>
-                      <span className={
-                        user.isVerified 
-                          ? badge.success 
-                          : badge.warning
-                      }>
-                        {user.isVerified ? '✓ Verified' : '○ Not Verified'}
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${user.isVerified ? 'bg-[#ebf7eb] text-[#008009]' : 'bg-[#fff3e0] text-[#b95000]'}`}>
+                        {user.isVerified ? 'Verified' : 'Not Verified'}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {/* Tabs */}
-                <div className="border-b border-slate-700 -mx-6 px-6">
+                <div className="border-b border-gray-100 -mx-6 px-6">
                   <div className="flex gap-6">
                     {['info', 'documents', 'bookings'].map(tab => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
+                      <button key={tab} onClick={() => setActiveTab(tab)}
                         className={`px-0 py-3 border-b-2 font-medium text-sm transition-colors capitalize ${
-                          activeTab === tab
-                            ? 'border-sky-500 text-sky-400'
-                            : 'border-transparent text-slate-400 hover:text-slate-300'
-                        }`}
-                      >
+                          activeTab === tab ? 'border-[#0071c2] text-[#0071c2]' : 'border-transparent text-gray-500 hover:text-[#1a1a2e]'
+                        }`}>
                         {tab === 'info' ? 'Information' : tab === 'documents' ? `Documents (${user.documents?.length || 0})` : `Bookings (${user.bookings?.length || 0})`}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Tab Content */}
+                {/* Tab: Info */}
                 {activeTab === 'info' && (
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { label: 'Registration Date', value: new Date(user.createdAt).toLocaleString() },
                       { label: 'Last Login', value: user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Never' },
-                      { label: 'Verification Status', value: user.verificationStatus },
+                      { label: 'Verification Status', value: user.verificationStatus || 'N/A' },
                       { label: 'University', value: user.university || 'N/A' },
                     ].map(item => (
-                      <div key={item.label}>
-                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">{item.label}</p>
-                        <p className="font-medium text-white mt-1">{item.value}</p>
+                      <div key={item.label} className="bg-white border border-gray-200 rounded-md p-4">
+                        <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">{item.label}</p>
+                        <p className="font-medium text-[#1a1a2e] mt-1 text-sm">{item.value}</p>
                       </div>
                     ))}
                   </div>
                 )}
 
+                {/* Tab: Documents */}
                 {activeTab === 'documents' && (
                   <div className="space-y-4">
-                    {user.documents?.length > 0 ? (
-                      user.documents.map((doc: any) => (
-                        <div key={doc.id} className={card.base}>
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium text-white text-sm">{doc.fileType}</p>
-                              <p className="text-xs text-slate-400 mt-1">Uploaded: {new Date(doc.uploadedAt).toLocaleString()}</p>
-                            </div>
-                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${
-                              doc.status === 'APPROVED' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' : 
-                              doc.status === 'REJECTED' ? 'bg-red-900/50 border-red-600 text-red-200' : 
-                              'bg-amber-900/50 border-amber-600 text-amber-200'
-                            }`}>
-                              {doc.status}
-                            </span>
+                    {user.documents?.length > 0 ? user.documents.map((doc: any) => (
+                      <div key={doc.id} className="bg-white border border-gray-200 rounded-md p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium text-[#1a1a2e] text-sm">{doc.fileType}</p>
+                            <p className="text-xs text-gray-500 mt-1">Uploaded: {new Date(doc.uploadedAt).toLocaleString()}</p>
                           </div>
-                          {doc.mlInsights && (
-                            <div className="bg-slate-800/50 rounded p-3 space-y-2 border border-slate-700 mt-3">
-                              <p className="text-xs font-semibold text-slate-300">ML Insights</p>
-                              <p className="text-xs text-slate-400">
-                                Fraud Score: <span className="font-semibold text-white">{doc.mlInsights.fraudScore}</span>
-                              </p>
-                              {doc.mlInsights.riskFactors && (
-                                <div>
-                                  <p className="text-xs font-semibold text-slate-300 mb-2">Risk Factors:</p>
-                                  <ul className="text-xs text-slate-400 list-disc list-inside space-y-1">
-                                    {doc.mlInsights.riskFactors.map((factor: string, idx: number) => (
-                                      <li key={idx}>{factor}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                          {doc.rejectionReason && (
-                            <div className="mt-3 rounded p-3 border border-red-600/30 bg-red-900/20">
-                              <p className="text-xs font-semibold text-red-300">Rejection Reason:</p>
-                              <p className="text-xs text-red-200 mt-1">{doc.rejectionReason}</p>
-                            </div>
-                          )}
+                          <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${doc.status === 'APPROVED' ? 'bg-[#ebf7eb] text-[#008009]' : doc.status === 'REJECTED' ? 'bg-[#fff0f0] text-[#cc0000]' : 'bg-[#fff3e0] text-[#b95000]'}`}>
+                            {doc.status}
+                          </span>
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-slate-400 text-sm">No documents uploaded</p>
-                    )}
+                        {doc.mlInsights && (
+                          <div className="bg-white border border-gray-200 rounded-md p-3 space-y-2 mt-3">
+                            <p className="text-xs font-semibold text-gray-500">ML Insights</p>
+                            <p className="text-xs text-gray-600">Fraud Score: <span className="font-semibold text-[#1a1a2e]">{doc.mlInsights.fraudScore}</span></p>
+                            {doc.mlInsights.riskFactors && (
+                              <div>
+                                <p className="text-xs font-semibold text-gray-500 mb-2">Risk Factors:</p>
+                                <ul className="text-xs text-gray-600 list-disc list-inside space-y-1">
+                                  {doc.mlInsights.riskFactors.map((factor: string, idx: number) => <li key={idx}>{factor}</li>)}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {doc.rejectionReason && (
+                          <div className="mt-3 bg-[#fff0f0] border border-[#f5c6c6] rounded-md p-3">
+                            <p className="text-xs font-semibold text-[#cc0000]">Rejection Reason:</p>
+                            <p className="text-xs text-[#cc0000]/80 mt-1">{doc.rejectionReason}</p>
+                          </div>
+                        )}
+                      </div>
+                    )) : <p className="text-gray-500 text-sm">No documents uploaded</p>}
                   </div>
                 )}
 
+                {/* Tab: Bookings */}
                 {activeTab === 'bookings' && (
                   <div className="space-y-4">
-                    {user.bookings?.length > 0 ? (
-                      user.bookings.map((booking: any) => (
-                        <div key={booking.id} className={card.base}>
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium text-white text-sm">{booking.propertyTitle}</p>
-                              <p className="text-xs text-slate-400 mt-1">Booking ID: #{booking.id}</p>
-                              <p className="text-xs text-slate-400">Amount Due: EGP {booking.amountDue.toFixed(2)}</p>
-                            </div>
-                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${
-                              booking.status === 'PENDING_PAYMENT' ? 'bg-amber-900/50 border-amber-600 text-amber-200' :
-                              booking.status === 'CONFIRMED' ? 'bg-sky-900/50 border-sky-600 text-sky-200' :
-                              booking.status === 'COMPLETED' ? 'bg-emerald-900/50 border-emerald-600 text-emerald-200' :
-                              'bg-red-900/50 border-red-600 text-red-200'
-                            }`}>
-                              {booking.status}
-                            </span>
+                    {user.bookings?.length > 0 ? user.bookings.map((booking: any) => (
+                      <div key={booking.id} className="bg-white border border-gray-200 rounded-md p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium text-[#1a1a2e] text-sm">{booking.propertyTitle}</p>
+                            <p className="text-xs text-gray-500 mt-1">Booking ID: #{booking.id}</p>
+                            <p className="text-xs text-gray-500">Amount Due: EGP {booking.amountDue?.toFixed(2)}</p>
                           </div>
+                          <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${booking.status === 'PENDING_PAYMENT' ? 'bg-[#fff3e0] text-[#b95000]' : booking.status === 'CONFIRMED' ? 'bg-[#ebf7eb] text-[#008009]' : booking.status === 'COMPLETED' ? 'bg-[#ebf3ff] text-[#0071c2]' : 'bg-[#fff0f0] text-[#cc0000]'}`}>
+                            {booking.status}
+                          </span>
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-slate-400">No bookings</p>
-                    )}
+                      </div>
+                    )) : <p className="text-gray-500">No bookings</p>}
                   </div>
                 )}
 
                 {/* Admin Actions */}
-                <div className={card.base}>
-                  <p className="text-sm font-semibold text-white mb-3">Admin Actions</p>
+                <div className="bg-white border border-gray-200 rounded-md p-4">
+                  <p className="text-sm font-semibold text-[#1a1a2e] mb-3">Admin Actions</p>
                   <div className="flex flex-wrap gap-2">
                     {user.verificationStatus === 'PENDING_REVIEW' && (
                       <>
-                        <button
-                          onClick={() => setShowApproveModal(true)}
-                          disabled={actionLoading}
-                          className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-3 py-1 text-xs rounded font-medium transition-colors"
-                        >
-                          ✓ Approve Verification
+                        <button onClick={() => setShowApproveModal(true)} disabled={actionLoading}
+                          className="bg-[#008009] hover:bg-[#006600] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">
+                          Approve Verification
                         </button>
-                        <button
-                          onClick={() => setShowRejectModal(true)}
-                          disabled={actionLoading}
-                          className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-3 py-1 text-xs rounded font-medium transition-colors"
-                        >
-                          ✕ Reject Verification
+                        <button onClick={() => setShowRejectModal(true)} disabled={actionLoading}
+                          className="bg-[#cc0000] hover:bg-[#aa0000] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">
+                          Reject Verification
                         </button>
                       </>
                     )}
                     {user.isActive ? (
-                      <button
-                        onClick={() => setShowDeactivateModal(true)}
-                        disabled={actionLoading}
-                        className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-3 py-1 text-xs rounded font-medium transition-colors"
-                      >
-                        🔒 Deactivate Account
+                      <button onClick={() => setShowDeactivateModal(true)} disabled={actionLoading}
+                        className="bg-[#cc0000] hover:bg-[#aa0000] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">
+                        Deactivate Account
                       </button>
                     ) : (
-                      <button
-                        onClick={handleReactivate}
-                        disabled={actionLoading}
-                        className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white px-3 py-1 text-xs rounded font-medium transition-colors"
-                      >
-                        🔓 Reactivate Account
+                      <button onClick={handleReactivate} disabled={actionLoading}
+                        className="bg-[#008009] hover:bg-[#006600] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">
+                        Reactivate Account
                       </button>
                     )}
                   </div>
@@ -367,58 +272,70 @@ export default function UserDetailModal({
       </div>
 
       {/* Confirmation Modals */}
-      {[
-        { id: 'approve', show: showApproveModal, setShow: setShowApproveModal, title: 'Approve User Verification?', 
-          text: (user: any) => `Are you sure you want to approve verification for ${user?.fullName}?`,
-          action: handleApprove, btnClass: 'bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50', label: '✓ Approve',
-          loading: actionLoading },
-        { id: 'reject', show: showRejectModal, setShow: setShowRejectModal, title: 'Reject User Verification',
-          text: () => 'Provide a reason for rejection. The user will be notified and can resubmit.',
-          action: handleReject, btnClass: 'bg-red-600 hover:bg-red-700 disabled:opacity-50', label: '✕ Reject', 
-          loading: actionLoading, hasInput: true, inputValue: rejectReason, setInput: setRejectReason,
-          placeholder: 'Rejection reason (min 10 characters)...', minLen: 10 },
-        { id: 'deactivate', show: showDeactivateModal, setShow: setShowDeactivateModal, title: 'Deactivate User Account',
-          text: () => 'Provide a reason for deactivation. The user will be notified.',
-          action: handleDeactivate, btnClass: 'bg-red-600 hover:bg-red-700 disabled:opacity-50', label: '🔒 Deactivate',
-          loading: actionLoading, hasInput: true, inputValue: deactivateReason, setInput: setDeactivateReason,
-          placeholder: 'Deactivation reason...', minLen: 1 },
-      ].map(confirm => confirm.show && (
-        <div key={confirm.id} className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-800 border border-slate-700 rounded-xl max-w-md w-full">
-            <div className="px-6 py-4 border-b border-slate-700">
-              <h3 className="text-lg font-semibold text-white">{confirm.title}</h3>
+      {showApproveModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-[#1a1a2e]">Approve User Verification?</h3>
             </div>
             <div className="px-6 py-6 space-y-4">
-              <p className="text-slate-300 text-sm">
-                {confirm.hasInput ? confirm.text() : confirm.text(user)}
-              </p>
-              {confirm.hasInput && (
-                <textarea
-                  value={confirm.inputValue}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => confirm.setInput(e.target.value)}
-                  placeholder={confirm.placeholder}
-                  className="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-colors min-h-24"
-                />
-              )}
+              <p className="text-gray-600 text-sm">Are you sure you want to approve verification for <strong>{user?.fullName}</strong>?</p>
               <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => { confirm.setInput?.(''); confirm.setShow(false); }}
-                  className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 text-sm rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirm.action}
-                  disabled={confirm.loading || (confirm.hasInput && confirm.inputValue.length < (confirm.minLen || 0))}
-                  className={`${confirm.btnClass} text-white px-4 py-2 text-sm rounded-lg font-medium transition-colors`}
-                >
-                  {confirm.loading ? '⏳...' : confirm.label}
+                <button onClick={() => setShowApproveModal(false)} className="border border-gray-200 text-gray-600 hover:border-gray-300 px-4 py-2 rounded-md font-medium transition-all bg-white text-sm">Cancel</button>
+                <button onClick={handleApprove} disabled={actionLoading} className="bg-[#008009] hover:bg-[#006600] disabled:opacity-50 text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">
+                  {actionLoading ? 'Processing...' : 'Approve'}
                 </button>
               </div>
             </div>
           </div>
         </div>
-      ))}
+      )}
+
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-[#1a1a2e]">Reject User Verification</h3>
+            </div>
+            <div className="px-6 py-6 space-y-4">
+              <p className="text-gray-600 text-sm">Provide a reason for rejection. The user will be notified and can resubmit.</p>
+              <textarea value={rejectReason} onChange={(e) => setRejectReason(e.target.value)}
+                placeholder="Rejection reason (min 10 characters)..."
+                className={inputClass} rows={3} />
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => { setRejectReason(''); setShowRejectModal(false); }} className="border border-gray-200 text-gray-600 hover:border-gray-300 px-4 py-2 rounded-md font-medium transition-all bg-white text-sm">Cancel</button>
+                <button onClick={handleReject} disabled={actionLoading || rejectReason.length < 10}
+                  className="bg-[#cc0000] hover:bg-[#aa0000] disabled:opacity-50 text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">
+                  {actionLoading ? 'Processing...' : 'Reject'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeactivateModal && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full shadow-xl">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h3 className="text-lg font-semibold text-[#1a1a2e]">Deactivate User Account</h3>
+            </div>
+            <div className="px-6 py-6 space-y-4">
+              <p className="text-gray-600 text-sm">Provide a reason for deactivation. The user will be notified.</p>
+              <textarea value={deactivateReason} onChange={(e) => setDeactivateReason(e.target.value)}
+                placeholder="Deactivation reason..."
+                className={inputClass} rows={3} />
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => { setDeactivateReason(''); setShowDeactivateModal(false); }} className="border border-gray-200 text-gray-600 hover:border-gray-300 px-4 py-2 rounded-md font-medium transition-all bg-white text-sm">Cancel</button>
+                <button onClick={handleDeactivate} disabled={actionLoading || !deactivateReason.trim()}
+                  className="bg-[#cc0000] hover:bg-[#aa0000] disabled:opacity-50 text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">
+                  {actionLoading ? 'Processing...' : 'Deactivate'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

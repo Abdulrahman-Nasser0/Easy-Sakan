@@ -27,7 +27,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className={layout.page}>
-      <div className="bg-gradient-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200">
+      <div className="bg-linear-to-r from-[#0071c2]/50 via-[#005999] to-[#004a7d] border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <h1 className="text-3xl font-bold text-white">🛡️ Admin Dashboard</h1>
           <p className="text-white/80 mt-1 text-sm">Welcome, {session.name}</p>

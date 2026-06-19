@@ -53,6 +53,13 @@ export default function AccountDropdown({ isAuthenticated = false, userName = 'U
             >
               Settings
             </Link>
+            <Link
+              href="/report-issue"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-[#f2f6fc] hover:text-[#0071c2] transition-colors"
+            >
+              Report Issue
+            </Link>
             <button
               onClick={() => { setOpen(false); onLogout?.(); }}
               className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-[#cc0000] hover:bg-[#fff0f0] transition-colors"

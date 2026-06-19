@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#0071c2] via-[#005999] to-[#004a7d]">
+      <div className="relative overflow-hidden bg-linear-to-r from-[#0071c2] via-[#005999] to-[#004a7d]">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
           <div className="text-center">
             {/* Badge */}
@@ -178,7 +178,7 @@ export default function Home() {
       </div>
 
       {/* Stats Section */}
-      <div className="py-16 bg-gradient-to-r from-[#0071c2] to-[#005999]">
+      <div className="py-16 bg-linear-to-r from-[#0071c2] to-[#005999]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="text-white">

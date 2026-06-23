@@ -280,9 +280,7 @@ export default function PropertyDetail() {
                   {property.landlord.totalListings && <p>Listings: {property.landlord.totalListings}</p>}
                   {property.landlord.averageRating && <p>Average rating: {property.landlord.averageRating.toFixed(1)}</p>}
                 </div>
-                <button className="border border-gray-200 text-gray-600 hover:border-[#0071c2] hover:text-[#0071c2] w-full py-2 rounded-md font-medium transition-colors bg-white text-sm">
-                  Contact Landlord
-                </button>
+               
               </div>
             )}
           </div>

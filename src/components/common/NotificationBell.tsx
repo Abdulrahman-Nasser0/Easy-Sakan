@@ -129,11 +129,13 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
   const formatTime = (dateStr: string) => {
     const date = new Date(dateStr);
     const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
+    // Egypt is UTC+3, subtract 3 hours to adjust server UTC time to local comparison
+    const diffMs = now.getTime() - date.getTime() - 3 * 60 * 60 * 1000;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
+    if (diffMins < 0) return 'Just now';
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;

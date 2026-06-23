@@ -114,8 +114,7 @@ export default function UploadPropertyForm({ token }: Props) {
 
       if (!response.isSuccess) {
         const errMsg = [response.message, ...(response.errors || [])].filter(Boolean).join(' | ');
-        console.error('❌ Create failed:', errMsg);
-        setError(errMsg || 'Failed to create property');
+        setError('Fill up all required fields correctly. ');
         setLoading(false);
         return;
       }
@@ -123,7 +122,6 @@ export default function UploadPropertyForm({ token }: Props) {
       const propertyId = response.data?.id || response.data?.data?.id;
       console.log('✅ Property ID:', propertyId);
       if (!propertyId) {
-        console.error('❌ No property ID in response:', response);
         setError('Failed to get property ID');
         setLoading(false);
         return;

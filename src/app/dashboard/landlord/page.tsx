@@ -41,10 +41,14 @@ export default async function LandlordDashboard() {
       properties = listingsRes.data.items;
       totalProperties = listingsRes.data.totalCount || properties.length;
 
-      properties.forEach(p => {
+
+      properties.forEach((p: any) => {
         if (p.status === 'PENDING_APPROVAL') pendingApproval++;
-        activeBookings += (p.availability?.occupiedSlots || 0);
-        totalRevenue += (p.availability?.occupiedSlots || 0) * (p.price || 0);
+
+
+        const bookings = p.activeBookings ?? p.bookingsCount ?? p.totalBookings ?? p.availability?.occupiedSlots ?? 0;
+        activeBookings += bookings;
+        totalRevenue += bookings * (p.price || 0);
       });
     }
   } catch { /* noop */ }

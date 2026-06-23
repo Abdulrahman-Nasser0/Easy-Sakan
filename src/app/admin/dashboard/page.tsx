@@ -22,7 +22,6 @@ export default async function AdminDashboard() {
     { title: 'Bookings', href: '/admin/bookings', icon: '📅', desc: 'Manage all bookings', color: 'bg-[#f3e5f5]' },
     { title: 'Reports', href: '/admin/reports', icon: '🚨', desc: 'User reports & issues', color: 'bg-[#fff0f0]' },
     { title: 'Fraud Detection', href: '/admin/fraud-detection', icon: '🔍', desc: 'ML fraud analysis', color: 'bg-[#fff3e0]' },
-    { title: 'Audit Log', href: '/admin/audit-log', icon: '📋', desc: 'Admin action history', color: 'bg-[#e0f2fe]' },
   ];
 
   return (

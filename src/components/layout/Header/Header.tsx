@@ -40,6 +40,7 @@ export default function Header({ isAuthenticated = false, userRole, token, userN
               <UserActions isAuthenticated={isAuthenticated} userRole={userRole} userName={userName} />
 
               {/* Mobile Menu Button */}
+              {!isAuthenticated && (
               <button
                 onClick={toggleMenu}
                 className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-[#0071c2] hover:bg-[#f2f6fc] transition-all duration-200"
@@ -63,6 +64,7 @@ export default function Header({ isAuthenticated = false, userRole, token, userN
                   />
                 </svg>
               </button>
+              )}
             </div>
           </div>
 

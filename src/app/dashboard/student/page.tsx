@@ -111,9 +111,7 @@ export default async function StudentDashboard() {
           <Link href="/dashboard/student/my-bookings" className={btnOutline}>
             My Bookings
           </Link>
-          <Link href="/properties" className={btnOutline}>
-            Saved Properties
-          </Link>
+          
         </div>
 
         {/* Summary */}

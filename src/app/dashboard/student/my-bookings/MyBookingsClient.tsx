@@ -277,7 +277,6 @@ export function MyBookingsClient({ token }: MyBookingsClientProps) {
                       <div className="bg-[#ebf3ff] border border-[#b3d4f5] rounded-md p-3 mb-4">
                         <div className="flex justify-between items-center">
                           <span className="text-[#0071c2] text-sm font-medium">Trust Period ends:</span>
-                          <CountdownTimer expiresAt={booking.trustPeriodEndsAt} />
                         </div>
                         <p className="text-[#0071c2]/60 text-xs mt-1">
                           You can report issues within the 72-hour trust period

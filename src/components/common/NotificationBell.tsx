@@ -191,13 +191,9 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
               </div>
             ) : (
               notifications.map(n => (
-                <Link
+                <div
                   key={n.id}
-                  href={getNotificationLink(n)}
-                  onClick={() => {
-                    if (!n.isRead) handleMarkAsRead(n.id);
-                    setShowDropdown(false);
-                  }}
+                  
                   className={`block px-4 py-3 border-b border-gray-100 hover:bg-[#f2f6fc] transition-colors ${
                     !n.isRead ? 'bg-[#ebf3ff]' : ''
                   }`}
@@ -215,19 +211,13 @@ export default function NotificationBell({ token, userRole }: NotificationBellPr
                       <div className="w-2 h-2 rounded-full bg-[#0071c2] shrink-0 mt-2"></div>
                     )}
                   </div>
-                </Link>
+                </div>
               ))
             )}
           </div>
 
           {/* Footer */}
-          <Link
-            href="/profile?tab=notifications"
-            onClick={() => setShowDropdown(false)}
-            className="block px-4 py-3 text-center text-sm text-[#0071c2] hover:text-[#005999] hover:bg-[#f2f6fc] transition-colors border-t border-gray-100"
-          >
-            View all notifications →
-          </Link>
+          
         </div>
       )}
     </div>

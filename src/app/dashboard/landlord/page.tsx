@@ -36,11 +36,10 @@ export default async function LandlordDashboard() {
   let properties: any[] = [];
 
   try {
-    const listingsRes = await getMyListings(session.token, 1, 100);
+    const listingsRes = await getMyListings(session.token, 1, 50);
     if (listingsRes.isSuccess && listingsRes.data?.items) {
       properties = listingsRes.data.items;
       totalProperties = listingsRes.data.totalCount || properties.length;
-
 
       properties.forEach((p: any) => {
         if (p.status === 'PENDING_APPROVAL') pendingApproval++;

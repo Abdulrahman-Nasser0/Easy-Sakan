@@ -248,6 +248,7 @@ export default function Home() {
                 </li>
               </ul>
             </div>
+            {!isAuthenticated && (
             <div>
               <h4 className="font-semibold text-[#1a1a2e] mb-4">Account</h4>
               <ul className="space-y-2 text-gray-600">
@@ -263,6 +264,7 @@ export default function Home() {
                 </li>
               </ul>
             </div>
+            )}
             <div>
               <h4 className="font-semibold text-[#1a1a2e] mb-4">Contact</h4>
               <ul className="space-y-2 text-gray-600">

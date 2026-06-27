@@ -62,11 +62,12 @@ export async function login(_prevState: any, formData: FormData): Promise<LoginS
   );
 
   // 6. Redirect based on role
-  if (user.role === 'Student') {
-    redirect("/dashboard/student");
-  } else if (user.role === 'Landlord') {
+  const normalizedRole = user.role?.toUpperCase();
+  if (normalizedRole === 'STUDENT') {
+    redirect("/");
+  } else if (normalizedRole === 'LANDLORD') {
     redirect("/dashboard/landlord");
-  } else if (user.role === 'Admin') {
+  } else if (normalizedRole === 'ADMIN') {
     redirect("/admin/dashboard");
   }
 }
@@ -85,7 +86,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     };
   }
 
-  const { role, fullName, email, phone, password } = result.data;
+  const { role, fullName, email, phone, password, university } = result.data;
 
   // 2. Call backend API
   const response = await registerApi({
@@ -94,6 +95,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     email,
     phone,
     password,
+    university,
   });
 
   // 3. Handle API response
@@ -106,6 +108,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
       phone?: string[];
       password?: string[];
       confirmPassword?: string[];
+      university?: string[];
     } = {};
     
     if (response.errors && Array.isArray(response.errors)) {
@@ -129,6 +132,9 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
         } else if (errorField === 'role' || lowerError.includes("role")) {
           fieldErrors.role = fieldErrors.role || [];
           fieldErrors.role.push(errorMessage);
+        } else if (errorField === 'university' || lowerError.includes("university")) {
+          fieldErrors.university = fieldErrors.university || [];
+          fieldErrors.university.push(errorMessage);
         }
       });
     }
@@ -172,8 +178,14 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
     null
   );
 
-  // 6. Redirect to dashboard
-  redirect("/dashboard/student");
+  // 6. Redirect to dashboard or upload documents
+  if (userRole === 'Student') {
+    redirect("/upload-documents");
+  } else if (userRole === 'Landlord') {
+    redirect("/dashboard/landlord");
+  } else {
+    redirect("/dashboard/student");
+  }
 }
 
 

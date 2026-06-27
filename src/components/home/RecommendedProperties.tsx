@@ -2,44 +2,63 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getRecommendedProperties } from '@/lib/api';
+import { getRecommendedProperties, getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import { getImageUrl } from '@/lib/utils';
 
 interface RecommendedPropertiesProps {
-  token: string;
+  token?: string;
+  userRole?: string | null;
 }
 
-export default function RecommendedProperties({ token }: RecommendedPropertiesProps) {
+export default function RecommendedProperties({ token, userRole }: RecommendedPropertiesProps) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchRecommended = async () => {
+    if (!token || userRole !== 'Student') {
+      setLoading(false);
+      return;
+    }
+
+    const fetchProperties = async () => {
       try {
-        const response = await getRecommendedProperties(token, 1, 4, 'views');
-        if (response.isSuccess && response.data?.items) {
-          setProperties(response.data.items);
-        } else {
-          // Fallback silently
-          console.log('No recommended properties available');
+        let fetchedProperties: Property[] = [];
+
+        if (token) {
+          const response = await getRecommendedProperties(token, 1, 4);
+          if (response.isSuccess && response.data?.items && response.data.items.length > 0) {
+            fetchedProperties = response.data.items;
+          }
         }
+
+        // Fallback silently
+        if (fetchedProperties.length === 0) {
+          const fallbackResponse = await getAllProperties(1, 4, { sortBy: 'createdAt', sortOrder: 'desc' });
+          if (fallbackResponse.isSuccess && fallbackResponse.data?.items) {
+            fetchedProperties = fallbackResponse.data.items;
+          }
+        }
+
+        setProperties(fetchedProperties);
       } catch (err) {
-        console.error('Error fetching recommended properties:', err);
+        console.error('Error fetching properties:', err);
         setError('Could not load recommendations');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecommended();
-  }, [token]);
+    fetchProperties();
+  }, [token, userRole]);
+
+  if (!token || userRole !== 'Student') return null;
 
   if (loading) {
     return (
       <div className="mb-12">
-        <h2 className="text-2xl font-bold text-[#1a1a2e] mb-6 flex items-center gap-2">🔥 Recommended For You</h2>
+        <h2 className="text-2xl font-bold text-[#1a1a2e] mb-6 flex items-center gap-2">Recommended for you</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map(i => (
             <div key={i} className="bg-gray-100 border border-gray-200 rounded-lg overflow-hidden animate-pulse">
@@ -62,7 +81,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
     <div className="mb-12">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
-          🔥 Recommended For You
+          Recommended for you
         </h2>
         <Link href="/properties" className="text-[#0071c2] hover:text-[#005999] text-sm font-medium transition-colors">
           View All →
@@ -95,7 +114,7 @@ export default function RecommendedProperties({ token }: RecommendedPropertiesPr
               <div className="p-4">
                 <h3 className="text-[#1a1a2e] font-semibold truncate mb-1">{property.title}</h3>
                 <p className="text-xs text-gray-600 mb-2 truncate">📍 {property.location.address}</p>
-                
+
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-lg font-bold text-[#0071c2]">{property.price.toLocaleString()} <span className="text-xs text-gray-500 font-normal">EGP</span></p>
                   <span className="text-xs text-gray-600">

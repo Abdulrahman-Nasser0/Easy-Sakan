@@ -1,13 +1,31 @@
 'use client';
 
 import { signUp } from "@/lib/actions";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/common/Button";
 import Link from "next/link";
 
+const UNIVERSITIES = [
+    { value: "Assiut University", label: "جامعة أسيوط (Assiut University)" },
+    { value: "Cairo University", label: "جامعة القاهرة (Cairo University)" },
+    { value: "Ain Shams University", label: "جامعة عين شمس (Ain Shams University)" },
+    { value: "AUC", label: "الجامعة الأمريكية بالقاهرة (AUC)" },
+    { value: "GUC", label: "الجامعة الألمانية بالقاهرة (GUC)" },
+    { value: "Helwan University", label: "جامعة حلوان (Helwan University)" },
+    { value: "Alexandria University", label: "جامعة الإسكندرية (Alexandria University)" },
+    { value: "Mansoura University", label: "جامعة المنصورة (Mansoura University)" },
+    { value: "Tanta University", label: "جامعة طنطا (Tanta University)" },
+    { value: "Zagazig University", label: "جامعة الزقازيق (Zagazig University)" },
+    { value: "Minia University", label: "جامعة المنيا (Minia University)" },
+    { value: "Benha University", label: "جامعة بنها (Benha University)" },
+    { value: "Fayoum University", label: "جامعة الفيوم (Fayoum University)" },
+    { value: "Suez Canal University", label: "جامعة قناة السويس (Suez Canal University)" },
+];
+
 const SignUpForm = () => {
     const [state, signUpAction] = useActionState(signUp, undefined);
+    const [selectedRole, setSelectedRole] = useState<string>('');
 
     return (
         <div className="bg-white border border-gray-200 rounded-lg px-6 py-8">
@@ -21,7 +39,8 @@ const SignUpForm = () => {
                         id="role"
                         className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors appearance-none cursor-pointer"
                         required
-                        defaultValue=""
+                        value={selectedRole}
+                        onChange={(e) => setSelectedRole(e.target.value)}
                     >
                         <option value="" disabled>Select your role</option>
                         <option value="Student">Student (Looking for accommodation)</option>
@@ -34,6 +53,34 @@ const SignUpForm = () => {
                         </p>
                     )}
                 </div>
+
+                {selectedRole === 'Student' && (
+                    <div>
+                        <label htmlFor="university" className="block text-sm font-medium text-gray-700 mb-1.5">
+                            University
+                        </label>
+                        <select
+                            name="university"
+                            id="university"
+                            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors appearance-none cursor-pointer"
+                            required
+                            defaultValue=""
+                        >
+                            <option value="" disabled>Select your university</option>
+                            {UNIVERSITIES.map((uni) => (
+                                <option key={uni.value} value={uni.value}>
+                                    {uni.label}
+                                </option>
+                            ))}
+                        </select>
+                        {state?.errors?.university && (
+                            <p className="text-[#cc0000] text-sm mt-2 flex items-center">
+                                <span className="mr-1">⚠️</span>
+                                {state.errors.university[0]}
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 <div>
                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1.5">

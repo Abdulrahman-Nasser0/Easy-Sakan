@@ -14,6 +14,7 @@ export type SignUpState = {
     phone?: string[];
     password?: string[];
     confirmPassword?: string[];
+    university?: string[];
   };
   message?: string;
 } | undefined;
@@ -44,6 +45,7 @@ export interface RegisterRequest {
   role: UserRole;
   fullName: string;
   phone: string;
+  university?: string;
 }
 
 export interface LoginRequest {
@@ -275,6 +277,7 @@ export interface Property {
   bathrooms: number;
   areaSqm: number;
   mlInsights?: PropertyMLInsights;
+  ml_fair_price?: number;
   status?: PropertyListingStatus;
   isAvailable?: boolean;
   canBook?: boolean;

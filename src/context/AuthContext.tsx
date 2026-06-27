@@ -43,9 +43,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthContextType = {
     user,
     isLoading,
-    isStudent: user?.role === 'Student',
-    isLandlord: user?.role === 'Landlord',
-    isAdmin: user?.role === 'Admin',
+    isStudent: user?.role?.toUpperCase() === 'STUDENT',
+    isLandlord: user?.role?.toUpperCase() === 'LANDLORD',
+    isAdmin: user?.role?.toUpperCase() === 'ADMIN',
     isVerified: user?.isVerified ?? false,
     refetchUser: fetchSession,
   };

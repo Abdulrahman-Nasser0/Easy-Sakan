@@ -7,6 +7,7 @@ import {
   adminRejectUser,
   adminDeactivateUser,
   adminReactivateUser,
+  adminResolveFraudAlert,
 } from '@/lib/api';
 
 interface Props {
@@ -90,6 +91,23 @@ export default function UserDetailModal({ token, userId, onClose, onUserUpdated 
       else { setError(response.message || 'Failed to reactivate user'); }
     } catch { setError('Error reactivating user'); }
     finally { setActionLoading(false); }
+  };
+
+  const handleDocumentAction = async (docId: number, resolution: string) => {
+    setActionLoading(true);
+    try {
+      const res = await adminResolveFraudAlert(token, `doc_${docId}`, resolution);
+      if (res.isSuccess) {
+        onUserUpdated();
+        fetchUserDetails();
+      } else {
+        setError(res.message || 'Failed to update document status');
+      }
+    } catch (err) {
+      setError('Error updating document');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const inputClass = 'w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none';
@@ -186,10 +204,36 @@ export default function UserDetailModal({ token, userId, onClose, onUserUpdated 
                           <div>
                             <p className="font-medium text-[#1a1a2e] text-sm">{doc.fileType}</p>
                             <p className="text-xs text-gray-500 mt-1">Uploaded: {new Date(doc.uploadedAt).toLocaleString()}</p>
+                            {(doc.document_url || doc.documentUrl) && (
+                              <a 
+                                href={(doc.document_url || doc.documentUrl).startsWith('http') 
+                                  ? (doc.document_url || doc.documentUrl) 
+                                  : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/${(doc.document_url || doc.documentUrl).replace(/^\//, '')}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-[#0071c2] hover:underline text-xs font-medium mt-2 inline-block"
+                              >
+                                View Document ↗
+                              </a>
+                            )}
                           </div>
-                          <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${doc.status === 'APPROVED' ? 'bg-[#ebf7eb] text-[#008009]' : doc.status === 'REJECTED' ? 'bg-[#fff0f0] text-[#cc0000]' : 'bg-[#fff3e0] text-[#b95000]'}`}>
-                            {doc.status}
-                          </span>
+                          <div className="flex flex-col items-end gap-2">
+                            <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${doc.status === 'APPROVED' ? 'bg-[#ebf7eb] text-[#008009]' : doc.status === 'REJECTED' ? 'bg-[#fff0f0] text-[#cc0000]' : 'bg-[#fff3e0] text-[#b95000]'}`}>
+                              {doc.status}
+                            </span>
+                            {doc.status === 'PENDING_REVIEW' && (
+                              <div className="flex gap-2 mt-1">
+                                <button onClick={() => handleDocumentAction(doc.id, 'APPROVED')} disabled={actionLoading}
+                                  className="text-[#008009] hover:bg-[#ebf7eb] px-2 py-1 text-xs rounded font-medium border border-[#008009] transition-colors">
+                                  Approve
+                                </button>
+                                <button onClick={() => handleDocumentAction(doc.id, 'REJECTED')} disabled={actionLoading}
+                                  className="text-[#cc0000] hover:bg-[#fff0f0] px-2 py-1 text-xs rounded font-medium border border-[#cc0000] transition-colors">
+                                  Reject
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         {doc.mlInsights && (
                           <div className="bg-white border border-gray-200 rounded-md p-3 space-y-2 mt-3">

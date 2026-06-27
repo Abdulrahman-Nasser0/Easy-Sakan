@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProperty, uploadPropertyImages } from '@/lib/api';
 import { getImageUrl } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface Props { token: string; }
 
@@ -25,6 +26,19 @@ export default function UploadPropertyForm({ token }: Props) {
   const [uploadProgress, setUploadProgress] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      const userIsVerified = user.isVerified === true || (user as any).is_verified === true || (user as any).verification_status === 'VERIFIED';
+      if (user.role?.toUpperCase() === 'LANDLORD' && !userIsVerified) {
+        alert("عفواً، يجب توثيق الحساب ورفع المستندات أولاً قبل إضافة إعلانات.");
+        router.push('/upload-documents');
+      } else if (!userIsVerified) {
+        router.push('/upload-documents');
+      }
+    }
+  }, [user, router]);
 
   const [form, setForm] = useState({
     title: '', description: '', price: '', currency: 'EGP',
@@ -71,6 +85,7 @@ export default function UploadPropertyForm({ token }: Props) {
     if (!form.description.trim()) return 'Description is required';
     if (!form.price || Number(form.price) <= 0) return 'Valid price is required';
     if (!form.address.trim()) return 'Address is required';
+    if (!form.university.trim()) return 'University/Area is required';
     if (!form.lat || !form.lng) return 'Location coordinates are required';
     if (!form.totalCapacity || Number(form.totalCapacity) < 1) return 'Valid total capacity is required';
     if (form.images.length === 0) return 'At least one image is required';
@@ -96,8 +111,8 @@ export default function UploadPropertyForm({ token }: Props) {
           address: form.address.trim(),
           lat: Number(form.lat),
           lng: Number(form.lng),
+          nearest_university: form.university.trim(),
         },
-        university: form.university.trim() || undefined,
         gender: form.selectedGender,
         listingMode: form.listingMode,
         bedrooms: Number(form.bedrooms),
@@ -113,8 +128,10 @@ export default function UploadPropertyForm({ token }: Props) {
       console.log('📦 Create response:', JSON.stringify(response, null, 2));
 
       if (!response.isSuccess) {
-        const errMsg = [response.message, ...(response.errors || [])].filter(Boolean).join(' | ');
-        setError('Fill up all required fields correctly. ');
+        const formattedErrors = response.errors 
+          ? response.errors.map((e: any) => typeof e === 'object' ? (e.message || e.msg || JSON.stringify(e)) : e).join(' | ') 
+          : response.message;
+        setError(formattedErrors || response.message || 'Failed to create property. Please check required fields.');
         setLoading(false);
         return;
       }
@@ -202,9 +219,9 @@ export default function UploadPropertyForm({ token }: Props) {
                 <label className={labelClass}>Longitude</label>
                 <input type="number" step="any" value={form.lng} onChange={e => update('lng', e.target.value)} className={inputClass} placeholder="e.g., 31.2357" />
               </div>
-              <div>
-                <label className={labelClass}>University/Area</label>
-                <input type="text" value={form.university} onChange={e => update('university', e.target.value)} className={inputClass} placeholder="Nearby university (optional)" />
+              <div className="md:col-span-1">
+                <label className={labelClass}>University/Area <span className="text-[#cc0000]">*</span></label>
+                <input required type="text" value={form.university} onChange={e => update('university', e.target.value)} className={inputClass} placeholder="Nearby university" />
               </div>
               <div>
                 <label className={labelClass}>Gender Preference</label>

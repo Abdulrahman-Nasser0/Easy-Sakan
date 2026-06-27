@@ -16,11 +16,12 @@ export default async function DashboardRedirect() {
   }
 
   // Redirect based on role
-  if (session.role === "Admin") {
+  const normalizedRole = session.role?.toUpperCase();
+  if (normalizedRole === "ADMIN") {
     redirect("/admin/dashboard");
-  } else if (session.role === "Landlord") {
+  } else if (normalizedRole === "LANDLORD") {
     redirect("/dashboard/landlord");
   } else {
-    redirect("/dashboard/student");
+    redirect("/");
   }
 }

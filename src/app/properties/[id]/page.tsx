@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getPropertyById } from '@/lib/api';
+import { getPropertyById, logUserInteraction } from '@/lib/api';
 import { Property } from '@/lib/types';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import BookingModal from '@/components/common/BookingModal';
 import { getImageUrl } from '@/lib/utils';
 
@@ -26,6 +27,8 @@ const disabledBtn = 'bg-gray-100 text-gray-300 cursor-not-allowed px-4 py-2 roun
 
 export default function PropertyDetail() {
   const params = useParams();
+  const router = useRouter();
+  const { isVerified, user, refetchUser } = useAuth();
   const propertyId = parseInt(params.id as string);
 
   const [property, setProperty] = useState<Property | null>(null);
@@ -34,7 +37,36 @@ export default function PropertyDetail() {
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
-  useEffect(() => { fetchProperty(); }, [propertyId]);
+  useEffect(() => { 
+    refetchUser();
+    fetchProperty(); 
+  }, [propertyId]);
+
+  useEffect(() => {
+    if (user?.token && property) {
+      logUserInteraction(user.token, property.id, "VIEW").catch(console.error);
+    }
+  }, [user?.token, property?.id]);
+
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    const isVerified = user?.isVerified === true || (user as any)?.is_verified === true;
+
+    if (!isVerified) {
+      alert("عفواً، برجاء رفع وثيقة إثبات الهوية أولاً.");
+      window.location.href = '/upload-documents';
+      return;
+    }
+
+    setBookingModalOpen(true);
+  };
 
   const fetchProperty = async () => {
     setLoading(true);
@@ -199,6 +231,34 @@ export default function PropertyDetail() {
                 <p className="text-gray-500 text-sm mb-1">Monthly Price</p>
                 <p className="text-3xl font-bold text-[#0071c2]">{property.price.toLocaleString()}</p>
                 <p className="text-gray-500 text-sm">EGP per month</p>
+
+                {(() => {
+                  const fairPrice = property.mlInsights?.predictedFairPrice || property.ml_fair_price;
+                  const dealRating = property.mlInsights?.dealRating;
+
+                  if (!fairPrice) return null;
+
+                  if (dealRating === 'Excellent') {
+                    return (
+                      <div className="mt-3 bg-green-50 text-green-700 border border-green-200 rounded-lg px-3 py-2 text-sm w-full flex items-start text-right whitespace-normal break-words leading-relaxed font-medium">
+                        <span>🔥 سعر ممتاز جداً <br /> السعر العادل: {fairPrice.toLocaleString()} ج.م وفقاً لتقييم الذكاء الاصطناعي</span>
+                      </div>
+                    );
+                  }
+                  if (dealRating === 'Overpriced') {
+                    return (
+                      <div className="mt-3 bg-orange-50 text-orange-700 border border-orange-200 rounded-lg px-3 py-2 text-sm w-full flex items-start text-right whitespace-normal break-words leading-relaxed font-medium">
+                        <span>⚠️ أعلى من سعر السوق <br /> السعر العادل: {fairPrice.toLocaleString()} ج.م وفقاً لتقييم الذكاء الاصطناعي</span>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="mt-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg px-3 py-2 text-sm w-full flex items-start text-right whitespace-normal break-words leading-relaxed font-medium">
+                      <span>✨ سعر عادل مطابق للسوق <br /> السعر العادل: {fairPrice.toLocaleString()} ج.م وفقاً لتقييم الذكاء الاصطناعي</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="bg-white border border-gray-200 rounded-md p-4 mb-6">
@@ -243,7 +303,7 @@ export default function PropertyDetail() {
                 </div>
               )}
 
-              <button onClick={() => setBookingModalOpen(true)}
+              <button onClick={handleBookNow}
                 disabled={isSoldOut || !property.canBook}
                 className={`w-full ${isSoldOut || !property.canBook ? disabledBtn : activeBtn}`}>
                 {isSoldOut ? 'Sold Out' : !property.canBook ? 'Cannot Book' : 'Book Now'}
@@ -280,7 +340,7 @@ export default function PropertyDetail() {
                   {property.landlord.totalListings && <p>Listings: {property.landlord.totalListings}</p>}
                   {property.landlord.averageRating && <p>Average rating: {property.landlord.averageRating.toFixed(1)}</p>}
                 </div>
-               
+
               </div>
             )}
           </div>

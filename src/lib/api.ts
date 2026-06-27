@@ -232,6 +232,7 @@ export async function getVerificationStatus(token: string) {
   return apiCall<any>("/api/auth/verification-status", {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store', // MUST ADD THIS LINE
   });
 }
 
@@ -508,16 +509,21 @@ export async function togglePropertyAvailability(token: string, propertyId: numb
   }
 }
 
-export async function getRecommendedProperties(token: string, page: number = 1, pageSize: number = 10, basedOn: string = "views") {
+export async function getRecommendedProperties(token: string, page: number = 1, pageSize: number = 10, basedOn: string = "") {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
-    basedOn,
+    t: Date.now().toString(),
   });
+  
+  if (basedOn) {
+    params.append('basedOn', basedOn);
+  }
 
   return apiCall<any>(`/api/properties/recommended?${params.toString()}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
   });
 }
 
@@ -936,7 +942,7 @@ export async function adminGetFraudDetection(token: string) {
   });
 }
 
-export async function adminResolveFraudAlert(token: string, alertId: number, resolution: string) {
+export async function adminResolveFraudAlert(token: string, alertId: string | number, resolution: string) {
   return apiCall<any>(`/api/admin/fraud-detection/${alertId}/resolve`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },

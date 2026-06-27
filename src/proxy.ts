@@ -26,12 +26,12 @@ export default async function proxy(req: NextRequest) {
   }
 
   // Redirect admins trying to access user routes to admin dashboard
-  if (session?.role === 'Admin' && (path === "/profile" || path === "/settings")) {
+  if (session?.role?.toUpperCase() === 'ADMIN' && (path === "/profile" || path === "/settings")) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.nextUrl));
   }
 
   // Redirect authenticated non-admin users from auth pages (but allow verify-email for unverified users)
-  if (session?.userId && session?.role !== 'Admin') {
+  if (session?.userId && session?.role?.toUpperCase() !== 'ADMIN') {
     // Allow unverified users to access verify-email
     if (path === "/verify-email" && !session.isVerified) {
       return NextResponse.next();
@@ -40,10 +40,11 @@ export default async function proxy(req: NextRequest) {
     // Redirect from other auth pages if authenticated
     if (path === "/login" || path === "/signup" || path === "/forgot-password" || path === "/verify-email") {
       // Redirect to role-specific dashboard
-      if (session.role === 'Landlord') {
+      const normalizedRole = session.role?.toUpperCase();
+      if (normalizedRole === 'LANDLORD') {
         return NextResponse.redirect(new URL("/dashboard/landlord", req.nextUrl));
-      } else if (session.role === 'Student') {
-        return NextResponse.redirect(new URL("/dashboard/student", req.nextUrl));
+      } else if (normalizedRole === 'STUDENT') {
+        return NextResponse.redirect(new URL("/", req.nextUrl));
       }
 
     }

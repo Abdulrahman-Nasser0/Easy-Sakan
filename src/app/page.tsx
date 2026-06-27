@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { Button } from "@/components/common/Button";
 import { useEffect, useState } from "react";
+import RecommendedProperties from "@/components/home/RecommendedProperties";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userToken, setUserToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -17,6 +19,7 @@ export default function Home() {
           if (data?.role) {
             setIsAuthenticated(true);
             setUserRole(data.role);
+            setUserToken(data.token);
           }
         }
       } catch (error) {
@@ -122,6 +125,15 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Recommended Properties Section */}
+      {userToken && userRole === 'Student' && (
+        <div className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <RecommendedProperties token={userToken} userRole={userRole} />
+          </div>
+        </div>
+      )}
 
       {/* Features Section */}
       <div className="py-24 bg-gray-50">

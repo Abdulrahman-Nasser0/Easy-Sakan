@@ -2,24 +2,48 @@
 
 import { useState } from 'react';
 import { adminResolveFraudAlert } from '@/lib/api';
-import { adminStyles } from '@/styles/adminStyles';
+
+interface FraudItem {
+  id: string;
+  type: string;
+  userId: number;
+  userEmail: string;
+  userName: string;
+  documentType: string;
+  fraudScore: number;
+  status: string;
+  createdAt?: string;
+  uploadedAt?: string;
+  uploaded_at?: string;
+  documentUrl?: string;
+  document_url?: string;
+  fileType?: string;
+  file_type?: string;
+  isFlagged?: boolean;
+}
 
 interface FraudAlertListProps {
-  initialAlerts: any[];
+  initialAlerts: FraudItem[];
   token: string;
 }
 
 export default function FraudAlertList({ initialAlerts, token }: FraudAlertListProps) {
-  const [alerts, setAlerts] = useState(initialAlerts);
-  const [loading, setLoading] = useState<number | null>(null);
+  const [alerts, setAlerts] = useState<FraudItem[]>(
+    initialAlerts.filter((item) => {
+      if (item.type !== 'DOCUMENT') return false;
+      const fScore = item.fraudScore || (item as any).fraud_score || 0;
+      return item.isFlagged === true || fScore >= 0.7;
+    })
+  );
+  const [loading, setLoading] = useState<string | null>(null);
 
-  const handleResolve = async (id: number, resolution: string) => {
+  const handleResolve = async (id: string, resolution: string) => {
     setLoading(id);
     try {
       const response = await adminResolveFraudAlert(token, id, resolution);
       if (response.isSuccess) {
         setAlerts((prev) =>
-          prev.map((a) => (a.id === id ? { ...a, status: 'RESOLVED', resolution } : a))
+          prev.map((a) => (a.id === id ? { ...a, status: resolution } : a))
         );
       } else {
         alert(response.message || 'Failed to resolve alert');
@@ -31,71 +55,90 @@ export default function FraudAlertList({ initialAlerts, token }: FraudAlertListP
     }
   };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'CRITICAL': return 'bg-red-900/50 border-red-600 text-red-200';
-      case 'HIGH': return 'bg-orange-900/50 border-orange-600 text-orange-200';
-      case 'MEDIUM': return 'bg-yellow-900/50 border-yellow-600 text-yellow-200';
-      default: return 'bg-sky-900/50 border-sky-600 text-sky-200';
-    }
-  };
-
   if (alerts.length === 0) {
     return (
-      <div className={`${adminStyles.card} text-center p-12`}>
-        <p className="text-slate-400 text-lg">✅ No fraud alerts</p>
-        <p className="text-slate-500 text-sm mt-2">System is operating normally</p>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+        <div className="flex flex-col items-center justify-center">
+          <span className="text-5xl mb-4">✅</span>
+          <p className="font-bold text-xl text-[#1a1a2e]">All clear!</p>
+          <p className="text-gray-500 mt-2">No fraudulent documents detected.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {alerts.map((alert: any) => (
-        <div key={alert.id} className={`border-l-4 rounded-lg p-6 transition-all ${alert.status === 'RESOLVED' ? 'bg-slate-800/50 border-l-slate-600 border-slate-700' : 'bg-slate-800/80 border-l-red-600 border border-slate-700'}`}>
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2 text-white flex items-center gap-2">
-                ⚠️ {alert.alertType?.replace(/_/g, ' ') || 'Unknown Alert'}
-              </h3>
-              <p className="text-slate-400 text-sm">👤 User: <span className="text-white font-medium">{alert.userName}</span></p>
-              <p className="text-slate-500 text-xs mt-1">📅 Detected: {new Date(alert.detectedAt).toLocaleDateString()}</p>
-            </div>
-            <span className={`${adminStyles.badge} ${getSeverityColor(alert.severity)}`}>
-              {alert.severity === 'CRITICAL' && '🔴'}
-              {alert.severity === 'HIGH' && '🟠'}
-              {alert.severity === 'MEDIUM' && '🟡'}
-              {alert.severity === 'LOW' && '🔵'}
-              {' '}{alert.severity}
-            </span>
-          </div>
-          <p className="text-slate-300 mb-4">{alert.description}</p>
-          
-          {alert.status === 'PENDING' && (
-            <div className="flex gap-4 flex-wrap">
-              <button
-                disabled={loading === alert.id}
-                onClick={() => handleResolve(alert.id, 'Confirmed Fraud')}
-                className={`${adminStyles.btnDanger} ${adminStyles.btnSmall}`}
-              >
-                {loading === alert.id ? '⏳ Processing...' : '🚫 Confirm Fraud'}
-              </button>
-              <button
-                disabled={loading === alert.id}
-                onClick={() => handleResolve(alert.id, 'False Alarm')}
-                className={`${adminStyles.btnSuccess} ${adminStyles.btnSmall}`}
-              >
-                 {loading === alert.id ? '⏳ Processing...' : '✓ Mark as False Alarm'}
-              </button>
-            </div>
-          )}
-          {alert.status === 'RESOLVED' && (
-            <div className="flex items-center gap-2">
-              <span className="text-sky-400 text-sm font-medium">✅ Resolved ({alert.resolution})</span>
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Document Type</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Fraud Score</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Upload Date</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {alerts.map((item) => {
+              const docType = item.fileType || item.file_type || item.documentType || 'Unknown';
+              const fScore = item.fraudScore || (item as any).fraud_score || 0;
+              const dateRaw = item.uploadedAt || item.uploaded_at || item.createdAt;
+              const dateFormatted = dateRaw ? new Date(dateRaw).toLocaleDateString() : 'N/A';
+              const docUrl = item.documentUrl || item.document_url || '#';
+
+              return (
+              <tr key={item.id} className={`hover:bg-gray-50 transition-colors ${item.status === 'APPROVED' || item.status === 'REJECTED' ? 'opacity-60' : ''}`}>
+                <td className="px-6 py-4">
+                  <p className="font-medium text-[#1a1a2e] text-sm">{item.userName}</p>
+                  <p className="text-xs text-gray-500">{item.userEmail}</p>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-[#ebf3ff] text-[#0071c2]">
+                    {docType}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="font-bold text-[#cc0000]">
+                    {(fScore * 100).toFixed(1)}% Risk
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600">
+                  {dateFormatted}
+                </td>
+                <td className="px-6 py-4">
+                  <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'APPROVED' ? 'bg-[#ebf7eb] text-[#008009]' : item.status === 'REJECTED' ? 'bg-[#fff0f0] text-[#cc0000]' : 'bg-[#fff3e0] text-[#b95000]'}`}>
+                    {item.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <div className="flex justify-end gap-2">
+                    <a href={docUrl} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center bg-white border border-[#0071c2] text-[#0071c2] hover:bg-[#ebf3ff] px-3 py-1.5 rounded text-xs font-medium transition-colors">
+                      Review Case
+                    </a>
+                    {item.status === 'PENDING_REVIEW' && (
+                      <>
+                        <button onClick={() => handleResolve(item.id, 'APPROVED')} disabled={loading === item.id}
+                          className="text-[#008009] hover:bg-[#ebf7eb] px-2 py-1.5 text-xs rounded font-medium border border-[#008009] transition-colors disabled:opacity-50">
+                          {loading === item.id ? '...' : 'Approve'}
+                        </button>
+                        <button onClick={() => handleResolve(item.id, 'REJECTED')} disabled={loading === item.id}
+                          className="text-[#cc0000] hover:bg-[#fff0f0] px-2 py-1.5 text-xs rounded font-medium border border-[#cc0000] transition-colors disabled:opacity-50">
+                          {loading === item.id ? '...' : 'Reject'}
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </td>
+              </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

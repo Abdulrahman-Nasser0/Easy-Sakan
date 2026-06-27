@@ -24,7 +24,14 @@ export const signUpSchema = z.object({
     .regex(/[^A-Za-z0-9]/, { message: "Password must contain at least one special character" })
     .trim(),
   confirmPassword: z.string().trim(),
+  university: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+}).refine((data) => {
+  if (data.role === 'Student' && !data.university) return false;
+  return true;
+}, {
+  message: "University is required for students",
+  path: ["university"],
 });

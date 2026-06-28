@@ -229,7 +229,10 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div><label className={labelClass}>Bedrooms</label><input type="number" value={form.bedrooms} onChange={e => update('bedrooms', e.target.value)} className={inputClass} min="0" /></div>
               <div><label className={labelClass}>Bathrooms</label><input type="number" value={form.bathrooms} onChange={e => update('bathrooms', e.target.value)} className={inputClass} min="0" /></div>
-              <div><label className={labelClass}>Area (sqm)</label><input type="number" value={form.areaSqm} onChange={e => update('areaSqm', e.target.value)} className={inputClass} placeholder="Optional" /></div>
+              <div>
+                <label className={labelClass}>Area (sqm) <span className="text-[#cc0000]">*</span></label>
+                <input required type="number" value={form.areaSqm} onChange={e => update('areaSqm', e.target.value)} className={inputClass} placeholder="e.g., 45" />
+              </div>
               <div><label className={labelClass}>Total Capacity</label><input type="number" value={form.totalCapacity} onChange={e => update('totalCapacity', e.target.value)} className={inputClass} min="1" /></div>
             </div>
           </section>

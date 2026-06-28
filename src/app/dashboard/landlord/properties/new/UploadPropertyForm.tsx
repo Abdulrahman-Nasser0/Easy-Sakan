@@ -89,6 +89,7 @@ export default function UploadPropertyForm({ token }: Props) {
     if (!form.lat || !form.lng) return 'Location coordinates are required';
     if (!form.totalCapacity || Number(form.totalCapacity) < 1) return 'Valid total capacity is required';
     if (form.images.length === 0) return 'At least one image is required';
+    if (!form.areaSqm || Number(form.areaSqm) <= 0) return 'Area (sqm) is required';
     return '';
   };
 
@@ -263,8 +264,8 @@ export default function UploadPropertyForm({ token }: Props) {
                 <input type="number" value={form.bathrooms} onChange={e => update('bathrooms', e.target.value)} className={inputClass} min="0" />
               </div>
               <div>
-                <label className={labelClass}>Area (sqm)</label>
-                <input type="number" value={form.areaSqm} onChange={e => update('areaSqm', e.target.value)} className={inputClass} placeholder="Optional" />
+                <label className={labelClass}>Area (sqm) <span className="text-[#cc0000]">*</span></label>
+                <input required type="number" value={form.areaSqm} onChange={e => update('areaSqm', e.target.value)} className={inputClass} placeholder="e.g., 45" />
               </div>
               <div>
                 <label className={labelClass}>Total Capacity</label>

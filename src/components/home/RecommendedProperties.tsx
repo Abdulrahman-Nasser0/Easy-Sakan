@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getRecommendedProperties, getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import { getImageUrl } from '@/lib/utils';
+import SafeImage from '@/components/common/SafeImage';
 
 interface RecommendedPropertiesProps {
   token?: string;
@@ -94,15 +95,11 @@ export default function RecommendedProperties({ token, userRole }: RecommendedPr
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#0071c2]/50 transition-all cursor-pointer group shadow-sm">
               {/* Image */}
               <div className="relative h-44 bg-gray-200 overflow-hidden">
-                {property.images && property.images.length > 0 ? (
-                  <img
-                    src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)}
-                    alt={property.title}
-                    className="w-full h-full object-cover transition-transform duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">📸</div>
-                )}
+                <SafeImage
+                  src={property.images?.length > 0 ? getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url) : null}
+                  alt={property.title}
+                  className="w-full h-full object-cover transition-transform duration-300"
+                />
                 {property.mlInsights?.dealRating === 'Excellent' && (
                   <div className="absolute top-2 left-2 bg-[#008009]/90 text-white px-2 py-0.5 rounded-full text-xs font-medium">
                     🔥 Best Deal

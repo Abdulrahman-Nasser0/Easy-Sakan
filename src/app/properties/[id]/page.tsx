@@ -8,19 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import BookingModal from '@/components/common/BookingModal';
 import { getImageUrl } from '@/lib/utils';
-
-// Simple image with fallback
-function SafeImage({ src, alt, className }: { src?: string; alt: string; className?: string }) {
-  const [error, setError] = useState(false);
-  if (!src || error) {
-    return (
-      <div className={`${className || ''} flex items-center justify-center bg-gray-100 text-gray-300`}>
-        <span className="text-4xl">🏠</span>
-      </div>
-    );
-  }
-  return <img src={src} alt={alt} className={className} onError={() => setError(true)} />;
-}
+import SafeImage from '@/components/common/SafeImage';
 
 const activeBtn = 'bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm';
 const disabledBtn = 'bg-gray-100 text-gray-300 cursor-not-allowed px-4 py-2 rounded-md font-medium text-sm';

@@ -6,6 +6,7 @@ import { getAllProperties } from '@/lib/api';
 import { Property } from '@/lib/types';
 import Image from 'next/image';
 import { getImageUrl } from '@/lib/utils';
+import SafeImage from '@/components/common/SafeImage';
 
 const COMMON_AMENITIES = [
   'WiFi',
@@ -332,17 +333,11 @@ export default function PropertiesPage() {
                       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-[#0071c2]/50 transition-all cursor-pointer shadow-sm">
                         {/* Image */}
                         <div className="relative h-48 bg-gray-200">
-                          {property.images && property.images.length > 0 ? (
-                            <img
-                              src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url)}
-                              alt={property.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
-                              📸 No image
-                            </div>
-                          )}
+                          <SafeImage
+                            src={property.images?.length > 0 ? getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : property.images[0].url) : null}
+                            alt={property.title}
+                            className="w-full h-full object-cover"
+                          />
                           {property.availability?.isSoldOut && (
                             <div className="absolute top-2 right-2 bg-[#cc0000]/90 text-white px-3 py-1 rounded-full text-sm font-medium">
                               Sold Out

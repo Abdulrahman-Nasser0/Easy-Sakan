@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { adminGetProperties, adminApproveProperty, adminRejectProperty, adminDeleteProperty } from '@/lib/api';
 import { adminStyles, statusColors } from '@/styles/adminStyles';
 import { getImageUrl } from '@/lib/utils';
+import SafeImage from '@/components/common/SafeImage';
 
 interface Property {
   id: number;
@@ -172,12 +173,11 @@ export default function PropertiesManagement({ token }: Props) {
               <div key={property.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col hover:border-[#0071c2] hover:shadow-md transition-all">
                 {/* Image */}
                 <div className="relative h-48 bg-gray-100 overflow-hidden">
-                  {property.images && property.images.length > 0 ? (
-                    <img src={getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : (property.images[0] as any).url)}
-                      alt={property.title} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">No Image</div>
-                  )}
+                  <SafeImage
+                    src={property.images?.length > 0 ? getImageUrl(typeof property.images[0] === 'string' ? property.images[0] : (property.images[0] as any).url) : null}
+                    alt={property.title}
+                    className="w-full h-full object-cover"
+                  />
                   <div className="absolute top-3 right-3">
                     <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${sc.bg} ${sc.border} ${sc.text}`}>
                       {property.status.replace(/_/g, ' ')}

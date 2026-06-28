@@ -45,11 +45,15 @@ export default function PropertyDetail() {
       return;
     }
 
+    if (user.role?.toUpperCase() === 'ADMIN') {
+      setBookingModalOpen(true);
+      return;
+    }
+
     const isVerified = user?.isVerified === true || (user as any)?.is_verified === true;
 
     if (!isVerified) {
-      alert("عفواً، برجاء رفع وثيقة إثبات الهوية أولاً.");
-      window.location.href = '/upload-documents';
+      router.push('/upload-documents');
       return;
     }
 

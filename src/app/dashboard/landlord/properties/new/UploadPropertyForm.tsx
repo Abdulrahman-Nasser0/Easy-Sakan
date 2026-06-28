@@ -29,14 +29,12 @@ export default function UploadPropertyForm({ token }: Props) {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) {
-      const userIsVerified = user.isVerified === true || (user as any).is_verified === true || (user as any).verification_status === 'VERIFIED';
-      if (user.role?.toUpperCase() === 'LANDLORD' && !userIsVerified) {
-        alert("عفواً، يجب توثيق الحساب ورفع المستندات أولاً قبل إضافة إعلانات.");
-        router.push('/upload-documents');
-      } else if (!userIsVerified) {
-        router.push('/upload-documents');
-      }
+    if (!user) return;
+    const role = user.role?.toUpperCase();
+    if (role === 'ADMIN') return;
+    const isVerified = user.isVerified === true || (user as any).is_verified === true || (user as any).verification_status === 'VERIFIED';
+    if (!isVerified) {
+      router.push('/upload-documents');
     }
   }, [user, router]);
 

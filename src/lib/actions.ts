@@ -182,7 +182,7 @@ export async function signUp(_prevState: any, formData: FormData): Promise<SignU
   if (userRole === 'Student') {
     redirect("/upload-documents");
   } else if (userRole === 'Landlord') {
-    redirect("/dashboard/landlord");
+    redirect("/upload-documents");
   } else {
     redirect("/dashboard/student");
   }

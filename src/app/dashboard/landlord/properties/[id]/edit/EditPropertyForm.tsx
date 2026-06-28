@@ -194,7 +194,26 @@ export default function EditPropertyForm({ token, propertyId, initialData, initi
               </div>
               <div><label className={labelClass}>Latitude</label><input type="number" step="any" value={form.lat} onChange={e => update('lat', e.target.value)} className={inputClass} /></div>
               <div><label className={labelClass}>Longitude</label><input type="number" step="any" value={form.lng} onChange={e => update('lng', e.target.value)} className={inputClass} /></div>
-              <div><label className={labelClass}>University/Area</label><input type="text" value={form.university} onChange={e => update('university', e.target.value)} className={inputClass} /></div>
+              <div>
+                <label className={labelClass}>University/Area</label>
+                <select value={form.university} onChange={e => update('university', e.target.value)} className={selectClass}>
+                  <option value="">Select a university</option>
+                  <option>Assiut University</option>
+                  <option>Cairo University</option>
+                  <option>AUC</option>
+                  <option>Ain Shams University</option>
+                  <option>GUC</option>
+                  <option>Helwan University</option>
+                  <option>Alexandria University</option>
+                  <option>Mansoura University</option>
+                  <option>Tanta University</option>
+                  <option>Zagazig University</option>
+                  <option>Minia University</option>
+                  <option>Benha University</option>
+                  <option>Fayoum University</option>
+                  <option>Suez Canal University</option>
+                </select>
+              </div>
               <div>
                 <label className={labelClass}>Gender Preference</label>
                 <select value={form.selectedGender} onChange={e => update('selectedGender', e.target.value)} className={selectClass}>

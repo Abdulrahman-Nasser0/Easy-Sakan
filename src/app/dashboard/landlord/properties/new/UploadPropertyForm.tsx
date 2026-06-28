@@ -221,7 +221,23 @@ export default function UploadPropertyForm({ token }: Props) {
               </div>
               <div className="md:col-span-1">
                 <label className={labelClass}>University/Area <span className="text-[#cc0000]">*</span></label>
-                <input required type="text" value={form.university} onChange={e => update('university', e.target.value)} className={inputClass} placeholder="Nearby university" />
+                <select required value={form.university} onChange={e => update('university', e.target.value)} className={selectClass}>
+                  <option value="">Select a university</option>
+                  <option>Assiut University</option>
+                  <option>Cairo University</option>
+                  <option>AUC</option>
+                  <option>Ain Shams University</option>
+                  <option>GUC</option>
+                  <option>Helwan University</option>
+                  <option>Alexandria University</option>
+                  <option>Mansoura University</option>
+                  <option>Tanta University</option>
+                  <option>Zagazig University</option>
+                  <option>Minia University</option>
+                  <option>Benha University</option>
+                  <option>Fayoum University</option>
+                  <option>Suez Canal University</option>
+                </select>
               </div>
               <div>
                 <label className={labelClass}>Gender Preference</label>

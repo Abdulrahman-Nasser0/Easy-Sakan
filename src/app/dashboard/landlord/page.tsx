@@ -99,9 +99,6 @@ export default async function LandlordDashboard() {
           <Link href="/dashboard/landlord/my-listings" className={btnOutline}>
             View My Listings
           </Link>
-          <button className={btnOutline}>
-            View Analytics
-          </button>
         </div>
 
         {/* Properties Section */}

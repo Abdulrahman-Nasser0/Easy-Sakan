@@ -877,11 +877,15 @@ export async function adminCancelBooking(token: string, bookingId: number, reaso
   });
 }
 
-export async function adminHandleDispute(token: string, bookingId: number, reason: string) {
+export async function adminHandleDispute(token: string, bookingId: number, disputeData: {
+  disputeType: string;
+  description: string;
+  reportedBy: string;
+}) {
   return apiCall<any>(`/api/admin/bookings/${bookingId}/dispute`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ reason }),
+    body: JSON.stringify(disputeData),
   });
 }
 

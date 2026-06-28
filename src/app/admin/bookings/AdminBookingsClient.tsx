@@ -89,6 +89,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [disputeResolution, setDisputeResolution] = useState('');
+  const [disputeType, setDisputeType] = useState('PAYMENT_ISSUE');
   const [refundAmount, setRefundAmount] = useState('');
   const [cancelReason, setCancelReason] = useState('');
   const [cancelError, setCancelError] = useState('');
@@ -147,8 +148,12 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
     setActionLoading(true);
     setDisputeError('');
     try {
-      const response = await adminHandleDispute(token, selectedBooking.id, disputeResolution);
-      if (response.isSuccess) { fetchBookings(); setShowDisputeModal(false); setShowDetailModal(false); setDisputeResolution(''); }
+      const response = await adminHandleDispute(token, selectedBooking.id, {
+        disputeType,
+        description: disputeResolution,
+        reportedBy: 'Admin',
+      });
+      if (response.isSuccess) { fetchBookings(); setShowDisputeModal(false); setShowDetailModal(false); setDisputeResolution(''); setDisputeType('PAYMENT_ISSUE'); }
       else { setDisputeError(response.message || 'Failed to flag dispute'); }
     } catch { setDisputeError('Error flagging dispute'); }
     finally { setActionLoading(false); }
@@ -358,7 +363,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                 )}
                 {!selectedBooking.hasDispute && (selectedBooking.status === 'PENDING_PAYMENT' || selectedBooking.status === 'CONFIRMED') && (
                   <>
-                    <button onClick={() => { setDisputeResolution(''); setDisputeError(''); setShowDisputeModal(true); }}
+                    <button onClick={() => { setDisputeResolution(''); setDisputeType('PAYMENT_ISSUE'); setDisputeError(''); setShowDisputeModal(true); }}
                       className="bg-[#b95000] hover:bg-[#9a4000] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">Flag Dispute</button>
                     <button onClick={() => { setCancelReason(''); setCancelError(''); setShowCancelModal(true); }} className={dangerBtn}>Cancel Booking</button>
                   </>
@@ -403,7 +408,18 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
           <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full mx-4 p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Flag Dispute</h3>
-            <p className="text-gray-600 mb-4 text-sm">Describe the issue with booking #{selectedBooking?.id}</p>
+            <p className="text-gray-600 mb-4 text-sm">Flag a dispute for booking #{selectedBooking?.id}</p>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-600 mb-2">Dispute Type</label>
+              <select value={disputeType} onChange={(e) => setDisputeType(e.target.value)} className={selectClass}>
+                <option value="PAYMENT_ISSUE">Payment Issue</option>
+                <option value="PROPERTY_CONDITION">Property Condition</option>
+                <option value="CANCELLATION">Cancellation</option>
+                <option value="FRAUD">Fraud</option>
+                <option value="BEHAVIOR">Behavior</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
             <textarea value={disputeResolution} onChange={(e) => setDisputeResolution(e.target.value)}
               placeholder="Describe the dispute details..."
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none mb-4"

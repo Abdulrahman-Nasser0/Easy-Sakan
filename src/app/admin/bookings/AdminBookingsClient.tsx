@@ -147,7 +147,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
     setActionLoading(true);
     setDisputeError('');
     try {
-      const response = await adminHandleDispute(token, selectedBooking.id, { disputeType: 'ADMIN_FLAG', description: disputeResolution, reportedBy: 'Admin' });
+      const response = await adminHandleDispute(token, selectedBooking.id, disputeResolution);
       if (response.isSuccess) { fetchBookings(); setShowDisputeModal(false); setShowDetailModal(false); setDisputeResolution(''); }
       else { setDisputeError(response.message || 'Failed to flag dispute'); }
     } catch { setDisputeError('Error flagging dispute'); }

@@ -17,9 +17,10 @@ interface Session {
 
 interface ProfileContentProps {
   session: Session;
+  university?: string;
 }
 
-export default function ProfileContent({ session }: ProfileContentProps) {
+export default function ProfileContent({ session, university }: ProfileContentProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(session.name || '');
   const [email, setEmail] = useState(session.email || '');
@@ -158,6 +159,18 @@ export default function ProfileContent({ session }: ProfileContentProps) {
                   className={readOnlyClass}
                 />
               </div>
+
+              {session.role === 'Student' && (
+                <div>
+                  <label className="block text-sm font-medium text-[#1a1a2e] mb-2">University</label>
+                  <input
+                    type="text"
+                    value={university || 'Not set'}
+                    readOnly
+                    className={readOnlyClass}
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-[#1a1a2e] mb-2">Verification Status</label>

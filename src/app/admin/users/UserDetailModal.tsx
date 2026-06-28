@@ -296,12 +296,6 @@ export default function UserDetailModal({ token, userId, onClose, onUserUpdated 
                         </button>
                       </>
                     )}
-                    { (
-                      <button onClick={() => setShowApproveModal(true)} disabled={actionLoading}
-                        className="bg-[#008009] hover:bg-[#006600] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">
-                        Approve User
-                      </button>
-                    )}
                     {user.isActive ? (
                       <button onClick={() => setShowDeactivateModal(true)} disabled={actionLoading}
                         className="bg-[#cc0000] hover:bg-[#aa0000] disabled:opacity-50 text-white px-3 py-1.5 text-xs rounded font-medium transition-colors">

@@ -91,6 +91,9 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   const [disputeResolution, setDisputeResolution] = useState('');
   const [refundAmount, setRefundAmount] = useState('');
   const [cancelReason, setCancelReason] = useState('');
+  const [cancelError, setCancelError] = useState('');
+  const [disputeError, setDisputeError] = useState('');
+  const [refundError, setRefundError] = useState('');
 
   const fetchBookings = useCallback(async () => {
     setLoading(true); setError('');
@@ -130,33 +133,36 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
   const handleCancelBooking = async () => {
     if (!selectedBooking || !cancelReason) return;
     setActionLoading(true);
+    setCancelError('');
     try {
       const response = await adminCancelBooking(token, selectedBooking.id, cancelReason);
       if (response.isSuccess) { fetchBookings(); setShowCancelModal(false); setShowDetailModal(false); setCancelReason(''); }
-      else { setError(response.message || 'Failed to cancel booking'); }
-    } catch { setError('Error cancelling booking'); }
+      else { setCancelError(response.message || 'Failed to cancel booking'); }
+    } catch { setCancelError('Error cancelling booking'); }
     finally { setActionLoading(false); }
   };
 
   const handleOpenDispute = async () => {
     if (!selectedBooking || !disputeResolution) return;
     setActionLoading(true);
+    setDisputeError('');
     try {
       const response = await adminHandleDispute(token, selectedBooking.id, { disputeType: 'ADMIN_FLAG', description: disputeResolution, reportedBy: 'Admin' });
       if (response.isSuccess) { fetchBookings(); setShowDisputeModal(false); setShowDetailModal(false); setDisputeResolution(''); }
-      else { setError(response.message || 'Failed to handle dispute'); }
-    } catch { setError('Error handling dispute'); }
+      else { setDisputeError(response.message || 'Failed to flag dispute'); }
+    } catch { setDisputeError('Error flagging dispute'); }
     finally { setActionLoading(false); }
   };
 
   const handleRefund = async () => {
     if (!selectedBooking || !refundAmount) return;
     setActionLoading(true);
+    setRefundError('');
     try {
       const response = await adminRefundBooking(token, selectedBooking.id, { refundAmount: parseFloat(refundAmount), refundMethod: 'BANK_TRANSFER', resolution: disputeResolution || 'Refund issued' });
-      if (response.isSuccess) { fetchBookings(); setShowRefundModal(false); setShowDetailModal(false); setRefundAmount(''); }
-      else { setError(response.message || 'Failed to process refund'); }
-    } catch { setError('Error processing refund'); }
+      if (response.isSuccess) { fetchBookings(); setShowRefundModal(false); setShowDetailModal(false); setRefundAmount(''); setDisputeResolution(''); }
+      else { setRefundError(response.message || 'Failed to process refund'); }
+    } catch { setRefundError('Error processing refund'); }
     finally { setActionLoading(false); }
   };
 
@@ -352,14 +358,14 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
                 )}
                 {!selectedBooking.hasDispute && (selectedBooking.status === 'PENDING_PAYMENT' || selectedBooking.status === 'CONFIRMED') && (
                   <>
-                    <button onClick={() => { setShowDisputeModal(true); }}
+                    <button onClick={() => { setDisputeResolution(''); setDisputeError(''); setShowDisputeModal(true); }}
                       className="bg-[#b95000] hover:bg-[#9a4000] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">Flag Dispute</button>
-                    <button onClick={() => { setShowCancelModal(true); }} className={dangerBtn}>Cancel Booking</button>
+                    <button onClick={() => { setCancelReason(''); setCancelError(''); setShowCancelModal(true); }} className={dangerBtn}>Cancel Booking</button>
                   </>
                 )}
                 {selectedBooking.hasDispute && selectedBooking.disputeStatus === 'OPEN' && (
                   <>
-                    <button onClick={() => { setShowRefundModal(true); }}
+                    <button onClick={() => { setRefundAmount(''); setDisputeResolution(''); setRefundError(''); setShowRefundModal(true); }}
                       className="bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm">Process Refund</button>
                     <button onClick={() => handleDismissDispute(selectedBooking.id)} disabled={actionLoading}
                       className={ghostBtn}>{actionLoading ? 'Processing...' : 'Dismiss Dispute'}</button>
@@ -374,7 +380,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
 
       {/* Cancel Modal */}
       {showCancelModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
           <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full mx-4 p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Cancel Booking</h3>
             <p className="text-gray-600 mb-4 text-sm">Are you sure you want to cancel booking #{selectedBooking?.id}?</p>
@@ -382,10 +388,11 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               placeholder="Provide reason for cancellation..."
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none mb-4"
               rows={3} />
+            {cancelError && <p className="text-sm text-[#cc0000] bg-[#fff0f0] border border-[#f5c6c6] rounded-md px-3 py-2 mb-4">{cancelError}</p>}
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowCancelModal(false)} className={ghostBtn}>Keep</button>
+              <button onClick={() => { setShowCancelModal(false); setCancelError(''); }} className={ghostBtn}>Keep</button>
               <button onClick={handleCancelBooking} disabled={actionLoading || !cancelReason}
-                className={dangerBtn}>{actionLoading ? 'Processing...' : 'Confirm Cancel'}</button>
+                className={`${dangerBtn} disabled:opacity-50`}>{actionLoading ? 'Processing...' : 'Confirm Cancel'}</button>
             </div>
           </div>
         </div>
@@ -393,7 +400,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
 
       {/* Dispute Modal */}
       {showDisputeModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
           <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full mx-4 p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Flag Dispute</h3>
             <p className="text-gray-600 mb-4 text-sm">Describe the issue with booking #{selectedBooking?.id}</p>
@@ -401,8 +408,9 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
               placeholder="Describe the dispute details..."
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none mb-4"
               rows={3} />
+            {disputeError && <p className="text-sm text-[#cc0000] bg-[#fff0f0] border border-[#f5c6c6] rounded-md px-3 py-2 mb-4">{disputeError}</p>}
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowDisputeModal(false)} className={ghostBtn}>Cancel</button>
+              <button onClick={() => { setShowDisputeModal(false); setDisputeError(''); }} className={ghostBtn}>Cancel</button>
               <button onClick={handleOpenDispute} disabled={actionLoading || !disputeResolution}
                 className="bg-[#b95000] hover:bg-[#9a4000] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm disabled:opacity-50">
                 {actionLoading ? 'Processing...' : 'Flag Dispute'}
@@ -414,7 +422,7 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
 
       {/* Refund Modal */}
       {showRefundModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
           <div className="bg-white border border-gray-200 rounded-lg max-w-md w-full mx-4 p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Process Refund</h3>
             <p className="text-gray-600 mb-4 text-sm">Process refund for booking #{selectedBooking?.id}</p>
@@ -426,10 +434,13 @@ export default function AdminBookingsClient({ token }: AdminBookingsClientProps)
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-600 mb-2">Resolution Notes</label>
               <textarea value={disputeResolution} onChange={(e) => setDisputeResolution(e.target.value)}
-                placeholder="Describe resolution..." className={inputClass} rows={3} />
+                placeholder="Describe resolution..."
+                className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-md text-[#1a1a2e] placeholder-gray-400 focus:outline-none focus:border-[#0071c2] focus:ring-2 focus:ring-[#0071c2]/20 transition-colors text-sm resize-none"
+                rows={3} />
             </div>
+            {refundError && <p className="text-sm text-[#cc0000] bg-[#fff0f0] border border-[#f5c6c6] rounded-md px-3 py-2 mb-4">{refundError}</p>}
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowRefundModal(false)} className={ghostBtn}>Cancel</button>
+              <button onClick={() => { setShowRefundModal(false); setRefundError(''); }} className={ghostBtn}>Cancel</button>
               <button onClick={handleRefund} disabled={actionLoading || !refundAmount}
                 className="bg-[#0071c2] hover:bg-[#005999] text-white px-4 py-2 rounded-md font-medium transition-colors text-sm disabled:opacity-50">
                 {actionLoading ? 'Processing...' : 'Process Refund'}
